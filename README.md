@@ -39,8 +39,8 @@ Police Scorecard API: https://policescorecard.docs.apiary.io/#reference/scorecar
 - **Media:** News articles, maps, photos
 
 - **Connections:**
-  -
-  -
+  - Connect to the score to see if they correlate
+  - Connect to the legislation passed to see if there's any coorelation
 
 ### 2. Legislation Tracker
 
@@ -57,8 +57,8 @@ Police Scorecard API: https://policescorecard.docs.apiary.io/#reference/scorecar
 - **Media:** Website, Text
 
 - **Connections:**
-  -
-  -
+  - Connect to incidents to see if they had an effect
+  - Connect to scorecards to see if the legislation affects that
 
 ### 3. Police Department Accountability Scorecards
 
@@ -75,8 +75,8 @@ Police Scorecard API: https://policescorecard.docs.apiary.io/#reference/scorecar
 - **Media:** Maps, Images, Text Feeds of Descriptions
 
 - **Connections:**
-  -
-  -
+  - Connect to incidents to see if the amount matches the score
+  - Connect to legislation to see if the number passed matches the score
 
 ## Questions our Site will Answer:
 
