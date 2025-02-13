@@ -10,7 +10,7 @@
 
 ## Project Proposal
 
-JusticeMap is a civic engagement platform that visualizes police brutality hotspots and tracks related legislation, misconduct cases, and police department accountability. Users can explore incidents, legislation, and department scorecards on an interactive maps. The platform allows filtering, sorting, and media-rich exploration of data to promote transparency and reform.
+JusticeMap is a civic engagement platform that visualizes police brutality hotspots and tracks related legislation, misconduct cases, and police department accountability. Users can explore incidents, legislation, and department scorecards on an interactive map. The platform allows filtering, sorting, and media-rich exploration of data to promote transparency and reform.
 
 ## Data Sources
 
@@ -22,7 +22,7 @@ Police Scorecard API: https://policescorecard.docs.apiary.io/#reference/scorecar
 
 1. Police Misconduct Incidents
 2. Legislation Tracker
-3. olice Department Accountability Scorecards
+3. Police Department Accountability Scorecards
 
 ### 1. Police Misconduct Incidents
 
@@ -39,8 +39,8 @@ Police Scorecard API: https://policescorecard.docs.apiary.io/#reference/scorecar
 - **Media:** News articles, maps, photos
 
 - **Connections:**
-  -
-  -
+  - Connect to the score to see if they correlate
+  - Connect to the legislation passed to see if there's any correlation
 
 ### 2. Legislation Tracker
 
@@ -50,15 +50,15 @@ Police Scorecard API: https://policescorecard.docs.apiary.io/#reference/scorecar
 
   - Bill Title and Summary: Name of the bill and its key details.
   - State and Legislative Body: Where the bill was introduced (e.g., California Senate).
-  - Status of Bill: Pending, passed, or failed status with last action date.
+  - Status of Bill: Pending, passed or failed status with last action date.
   - Author Information: Name and political party of the bill's sponsor(s).
   - Topics Covered: Areas like use-of-force policies, body cameras, or qualified immunity reforms.
 
 - **Media:** Website, Text
 
 - **Connections:**
-  -
-  -
+  - Connect to incidents to see if they had an effect
+  - Connect to scorecards to see if the legislation affects them
 
 ### 3. Police Department Accountability Scorecards
 
@@ -75,11 +75,11 @@ Police Scorecard API: https://policescorecard.docs.apiary.io/#reference/scorecar
 - **Media:** Maps, Images, Text Feeds of Descriptions
 
 - **Connections:**
-  -
-  -
+  - Connect to incidents to see if the amount matches the score
+  - Connect to legislation to see if the number passed matches the score
 
 ## Questions our Site will Answer:
 
--
--
--
+- Has the passed reform legislation had a positive effect on policing?
+- Where and to whom are negative policing incidents likely to happen?
+- What types of legislation passed & funding amount affect policing positively/negatively?
