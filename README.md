@@ -10,7 +10,7 @@
 
 ## Project Proposal
 
-JusticeMap is a civic engagement platform that visualizes police brutality hotspots and tracks related legislation, misconduct cases, and police department accountability. Users can explore incidents, legislation, and department scorecards on an interactive map. The platform allows filtering, sorting, and media-rich exploration of data to promote transparency and reform.
+JusticeWatch is a civic engagement platform that visualizes police brutality hotspots and tracks related legislation, misconduct cases, and police department accountability. Users can explore incidents, legislation, and department scorecards on an interactive map. The platform allows filtering, sorting, and media-rich exploration of data to promote transparency and reform.
 
 ## Data Sources
 
