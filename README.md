@@ -10,7 +10,7 @@
 
 ## Project Proposal
 
-JusticeWatch is a civic engagement platform that visualizes police brutality hotspots and tracks related legislation, misconduct cases, and police department accountability. Users can explore incidents, legislation, and department scorecards on an interactive map.
+JusticeWatch is a civic engagement platform that visualizes Texas police brutality hotspots and tracks related legislation, misconduct cases, and police department accountability. Users can explore incidents, legislation, and department scorecards on an interactive map. It guides users to explore all of these across different large and small Texas cities to learn more about how police brutality is present and being addressed in their state.
 
 ## Data Sources
 
