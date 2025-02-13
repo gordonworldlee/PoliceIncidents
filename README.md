@@ -10,7 +10,7 @@
 
 ## Project Proposal
 
-JusticeWatch is a civic engagement platform that visualizes police brutality hotspots and tracks related legislation, misconduct cases, and police department accountability. Users can explore incidents, legislation, and department scorecards on an interactive map. 
+JusticeWatch is a civic engagement platform that visualizes police brutality hotspots and tracks related legislation, misconduct cases, and police department accountability. Users can explore incidents, legislation, and department scorecards on an interactive map.
 
 ## Data Sources
 
@@ -44,7 +44,7 @@ Police Scorecard API: https://policescorecard.docs.apiary.io/#reference/scorecar
 
 ### 2. Legislation Tracker
 
-- **Estimated Instances:** 80+
+- **Estimated Instances:** ~8000
 
 - **Attributes:**
 
