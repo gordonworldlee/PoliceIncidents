@@ -7,18 +7,18 @@ export default function DepartmentModelPage() {
           <h1 className="text-3xl font-bold">Department Model Page</h1>
           <br />
           <p>
-            <Link className="text-blue-500 underline" href="/department/cady">
-              Link to Cady Police Department Scorecard
+            <Link className="text-blue-500 underline" href="/department/dallas">
+              Link to Dallas Police Department Scorecard
             </Link>
           </p>
           <p>
-            <Link className="text-blue-500 underline" href="/department/frisco">
-              Link to Frisco Police Department Scorecard
+            <Link className="text-blue-500 underline" href="/department/houston">
+              Link to Houston Police Department Scorecard
             </Link>
           </p>
           <p>
-            <Link className="text-blue-500 underline" href="/department/plano">
-              Link to Plano Police Department Scorecard
+            <Link className="text-blue-500 underline" href="/department/austin">
+              Link to Austin Police Department Scorecard
             </Link>
           </p>
           <br />
