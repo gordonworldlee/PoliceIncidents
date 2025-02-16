@@ -2,12 +2,11 @@ import Link from "next/link";
 
 interface ViolenceInstance {
   id: string;
-  perpetrator: string;
-  victim: string;
-  action: string;
+  city: string;
+  state: string;
+  encounter_type: string;
+  agency_responsible: string;
   date: string;
-  location: string;
-  details: string;
 }
 
 interface ViolencePageProps {
@@ -21,32 +20,29 @@ export default function ViolenceInstancePage({ params }: ViolencePageProps) {
 
   // This is a mock data structure. In a real application, you'd fetch this data from an API or database
   const violenceInstances: Record<string, ViolenceInstance> = {
-    killchild: {
-      id: "killchild",
-      perpetrator: "Police Officer",
-      victim: "Child",
-      action: "Kill",
-      date: "2025-02-15",
-      location: "City A",
-      details: "Detailed description of the incident involving a child"
+    incident1: {
+      id: "incident1",
+      city: "Grainfield",
+      state: "TX",
+      encounter_type: "Domestic Disturbance",
+      agency_responsible: "Gove County Sheriff's Office",
+      date: "1/31/25"
     },
-    stabmom: {
-      id: "stabmom",
-      perpetrator: "Police Officer",
-      victim: "Mother",
-      action: "Stab",
-      date: "2025-02-14",
-      location: "City B",
-      details: "Detailed description of the incident involving a mother"
+    incident2: {
+      id: "incident2",
+      city: "Austin",
+      state: "TX",
+      encounter_type: "Mental Health/Welfare Check",
+      agency_responsible: "Austin Police Department",
+      date: "2/15/25"
     },
-    hitwoman: {
-      id: "hitwoman",
-      perpetrator: "Police Officer",
-      victim: "Woman",
-      action: "Hit",
-      date: "2025-02-13",
-      location: "City C",
-      details: "Detailed description of the incident involving a woman"
+    incident3: {
+      id: "incident3",
+      city: "Dallas",
+      state: "TX",
+      encounter_type: "Violent Crime",
+      agency_responsible: "Dallas Police Department",
+      date: "3/1/25"
     }
   };
 
@@ -64,12 +60,11 @@ export default function ViolenceInstancePage({ params }: ViolencePageProps) {
         <p>This page is about the {instance.id} instance of violence.</p>
         <br />
         <div className="text-left">
-          <p><strong>Perpetrator:</strong> {instance.perpetrator}</p>
-          <p><strong>Victim:</strong> {instance.victim}</p>
-          <p><strong>Action:</strong> {instance.action}</p>
+          <p><strong>City:</strong> {instance.city}</p>
+          <p><strong>State:</strong> {instance.state}</p>
+          <p><strong>Encounter Type:</strong> {instance.encounter_type}</p>
+          <p><strong>Agency Responsible:</strong> {instance.agency_responsible}</p>
           <p><strong>Date:</strong> {instance.date}</p>
-          <p><strong>Location:</strong> {instance.location}</p>
-          <p><strong>Details:</strong> {instance.details}</p>
         </div>
         <br />
         <p>
