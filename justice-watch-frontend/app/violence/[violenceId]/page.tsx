@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FaNewspaper } from "react-icons/fa";
+import { FaNewspaper, FaClipboardList } from "react-icons/fa";
 
 interface ViolenceInstance {
   id: string;
@@ -26,6 +26,15 @@ const NewsLink = ({ url }: { url: string }) => (
   </Link>
 );
 
+const ScorecardLink = ({ city }: { city: string }) => (
+  <Link href={`/scorecard/${city.toLowerCase()}`} passHref>
+    <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded inline-flex items-center mt-2">
+      <FaClipboardList className="mr-2" />
+      <span>View Police Scorecard</span>
+    </button>
+  </Link>
+);
+
 export default function ViolenceInstancePage({ params }: ViolencePageProps) {
   const { violenceId } = params;
 
@@ -33,10 +42,10 @@ export default function ViolenceInstancePage({ params }: ViolencePageProps) {
   const violenceInstances: Record<string, ViolenceInstance> = {
     incident1: {
       id: "incident1",
-      city: "Grainfield",
+      city: "Houston",
       state: "TX",
       encounter_type: "Domestic Disturbance",
-      agency_responsible: "Gove County Sheriff's Office",
+      agency_responsible: "Houston Police Department",
       date: "1/31/25",
       news: "https://vtdigger.org/2025/01/24/federal-prosecutors-file-charges-in-probe-of-fatal-shooting-of-border-patrol-agent-in-vermont/"
     },
@@ -67,7 +76,7 @@ export default function ViolenceInstancePage({ params }: ViolencePageProps) {
   }
 
   return (
-  <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center min-h-screen">
     <div className="text-center">
       <h1 className="text-3xl font-bold">Violence Instance Details</h1>
       <div className="mt-6 text-left bg-white shadow-md rounded-lg p-6">
@@ -78,6 +87,9 @@ export default function ViolenceInstancePage({ params }: ViolencePageProps) {
         <p><strong>Date:</strong> {instance.date}</p>
         <div className="mt-4">
           <NewsLink url={instance.news} />
+        </div>
+        <div className="mt-2">
+          <ScorecardLink city={instance.city} />
         </div>
       </div>
       <div className="mt-6">
