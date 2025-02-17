@@ -7,8 +7,10 @@ interface ViolenceInstance {
   state: string;
   encounter_type: string;
   agency_responsible: string;
+  cause: string;
   date: string;
   news: string;
+  
 }
 
 interface ViolencePageProps {
@@ -46,6 +48,7 @@ export default function ViolenceInstancePage({ params }: ViolencePageProps) {
       state: "TX",
       encounter_type: "Domestic Disturbance",
       agency_responsible: "Houston Police Department",
+      cause: "Gun",
       date: "1/31/25",
       news: "https://vtdigger.org/2025/01/24/federal-prosecutors-file-charges-in-probe-of-fatal-shooting-of-border-patrol-agent-in-vermont/"
     },
@@ -55,6 +58,7 @@ export default function ViolenceInstancePage({ params }: ViolencePageProps) {
       state: "TX",
       encounter_type: "Mental Health/Welfare Check",
       agency_responsible: "Austin Police Department",
+      cause: "Taser",
       date: "2/15/25",
       news: "https://www.fox8live.com/2025/01/18/father-kills-wife-shoots-3-children-before-being-killed-by-jpso-deputies-river-ridge/"
     },
@@ -64,6 +68,7 @@ export default function ViolenceInstancePage({ params }: ViolencePageProps) {
       state: "TX",
       encounter_type: "Violent Crime",
       agency_responsible: "Dallas Police Department",
+      cause: "Aphyxsiation",
       date: "3/1/25",
       news: "https://www.fox10phoenix.com/news/phoenix-police-scene-officer-involved-shooting-laveen"
     }
@@ -84,6 +89,7 @@ export default function ViolenceInstancePage({ params }: ViolencePageProps) {
         <p><strong>State:</strong> {instance.state}</p>
         <p><strong>Encounter Type:</strong> {instance.encounter_type}</p>
         <p><strong>Agency Responsible:</strong> {instance.agency_responsible}</p>
+        <p><strong>Cause of Death:</strong> {instance.cause}</p>
         <p><strong>Date:</strong> {instance.date}</p>
         <div className="mt-4">
           <NewsLink url={instance.news} />
