@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import MarkerClusterGroup from "react-leaflet-markercluster";
 
 export default function ViolenceModelPage() {
   const incidents = [
