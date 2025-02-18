@@ -1,0 +1,53 @@
+{
+    "status": "OK",
+    "searchresult": {
+      "summary": {
+        "page": "1 of 1",
+        "range": "1 - 7",
+        "relevancy": "100% - 38%",
+        "count": 7,
+        "page_current": 1,
+        "page_total": 1,
+        "query": "((Zpolic:(pos=1) AND Zmisconduct:(pos=2)))"
+      },
+      "0": {
+        "relevance": 96,
+        "state": "TX",
+        "bill_number": "HB881",
+        "bill_id": 1891028,
+        "change_hash": "2ad0307bbb9d9ffbb4e390b457d27997",
+        "url": "https://legiscan.com/TX/bill/HB881/2025",
+        "text_url": "https://legiscan.com/TX/text/HB881/2025",
+        "research_url": "https://legiscan.com/TX/research/HB881/2025",
+        "last_action_date": "2024-11-12",
+        "last_action": "Filed",
+        "title": "Relating to a progressive disciplinary matrix for police officer misconduct in certain municipalities."
+      },
+      "1": {
+        "relevance": 96,
+        "state": "TX",
+        "bill_number": "SB280",
+        "bill_id": 1890795,
+        "change_hash": "65e2c1c58a930792513a282b87f9141f",
+        "url": "https://legiscan.com/TX/bill/SB280/2025",
+        "text_url": "https://legiscan.com/TX/text/SB280/2025",
+        "research_url": "https://legiscan.com/TX/research/SB280/2025",
+        "last_action_date": "2025-02-03",
+        "last_action": "Referred to Criminal Justice",
+        "title": "Relating to municipal civilian complaint review boards for peace officer misconduct in certain municipalities."
+      },
+      "2": {
+        "relevance": 85,
+        "state": "TX",
+        "bill_number": "HB909",
+        "bill_id": 1891118,
+        "change_hash": "2bf70ac6c75c877df0d5b869c3c43729",
+        "url": "https://legiscan.com/TX/bill/HB909/2025",
+        "text_url": "https://legiscan.com/TX/text/HB909/2025",
+        "research_url": "https://legiscan.com/TX/research/HB909/2025",
+        "last_action_date": "2024-11-12",
+        "last_action": "Filed",
+        "title": "Relating to law enforcement misconduct and law enforcement interactions with certain detained or arrested individuals and other members of the public, to public entity liability for those interactions, and to the confinement, conviction, or release of detained or arrested individuals."
+      }
+    }
+  }
