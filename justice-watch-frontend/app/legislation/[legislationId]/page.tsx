@@ -1,5 +1,6 @@
 // app/legislation/[legislationId]/page.tsx
 import { getBillContent, obtainSingleBill } from "@/lib/fetch_legislative_data";
+import Link from "next/link";
 
 interface LegislationInstancePageProps {
   params: {
@@ -59,7 +60,11 @@ export default async function LegislationInstancePage({ params }: LegislationIns
       <h2 className="text-xl font-bold underline">Relevant Links</h2>
       <a href={billData.state_link} className="text-blue-500 underline">{billData.state_link}</a>
       
-      {/* <BillContent content={billContent} /> */}
+      <div className="mt-8">
+          <Link href="/legislation" className="text-blue-500 hover:underline">
+            Back to the Legislation Model Page
+          </Link>
+        </div>
     </div>
   );
 }

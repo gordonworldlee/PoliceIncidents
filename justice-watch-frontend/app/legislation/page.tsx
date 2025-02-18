@@ -13,8 +13,8 @@ export default async function LegislationModelPage() {
         <h1 className="text-3xl font-bold mb-6">Legislation Model Page</h1>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {bill_data.map((bill) => (
-            <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow flex flex-col justify-center items-center min-h-[200px]">
-              <Link key={bill.bill_id} href={`/legislation/${bill.bill_id}`} className="block">
+            <div  key={bill.bill_id} className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow flex flex-col justify-center items-center min-h-[200px]">
+              <Link href={`/legislation/${bill.bill_id}`} className="block">
                 <h2 className="text-lg font-semibold text-blue-600 mb-2 text-center">{bill.title}</h2>
                 <p className="text-sm text-gray-600 text-center"><strong>State:</strong> {bill.state}</p>
                 <p className="text-sm text-gray-600 text-center"><strong>Bill Number:</strong> {bill.bill_number}</p>
