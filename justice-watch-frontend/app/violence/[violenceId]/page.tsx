@@ -40,6 +40,16 @@ const ScorecardLink = ({ city }: { city: string }) => (
   </Link>
 );
 
+const LegiLink = ({ city }: { city: string }) => (
+  <Link href={`/legislation`} passHref>
+    <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded inline-flex items-center mt-2">
+      <FaClipboardList className="mr-2" />
+      <span>View Related Legislation</span>
+    </button>
+  </Link>
+);
+
+
 export default function ViolenceInstancePage({ params }: ViolencePageProps) {
   const { violenceId } = params;
 
@@ -111,6 +121,9 @@ export default function ViolenceInstancePage({ params }: ViolencePageProps) {
         </div>
         <div className="mt-2">
           <ScorecardLink city={instance.city} />
+        </div>
+        <div className="mt-2">
+          <LegiLink city={instance.city} />
         </div>
       </div>
       <div className="mt-6">
