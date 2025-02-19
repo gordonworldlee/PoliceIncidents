@@ -24,7 +24,7 @@ export default function ViolenceModelPage() {
       cause: "Gun", 
       date: "1/31/25",
       agency: "Farmington Police Department",
-      image: "https://dallaspolice.net/PublishingImages/badge-dpd.png"
+      image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png"
     },
     { 
       id: "incident2", 
@@ -34,7 +34,7 @@ export default function ViolenceModelPage() {
       cause: "Taser", 
       date: "2/15/25",
       agency: "Volusia County Sheriff's Office",
-      image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png" 
+      image: "https://dallaspolice.net/PublishingImages/badge-dpd.png" 
     },
     { 
       id: "incident3", 
@@ -62,7 +62,7 @@ export default function ViolenceModelPage() {
                   <img 
                     src={incident.image} 
                     alt={`${incident.agency} logo`} 
-                    className="w-16 h-16 object-contain mr-4"
+                    className="w-16 h-16 mr-4"
                   />
                   <h2 className="text-lg font-semibold text-blue-600">{incident.city}, {incident.state}</h2>
                 </div>
