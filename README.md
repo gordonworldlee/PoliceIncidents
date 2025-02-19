@@ -17,11 +17,11 @@ Website Link:
 Phase Leader: Gordon Lee
   - Organized team meetings and organized tasks for each member.
 
-- Gordon Lee - 5 Hours
-- Gabriel Keller - 5 Hours
-- Andres Osornio - 5 Hours
-- Hari Shankar - 5 Hours
-- Long Phan - 5 Hours
+- Gordon Lee - est: 5 Hours, actual 3 hours
+- Gabriel Keller - est: 5 Hours, actual 3 hours
+- Andres Osornio - est: 5 Hours, actual 3 hours
+- Hari Shankar - est: 5 Hours, actual 3 hours
+- Long Phan - est: 5 Hours, actual 3 hours
 
 
 
