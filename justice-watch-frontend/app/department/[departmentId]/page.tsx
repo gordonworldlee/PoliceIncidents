@@ -1,15 +1,20 @@
 import Link from "next/link";
 
-interface DepartmentInstance {
+interface DetailedDepartmentInstance {
   agency_name: string;
+  agency_type: string;
   location_name: string;
   state: string;
+  ori: string
   latitude: number;
   longtitude: number;
   total_population: number;
+  calc_police_funding_score: number;
+  use_of_force_reported: number;
   calc_police_violence_score: number;
   police_shooting_avg: number;
-  calc_overall_score: number;
+  calc_police_accountability_score: number;
+  overall_score: number;
 }
 
 interface DepartmentPageProps {
@@ -21,39 +26,54 @@ interface DepartmentPageProps {
   export default function DepartmentPage({ params }: DepartmentPageProps) {
     const { departmentId } = params;
 
-    const departmentInstances: Record<string, DepartmentInstance> = {
+    const departmentInstances: Record<string, DetailedDepartmentInstance> = {
       dallas: {
         agency_name: "dallas",
+        agency_type: "Police Department",
         location_name: "dallas",
         state: "TEXAS",
+        ori: "TXDPD0000",
         latitude: 32.76778,
         longtitude: -96.79468,
         total_population: 1278608,
+        calc_police_funding_score: 38,
+        use_of_force_reported: 268,
         calc_police_violence_score: 48,
         police_shooting_avg: 4.3,
-        calc_overall_score: 46
+        calc_police_accountability_score: 49,
+        overall_score: 46
       },
       houston: {
         agency_name: "houston",
+        agency_type: "Police Department",
         location_name: "houston",
         state: "TEXAS",
+        ori: "TXHPD0000",
         latitude: 29.96826,
         longtitude: -95.36137,
         total_population: 2297580,
+        calc_police_funding_score: 52,
+        use_of_force_reported: 229,
         calc_police_violence_score: 42,
-        police_shooting_avg: 3.8,
-        calc_overall_score: 47
+        police_shooting_avg: 3.2,
+        calc_police_accountability_score: 45,
+        overall_score: 47
       },
       austin: {
         agency_name: "austin",
+        agency_type: "Police Department",
         location_name: "austin",
         state: "TEXAS",
+        ori: "TX2270100",
         latitude: 30.26993,
         longtitude: -97.74315,
         total_population: 943059,
+        calc_police_funding_score: 41,
+        use_of_force_reported: 301,
         calc_police_violence_score: 40,
         police_shooting_avg: 3.5,
-        calc_overall_score: 32
+        calc_police_accountability_score: 4,
+        overall_score: 32
       }
     }
 
@@ -65,32 +85,30 @@ interface DepartmentPageProps {
     }
 
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="max-w-2xl p-6 text-center">
-          <h1 className="text-3xl font-bold">{departmentName} Police Department</h1>
-          <br />
-          <div className="text-left space-y-6">
-            <div className="bg-gray-100 p-4 rounded-lg shadow-md">
-              <h2 className="text-xl font-semibold mb-2">Department Information</h2>
-              <p><strong>Agency Name:</strong> {departmentName}</p>
-              <p><strong>Location:</strong> {location}</p>
-              <p><strong>State:</strong> {departmentInstance.state}</p>
-              <p><strong>Total Population:</strong> {departmentInstance.total_population.toLocaleString()}</p>
-              <p><strong>Coordinates:</strong> {departmentInstance.latitude}, {departmentInstance.longtitude}</p>
-            </div>
-    
-            <div className="bg-gray-100 p-4 rounded-lg shadow-lg">
-              <h2 className="text-xl font-semibold mb-2">Scores</h2>
-              <p><strong>Police Violence Score:</strong> {departmentInstance.calc_police_violence_score}/100</p>
-              <p><strong>Overall Score:</strong> {departmentInstance.calc_overall_score}/100</p>
-            </div>
+      <div className="min-h-screen flex flex-col justify-center">
+        <h1 className="mb-8 text-center text-3xl font-bold">{departmentName} Police Department</h1>
+        <div>
+          <div className="text-left border-b-2 border-gray-300 rounded-lg shadow-md p-4">
+            <p><strong>Agency Name:</strong> {departmentName}</p>
+            <p><strong>Agency Type:</strong> {departmentInstance.agency_type}</p>
+            <p><strong>Location:</strong> {location}</p>
+            <p><strong>State:</strong> {departmentInstance.state}</p>
+            <p><strong>ORI:</strong> {departmentInstance.ori}</p>
+            <p><strong>Coordinates:</strong> {departmentInstance.latitude}, {departmentInstance.longtitude}</p>
+            <p><strong>Total Population:</strong> {departmentInstance.total_population.toLocaleString()}</p>
+            <p><strong>Police Funding Score:</strong> {departmentInstance.calc_police_funding_score}/100</p>
+            <p><strong>Use of Force Reported:</strong> {departmentInstance.use_of_force_reported}</p>
+            <p><strong>Police Violence Score:</strong> {departmentInstance.calc_police_violence_score}/100</p>
+            <p><strong>Police Shooting Average:</strong> {departmentInstance.police_shooting_avg}</p>
+            <p><strong>Police Accountability Score:</strong> {departmentInstance.calc_police_accountability_score}/100</p>
+            <p><strong>Overall Score:</strong> {departmentInstance.overall_score}/100</p>
+            <Link className="inline-block mt-4 bg-blue-500 text-white px-4 py-2 rounded-md" href="/legislation">View Legislation</Link>
           </div>
-          
-          <div className="mt-6">
+        <div className="mt-6 text-center">
             <Link className="text-blue-500 underline" href="/department">
               Back to Department List
-            </Link>
-          </div>
+          </Link>
+        </div>
         </div>
       </div>
     );
