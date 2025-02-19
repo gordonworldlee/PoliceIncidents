@@ -1,7 +1,8 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import TeamMemberCard, { TeamMember } from "./TeamMemberCard";
-import TeamMemberCardSkeleton from "./TeamMemberCardSkeleton";
+import TeamMemberCard, { TeamMember } from "@/app/components/TeamMemberCard";
+import TeamMemberCardSkeleton from "@/app/components/skeleton/TeamMemberCardSkeleton";
+import Navbar from "@/app/components/Navbar";
 import { fetchUserStats } from "../utils/gitlab";
 
 const teamMembers: Omit<TeamMember, "stats">[] = [
@@ -63,104 +64,109 @@ async function TeamMemberWithStats({
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen p-8 bg-gray-50">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8 text-center">
-          About JusticeWatch
-        </h1>
+    <div>
+      <Navbar />
+      <div className="min-h-screen p-8 bg-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-4xl font-bold mb-8 text-center">
+            About JusticeWatch
+          </h1>
 
-        <section className="mb-12">
-          <h2 className="text-2xl font-semibold mb-4">Project Overview</h2>
-          <p className="text-gray-700 mb-4">
-            JusticeWatch is a civic engagement platform that visualizes Texas
-            police brutality hotspots and tracks related legislation, misconduct
-            cases, and police department accountability.
-          </p>
-          <p className="text-gray-700">
-            Repository:{" "}
-            <a
-              href="https://gitlab.com/gjkeller/cs373-spring-2025-group-07"
-              className="text-blue-500 hover:underline"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitLab Repository
-            </a>
-          </p>
-        </section>
-
-        <section className="mb-12">
-          <h2 className="text-2xl font-semibold mb-6">Data Sources</h2>
-          <div className="space-y-4">
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="font-semibold text-lg mb-2">
-                <a
-                  href="https://mappingpoliceviolence.us/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline"
-                >
-                  Mapping Police Violence Dataset
-                </a>
-              </h3>
-              <p className="text-gray-700">
-                CSV dataset for police killings and misconduct incidents
-              </p>
-            </div>
-
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="font-semibold text-lg mb-2">
-                <a
-                  href="https://www.ncsl.org/civil-and-criminal-justice/policing-legislation-databaseas"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline"
-                >
-                  National Conference of State Legislatures (NCSL) Policing
-                  Legislation Database
-                </a>
-              </h3>
-              <p className="text-gray-700">
-                Database tracking policing-related legislation
-              </p>
-            </div>
-
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="font-semibold text-lg mb-2">
-                <a
-                  href="https://policescorecard.docs.apiary.io/#reference/scorecard/state/get-summary-for-a-single-state"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline"
-                >
-                  Police Scorecard API
-                </a>
-              </h3>
-              <p className="text-gray-700">
-                RESTful API for department performance data
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-6 text-center">Our Team</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {teamMembers.map((member) => (
-              <Suspense
-                key={member.username}
-                fallback={<TeamMemberCardSkeleton />}
+          <section className="mb-12">
+            <h2 className="text-2xl font-semibold mb-4">Project Overview</h2>
+            <p className="text-gray-700 mb-4">
+              JusticeWatch is a civic engagement platform that visualizes Texas
+              police brutality hotspots and tracks related legislation,
+              misconduct cases, and police department accountability.
+            </p>
+            <p className="text-gray-700">
+              Repository:{" "}
+              <a
+                href="https://gitlab.com/gjkeller/cs373-spring-2025-group-07"
+                className="text-blue-500 hover:underline"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <TeamMemberWithStats member={member} />
-              </Suspense>
-            ))}
-          </div>
-        </section>
+                GitLab Repository
+              </a>
+            </p>
+          </section>
 
-        <div className="text-center mt-8">
-          <Link className="text-blue-500 hover:underline" href="/">
-            Back to Home
-          </Link>
+          <section className="mb-12">
+            <h2 className="text-2xl font-semibold mb-6">Data Sources</h2>
+            <div className="space-y-4">
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="font-semibold text-lg mb-2">
+                  <a
+                    href="https://mappingpoliceviolence.us/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline"
+                  >
+                    Mapping Police Violence Dataset
+                  </a>
+                </h3>
+                <p className="text-gray-700">
+                  CSV dataset for police killings and misconduct incidents
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="font-semibold text-lg mb-2">
+                  <a
+                    href="https://www.ncsl.org/civil-and-criminal-justice/policing-legislation-databaseas"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline"
+                  >
+                    National Conference of State Legislatures (NCSL) Policing
+                    Legislation Database
+                  </a>
+                </h3>
+                <p className="text-gray-700">
+                  Database tracking policing-related legislation
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="font-semibold text-lg mb-2">
+                  <a
+                    href="https://policescorecard.docs.apiary.io/#reference/scorecard/state/get-summary-for-a-single-state"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline"
+                  >
+                    Police Scorecard API
+                  </a>
+                </h3>
+                <p className="text-gray-700">
+                  RESTful API for department performance data
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-semibold mb-6 text-center">
+              Our Team
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {teamMembers.map((member) => (
+                <Suspense
+                  key={member.username}
+                  fallback={<TeamMemberCardSkeleton />}
+                >
+                  <TeamMemberWithStats member={member} />
+                </Suspense>
+              ))}
+            </div>
+          </section>
+
+          <div className="text-center mt-8">
+            <Link className="text-blue-500 hover:underline" href="/">
+              Back to Home
+            </Link>
+          </div>
         </div>
       </div>
     </div>
