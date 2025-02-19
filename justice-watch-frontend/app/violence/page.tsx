@@ -11,6 +11,7 @@ interface ViolenceInstance {
   cause: string;
   date: string;
   agency: string;
+  image: string;
 }
 
 export default function ViolenceModelPage() {
@@ -22,7 +23,8 @@ export default function ViolenceModelPage() {
       encounter_type: "Domestic Disturbance", 
       cause: "Gun", 
       date: "1/31/25",
-      agency: "Farmington Police Department" 
+      agency: "Farmington Police Department",
+      image: "https://dallaspolice.net/PublishingImages/badge-dpd.png"
     },
     { 
       id: "incident2", 
@@ -31,7 +33,8 @@ export default function ViolenceModelPage() {
       encounter_type: "Mental Health/Welfare Check", 
       cause: "Taser", 
       date: "2/15/25",
-      agency: "Volusia County Sheriff's Office" 
+      agency: "Volusia County Sheriff's Office",
+      image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png" 
     },
     { 
       id: "incident3", 
@@ -40,7 +43,8 @@ export default function ViolenceModelPage() {
       encounter_type: "Violent Crime", 
       cause: "Aphyxsiation", 
       date: "3/1/25",
-      agency: "Douglas County Sheriff's Office" 
+      agency: "Douglas County Sheriff's Office",
+      image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png"
     },
   ];
 
@@ -51,17 +55,24 @@ export default function ViolenceModelPage() {
         <div className="text-center">
           <h1 className="text-3xl font-bold mb-6">Violence Model Page</h1>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {incidents.map((incident) => (
-              <Link key={incident.id} href={`/violence/${incident.id}`} className="block">
-                <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                  <h2 className="text-lg font-semibold text-blue-600 mb-2">{incident.city}, {incident.state}</h2>
-                  <p className="text-sm text-gray-600"><strong>Type:</strong> {incident.agency}</p>
-                  <p className="text-sm text-gray-600"><strong>Type:</strong> {incident.encounter_type}</p>
-                  <p className="text-sm text-gray-600"><strong>Cause:</strong> {incident.cause}</p>
-                  <p className="text-sm text-gray-600"><strong>Date:</strong> {incident.date}</p>
+          {incidents.map((incident) => (
+            <Link key={incident.id} href={`/violence/${incident.id}`} className="block">
+              <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                <div className="flex items-center mb-4">
+                  <img 
+                    src={incident.image} 
+                    alt={`${incident.agency} logo`} 
+                    className="w-16 h-16 object-contain mr-4"
+                  />
+                  <h2 className="text-lg font-semibold text-blue-600">{incident.city}, {incident.state}</h2>
                 </div>
-              </Link>
-            ))}
+                <p className="text-sm text-gray-600"><strong>Agency:</strong> {incident.agency}</p>
+                <p className="text-sm text-gray-600"><strong>Type:</strong> {incident.encounter_type}</p>
+                <p className="text-sm text-gray-600"><strong>Cause:</strong> {incident.cause}</p>
+                <p className="text-sm text-gray-600"><strong>Date:</strong> {incident.date}</p>
+              </div>
+            </Link>
+          ))}
           </div>
           <div className="mt-8">
             <Link href="/" className="text-blue-500 hover:underline">
