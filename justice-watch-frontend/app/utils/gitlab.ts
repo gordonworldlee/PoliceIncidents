@@ -49,10 +49,10 @@ async function fetchGitLabApi<T>(url: string): Promise<GitLabApiResponse<T>> {
 
     const response = await fetch(url, {
       headers,
-      // next: {
-      //   revalidate: 900, // Cache for 15 minutes
-      //   tags: ["gitlab-stats"], // Add cache tag for manual revalidation if needed
-      // },
+      next: {
+        revalidate: 900, // Cache for 15 minutes
+        tags: ["gitlab-stats"], // Add cache tag for manual revalidation if needed
+      },
     });
 
     if (!response.ok) {
