@@ -71,7 +71,6 @@ export default function Home() {
       {/* Footer Links */}
       <div className="max-w-3xl mx-auto mt-16 text-left px-4 py-8">
         <Link className="block text-lg font-semibold mb-2" href="/department/austin">POLICE SCORECARD FOR AUSTIN, TX &gt;</Link>
-        <Link className="block text-lg font-semibold" href="/about">WHO WE ARE &gt;</Link>
       </div>
     </div>
   );
