@@ -1,4 +1,8 @@
 import Link from "next/link";
+import Navbar from "../../components/Navbar";
+import { FaNewspaper, FaClipboardList } from "react-icons/fa";
+
+
 
 interface DetailedDepartmentInstance {
   agency_name: string;
@@ -15,6 +19,7 @@ interface DetailedDepartmentInstance {
   police_shooting_avg: number;
   calc_police_accountability_score: number;
   overall_score: number;
+  incident_id: string;
 }
 
 interface DepartmentPageProps {
@@ -41,7 +46,8 @@ interface DepartmentPageProps {
         calc_police_violence_score: 48,
         police_shooting_avg: 4.3,
         calc_police_accountability_score: 49,
-        overall_score: 46
+        overall_score: 46,
+        incident_id: "incident3"
       },
       houston: {
         agency_name: "houston",
@@ -57,7 +63,8 @@ interface DepartmentPageProps {
         calc_police_violence_score: 42,
         police_shooting_avg: 3.2,
         calc_police_accountability_score: 45,
-        overall_score: 47
+        overall_score: 47,
+        incident_id: "incident1"
       },
       austin: {
         agency_name: "austin",
@@ -73,7 +80,8 @@ interface DepartmentPageProps {
         calc_police_violence_score: 40,
         police_shooting_avg: 3.5,
         calc_police_accountability_score: 4,
-        overall_score: 32
+        overall_score: 32,
+        incident_id: "incident2"
       }
     }
 
@@ -85,10 +93,12 @@ interface DepartmentPageProps {
     }
 
     return (
-      <div className="min-h-screen flex flex-col justify-center">
+      <div>
+      <Navbar />
+      <div className="min-h-screen flex flex-col justify-center bg-gray-100">
         <h1 className="mb-8 text-center text-3xl font-bold">{departmentName} Police Department</h1>
         <div>
-          <div className="text-left border-b-2 border-gray-300 rounded-lg shadow-md p-4">
+          <div className="text-left border-b-2 border-gray-300 rounded-lg shadow-md p-4 bg-white">
             <p><strong>Agency Name:</strong> {departmentName}</p>
             <p><strong>Agency Type:</strong> {departmentInstance.agency_type}</p>
             <p><strong>Location:</strong> {location}</p>
@@ -102,7 +112,16 @@ interface DepartmentPageProps {
             <p><strong>Police Shooting Average:</strong> {departmentInstance.police_shooting_avg}</p>
             <p><strong>Police Accountability Score:</strong> {departmentInstance.calc_police_accountability_score}/100</p>
             <p><strong>Overall Score:</strong> {departmentInstance.overall_score}/100</p>
-            <Link className="inline-block mt-4 bg-blue-500 text-white px-4 py-2 rounded-md" href="/legislation">View Legislation</Link>
+            <div>
+              <Link className="inline-block mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 hover:shadow-lg" href="/legislation">
+              <FaClipboardList className="mr-2 mb-1 inline-block" />View Legislation
+              </Link>
+            </div>
+            <div>
+            <Link className="inline-block mt-4 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 hover:shadow-lg" href={`/violence/${departmentInstance.incident_id}`}>
+            <FaNewspaper className="mr-2 mb-1 inline-block" />View Incidents
+            </Link>
+            </div>
           </div>
         <div className="mt-6 text-center">
             <Link className="text-blue-500 underline" href="/department">
@@ -110,6 +129,7 @@ interface DepartmentPageProps {
           </Link>
         </div>
         </div>
+      </div>
       </div>
     );
   }
