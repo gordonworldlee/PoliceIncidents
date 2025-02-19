@@ -1,6 +1,7 @@
 // app/legislation/[legislationId]/page.tsx
 import { getBillContent, obtainSingleBill } from "@/lib/fetch_legislative_data";
 import Link from "next/link";
+import Navbar from "../../components/Navbar";
 
 interface LegislationInstancePageProps {
   params: {
@@ -30,7 +31,10 @@ export default async function LegislationInstancePage({ params }: LegislationIns
   const billContent = await getBillContent(billData.texts[0].state_link);  // Fetch bill content
 
   return (
-    <div className="p-8">
+    <div>
+      <Navbar />
+      <div className="p-8">
+        
       <h1 className="text-3xl font-bold">{billData.title}</h1>
       <br />
       <p className="text-xl font-bold">
@@ -65,6 +69,7 @@ export default async function LegislationInstancePage({ params }: LegislationIns
             Back to the Legislation Model Page
           </Link>
         </div>
+      </div>
     </div>
   );
 }
