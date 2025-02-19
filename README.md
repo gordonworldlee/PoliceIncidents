@@ -8,6 +8,25 @@
 - Hari Shankar / @harishankar5
 - Long Phan / @longphan084
 
+## Phase 1:
+
+API Design: https://documenter.getpostman.com/view/42447157/2sAYdZtYvV 
+Website Link: 
+Phase Leader: Gordon Lee
+  - Organized team meetings and organized tasks for each member.
+
+- Gordon Lee - 5 Hours
+- Gabriel Keller - 5 Hours
+- Andres Osornio - 5 Hours
+- Hari Shankar - 5 Hours
+- Long Phan - 5 Hours
+
+
+
+
+
+
+
 ## Project Proposal
 
 JusticeWatch is a civic engagement platform that visualizes Texas police brutality hotspots and tracks related legislation, misconduct cases, and police department accountability. Users can explore incidents, legislation, and department scorecards on an interactive map. It guides users to explore all of these across different large and small Texas cities to learn more about how police brutality is present and being addressed in their state.
