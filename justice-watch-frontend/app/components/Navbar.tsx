@@ -37,7 +37,7 @@ export default function Navbar() {
           <Link className="text-black font-medium" href="/department">AGENCIES</Link>
           <Link className="text-black font-medium" href="/violence">INCIDENTS</Link>
           <Link className="text-black font-medium" href="/legislation">LEGISLATION</Link>
-          <Link className="text-black font-medium" href="/about">WHO WE ARE</Link>
+          <Link className="text-black font-medium" href="/about">ABOUT US</Link>
         </div>
       </div>
 
@@ -47,7 +47,7 @@ export default function Navbar() {
           <Link className="block text-black font-medium" href="/department">AGENCIES</Link>
           <Link className="block text-black font-medium" href="/violence">INCIDENTS</Link>
           <Link className="block text-black font-medium" href="/legislation">LEGISLATION</Link>
-          <Link className="block text-black font-medium" href="/about">WHO WE ARE</Link>
+          <Link className="block text-black font-medium" href="/about">ABOUT US</Link>
         </div>
       )}
     </div>
