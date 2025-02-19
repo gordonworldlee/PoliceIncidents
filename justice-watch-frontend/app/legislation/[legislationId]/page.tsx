@@ -22,19 +22,68 @@ const party_lookup = {
   N: "Nonpartisan",
 };
 
+interface ViolenceInstance {
+  id: string;
+  city: string;
+  state: string;
+  encounter_type: string;
+  cause: string;
+  date: string;
+  agency: string;
+  image: string;
+}
+
+// This is a mock data structure. In a real application, you'd fetch this data from an API or database
+const incidents: ViolenceInstance[] = [
+  {
+    id: "incident1",
+    city: "Houston",
+    state: "TX",
+    encounter_type: "Domestic Disturbance",
+    cause: "Gun",
+    date: "1/31/25",
+    agency: "Farmington Police Department",
+    image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png",
+  },
+  {
+    id: "incident2",
+    city: "Austin",
+    state: "TX",
+    encounter_type: "Mental Health/Welfare Check",
+    cause: "Taser",
+    date: "2/15/25",
+    agency: "Volusia County Sheriff's Office",
+    image: "https://dallaspolice.net/PublishingImages/badge-dpd.png",
+  },
+  {
+    id: "incident3",
+    city: "Dallas",
+    state: "TX",
+    encounter_type: "Violent Crime",
+    cause: "Aphyxsiation",
+    date: "3/1/25",
+    agency: "Douglas County Sheriff's Office",
+    image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png",
+  },
+];
+
 export default async function LegislationInstancePage({
   params,
 }: LegislationInstancePageProps) {
   const { legislationId } = await params;
   const billData = await obtainSingleBill(parseInt(legislationId));
-  const billContent = await getBillContent(billData.texts[0].state_link);
-  console.log(billContent);
-
   return (
     <div>
       <Navbar />
       <div className="p-8">
-        <h1 className="text-3xl font-bold">{billData.title}</h1>
+      <div className="flex items-center space-x-4">
+    <img
+      src="/texas-state-outline.png"
+      alt="Outline of Texas State"
+      className="w-16 h-16"
+    />
+    <h1 className="text-3xl font-bold">{billData.title}</h1>
+  </div>
         <br />
         <p className="text-xl font-bold">
           <span className="text-red-500"> {billData.state}</span> |{" "}
@@ -72,9 +121,51 @@ export default async function LegislationInstancePage({
         </ol>
         <br />
         <h2 className="text-xl font-bold underline">Relevant Links</h2>
-        <a href={billData.state_link} className="text-blue-500 underline">
-          {billData.state_link}
-        </a>
+        <p>
+          <a href={billData.state_link} className="text-blue-500 underline">
+            {billData.state_link}
+          </a>
+        </p>
+
+        <br />
+        <h2 className="text-xl font-bold underline">Relevant Instances of Violence</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {incidents.map((incident) => (
+              <Link
+                key={incident.id}
+                href={`/violence/${incident.id}`}
+                className="block"
+              >
+                <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                  <div className="flex items-center mb-4">
+                    <img
+                      width={64}
+                      height={64}
+                      src={incident.image}
+                      alt={`${incident.agency} logo`}
+                      className="w-16 h-16 mr-4"
+                    />
+                    <h2 className="text-lg font-semibold text-blue-600">
+                      {incident.city}, {incident.state}
+                    </h2>
+                  </div>
+                  <p className="text-sm text-gray-600">
+                    <strong>Agency:</strong> {incident.agency}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    <strong>Type:</strong> {incident.encounter_type}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    <strong>Cause:</strong> {incident.cause}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    <strong>Date:</strong> {incident.date}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+
 
         <div className="mt-8">
           <Link href="/legislation" className="text-blue-500 hover:underline">
