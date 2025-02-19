@@ -14,13 +14,12 @@ interface ViolenceInstance {
   date: string;
   description: string;
   news: string;
-  
 }
 
 interface ViolencePageProps {
-  params: {
+  params: Promise<{
     violenceId: string;
-  };
+  }>;
 }
 
 const NewsLink = ({ url }: { url: string }) => (
@@ -42,7 +41,7 @@ const ScorecardLink = ({ city }: { city: string }) => (
 );
 
 const LegiLink = ({ city }: { city: string }) => (
-  <Link href={`/legislation`} passHref>
+  <Link href={`/legislation/${city.toLowerCase()}`} passHref>
     <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded inline-flex items-center mt-2">
       <FaClipboardList className="mr-2" />
       <span>View Related Legislation</span>
@@ -50,9 +49,10 @@ const LegiLink = ({ city }: { city: string }) => (
   </Link>
 );
 
-
-export default function ViolenceInstancePage({ params }: ViolencePageProps) {
-  const { violenceId } = params;
+export default async function ViolenceInstancePage({
+  params,
+}: ViolencePageProps) {
+  const { violenceId } = await params;
 
   // This is a mock data structure. In a real application, you'd fetch this data from an API or database
   const violenceInstances: Record<string, ViolenceInstance> = {
@@ -66,8 +66,9 @@ export default function ViolenceInstancePage({ params }: ViolencePageProps) {
       agency_responsible: "Houston Police Department",
       cause: "Gun",
       date: "1/31/25",
-      description: "Officers investigating a separate case on West Broadway were diverted to a reported shooting near the MTS trolley platform. According to police, Officer Daniel Gold, a two-year veteran of the San Diego Police Department assigned to Central Division, encountered Wilson near Kettner Boulevard and the Santa Fe Depot. Officer Gold shot and killed the teen.",
-      news: "https://vtdigger.org/2025/01/24/federal-prosecutors-file-charges-in-probe-of-fatal-shooting-of-border-patrol-agent-in-vermont/"
+      description:
+        "Officers investigating a separate case on West Broadway were diverted to a reported shooting near the MTS trolley platform. According to police, Officer Daniel Gold, a two-year veteran of the San Diego Police Department assigned to Central Division, encountered Wilson near Kettner Boulevard and the Santa Fe Depot. Officer Gold shot and killed the teen.",
+      news: "https://vtdigger.org/2025/01/24/federal-prosecutors-file-charges-in-probe-of-fatal-shooting-of-border-patrol-agent-in-vermont/",
     },
     incident2: {
       id: "incident2",
@@ -79,8 +80,9 @@ export default function ViolenceInstancePage({ params }: ViolencePageProps) {
       agency_responsible: "Austin Police Department",
       cause: "Taser",
       date: "2/15/25",
-      description: "Atchison Police Department responded to a call about a person with a gun and a second call of a subject breaking into an apartment. As officers arrived at 508 N 9th St. in Atchison, an officer exited his vehicle and shots were fired at him, striking his police vehicle multiple times. The officer was not struck. The man, identified as Bryson McCray, 36, of St. Joseph, Mo., then fled back into a residence. Preliminary information indicates that at around 2:30 a.m., an attempt was made to rescue the female hostage. During the rescue attempt, McCray and the hostage were separated momentarily, and a KHP trooper fired at McCray striking him.",
-      news: "https://www.fox8live.com/2025/01/18/father-kills-wife-shoots-3-children-before-being-killed-by-jpso-deputies-river-ridge/"
+      description:
+        "Atchison Police Department responded to a call about a person with a gun and a second call of a subject breaking into an apartment. As officers arrived at 508 N 9th St. in Atchison, an officer exited his vehicle and shots were fired at him, striking his police vehicle multiple times. The officer was not struck. The man, identified as Bryson McCray, 36, of St. Joseph, Mo., then fled back into a residence. Preliminary information indicates that at around 2:30 a.m., an attempt was made to rescue the female hostage. During the rescue attempt, McCray and the hostage were separated momentarily, and a KHP trooper fired at McCray striking him.",
+      news: "https://www.fox8live.com/2025/01/18/father-kills-wife-shoots-3-children-before-being-killed-by-jpso-deputies-river-ridge/",
     },
     incident3: {
       id: "incident3",
@@ -92,9 +94,10 @@ export default function ViolenceInstancePage({ params }: ViolencePageProps) {
       agency_responsible: "Dallas Police Department",
       cause: "Aphyxsiation",
       date: "3/1/25",
-      description: "Deputies shot and killed a man who had allegedly killed his father, after a standoff following a welfare check.",
-      news: "https://www.fox10phoenix.com/news/phoenix-police-scene-officer-involved-shooting-laveen"
-    }
+      description:
+        "Deputies shot and killed a man who had allegedly killed his father, after a standoff following a welfare check.",
+      news: "https://www.fox10phoenix.com/news/phoenix-police-scene-officer-involved-shooting-laveen",
+    },
   };
 
   const instance = violenceInstances[violenceId];
@@ -107,35 +110,56 @@ export default function ViolenceInstancePage({ params }: ViolencePageProps) {
     <div>
       <Navbar />
       <div className="flex items-center justify-center min-h-screen">
-    <div className="text-center">
-      <h1 className="text-3xl font-bold">Violence Instance Details</h1>
-      <div className="mt-6 text-left bg-white shadow-md rounded-lg p-6">
-        <p><strong>City:</strong> {instance.city}</p>
-        <p><strong>State:</strong> {instance.state}</p>
-        <p><strong>Address:</strong> {instance.address}</p>
-        <p><strong>ID:</strong> {instance.ori}</p>
-        <p><strong>Encounter Type:</strong> {instance.encounter_type}</p>
-        <p><strong>Agency Responsible:</strong> {instance.agency_responsible}</p>
-        <p><strong>Cause of Death:</strong> {instance.cause}</p>
-        <p><strong>Date:</strong> {instance.date}</p>
-        <p><strong>Description:</strong> {instance.description}</p>
-        <div className="mt-4">
-          <NewsLink url={instance.news} />
+        <div className="text-center">
+          <h1 className="text-3xl font-bold">Violence Instance Details</h1>
+          <div className="mt-6 text-left bg-white shadow-md rounded-lg p-6">
+            <p>
+              <strong>City:</strong> {instance.city}
+            </p>
+            <p>
+              <strong>State:</strong> {instance.state}
+            </p>
+            <p>
+              <strong>Address:</strong> {instance.address}
+            </p>
+            <p>
+              <strong>ID:</strong> {instance.ori}
+            </p>
+            <p>
+              <strong>Encounter Type:</strong> {instance.encounter_type}
+            </p>
+            <p>
+              <strong>Agency Responsible:</strong> {instance.agency_responsible}
+            </p>
+            <p>
+              <strong>Cause of Death:</strong> {instance.cause}
+            </p>
+            <p>
+              <strong>Date:</strong> {instance.date}
+            </p>
+            <p>
+              <strong>Description:</strong> {instance.description}
+            </p>
+            <div className="mt-4">
+              <NewsLink url={instance.news} />
+            </div>
+            <div className="mt-2">
+              <ScorecardLink city={instance.city} />
+            </div>
+            <div className="mt-2">
+              <LegiLink city={instance.city} />
+            </div>
+          </div>
+          <div className="mt-6">
+            <Link
+              className="text-blue-500 hover:text-blue-700 underline"
+              href="/violence"
+            >
+              Back to Violence Model Page
+            </Link>
+          </div>
         </div>
-        <div className="mt-2">
-          <ScorecardLink city={instance.city} />
-        </div>
-        <div className="mt-2">
-          <LegiLink city={instance.city} />
-        </div>
-      </div>
-      <div className="mt-6">
-        <Link className="text-blue-500 hover:text-blue-700 underline" href="/violence">
-          Back to Violence Model Page
-        </Link>
       </div>
     </div>
-  </div>
-  </div>
   );
 }

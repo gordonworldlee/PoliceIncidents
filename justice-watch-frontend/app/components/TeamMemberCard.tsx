@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { GitLabStats } from "@/app/utils/gitlab";
-import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 export interface TeamMember {
