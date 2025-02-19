@@ -22,6 +22,9 @@ export default function Navbar() {
         <Link className="text-black font-medium" href="/legislation">
           LEGISLATION
         </Link>
+        <Link className="text-black font-medium" href="/about">
+          ABOUT
+        </Link>
       </div>
     </div>
   );
