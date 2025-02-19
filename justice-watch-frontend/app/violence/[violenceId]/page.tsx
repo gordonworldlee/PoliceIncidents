@@ -3,6 +3,7 @@ import { FaNewspaper, FaClipboardList } from "react-icons/fa";
 import Navbar from "../../components/Navbar";
 
 interface ViolenceInstance {
+  image: string;
   id: string;
   city: string;
   state: string;
@@ -57,6 +58,7 @@ export default async function ViolenceInstancePage({
   // This is a mock data structure. In a real application, you'd fetch this data from an API or database
   const violenceInstances: Record<string, ViolenceInstance> = {
     incident1: {
+      image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png",
       id: "incident1",
       city: "Houston",
       state: "TX",
@@ -71,6 +73,7 @@ export default async function ViolenceInstancePage({
       news: "https://vtdigger.org/2025/01/24/federal-prosecutors-file-charges-in-probe-of-fatal-shooting-of-border-patrol-agent-in-vermont/",
     },
     incident2: {
+      image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png",
       id: "incident2",
       city: "Austin",
       state: "TX",
@@ -85,6 +88,7 @@ export default async function ViolenceInstancePage({
       news: "https://www.fox8live.com/2025/01/18/father-kills-wife-shoots-3-children-before-being-killed-by-jpso-deputies-river-ridge/",
     },
     incident3: {
+      image: "https://dallaspolice.net/PublishingImages/badge-dpd.png",
       id: "incident3",
       city: "Dallas",
       state: "TX",
@@ -109,9 +113,14 @@ export default async function ViolenceInstancePage({
   return (
     <div>
       <Navbar />
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex flex-col items-center justify-center min-h-screen">
         <div className="text-center">
-          <h1 className="text-3xl font-bold">Violence Instance Details</h1>
+          <h1 className="text-3xl font-bold mb-4">Violence Instance Details</h1>
+          <img 
+            src={instance.image} 
+            alt={`${instance.agency_responsible} logo`}
+            className="w-32 h-32 mb-6 mx-auto"
+          />
           <div className="mt-6 text-left bg-white shadow-md rounded-lg p-6">
             <p>
               <strong>City:</strong> {instance.city}
