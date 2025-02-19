@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Navbar from "../components/Navbar";
 
 interface DepartmentInstance {
   agency_name: string;
@@ -71,21 +72,24 @@ export default function DepartmentModelPage() {
     }
   ]
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="text-center max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold mt-8">Department Model Page</h1>
-          <br />
-          <div className="flex flex-col md:flex-row gap-4 m-4 h-full">
-            {DepartmentInstances.map((department) => {
-              return <Card key={department.agency_name} {...department} />
-            })};
-         </div>
-          <br />
-          <p>
-            <Link className="text-blue-500 underline" href="/">
-              Link to go back to the landing page.
-            </Link>
-          </p>
+      <div className="min-h-screen bg-white text-black overflow-y-auto">
+        <Navbar />
+        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+          <div className="text-center max-w-7xl px-4 sm:px-6 lg:px-8">
+            <h1 className="text-3xl font-bold mt-8">Department Model Page</h1>
+            <br />
+            <div className="flex flex-col md:flex-row gap-4 m-4 h-full">
+              {DepartmentInstances.map((department) => {
+                return <Card key={department.agency_name} {...department} />
+              })};
+          </div>
+            <br />
+            <p>
+              <Link className="text-blue-500 underline" href="/">
+                Link to go back to the landing page.
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     );

@@ -1,17 +1,11 @@
 import Link from "next/link";
+import Navbar from "./components/Navbar";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-white text-black overflow-y-auto">
       {/* Header */}
-      <div className="bg-[#FFF4E1] py-4 px-6 flex justify-between items-center">
-        <div className="text-2xl font-bold text-[#D92552]">JUSTICEWATCH</div>
-        <div className="space-x-6">
-          <Link className="text-black font-medium" href="/department">AGENCIES</Link>
-          <Link className="text-black font-medium" href="/violence">INCIDENTS</Link>
-          <Link className="text-black font-medium" href="/legislation">LEGISLATION</Link>
-        </div>
-      </div>
+      <Navbar />
 
       {/* Main Content */}
       <div className="max-w-3xl mx-auto mt-16 text-left px-4">
