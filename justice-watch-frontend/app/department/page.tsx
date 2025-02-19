@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Navbar from "../components/Navbar";
-import Image from "next/image";
+// import Image from "next/image";
 
 interface DepartmentInstance {
   agency_name: string;
@@ -28,14 +28,7 @@ const Card = (DepartmentInstance: DepartmentInstance) => {
           Police Department Scorecard
         </h2>
         <div className="w-32 h-32 mb-4">
-          <Image
-            src={DepartmentInstance.department_image}
-            alt={deptName + "Police Department"}
-            width={200}
-            height={200}
-            className="w-full h-full object-contain"
-          />
-          <Image
+          <img
             src={DepartmentInstance.department_image}
             alt={deptName + "Police Department"}
             width={200}

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Navbar from "../components/Navbar";
-import Image from "next/image";
+// import Image from "next/image";
 // import { MapContainer, TileLayer, Marker } from "react-leaflet";
 // import MarkerClusterGroup from "react-leaflet-markercluster";
 
@@ -64,7 +64,7 @@ export default function ViolenceModelPage() {
               >
                 <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
                   <div className="flex items-center mb-4">
-                    <Image
+                    <img
                       width={64}
                       height={64}
                       src={incident.image}
