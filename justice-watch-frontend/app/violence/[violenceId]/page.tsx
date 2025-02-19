@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FaNewspaper, FaClipboardList } from "react-icons/fa";
+import Navbar from "../../components/Navbar";
 
 interface ViolenceInstance {
   id: string;
@@ -103,7 +104,9 @@ export default function ViolenceInstancePage({ params }: ViolencePageProps) {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div>
+      <Navbar />
+      <div className="flex items-center justify-center min-h-screen">
     <div className="text-center">
       <h1 className="text-3xl font-bold">Violence Instance Details</h1>
       <div className="mt-6 text-left bg-white shadow-md rounded-lg p-6">
@@ -132,6 +135,7 @@ export default function ViolenceInstancePage({ params }: ViolencePageProps) {
         </Link>
       </div>
     </div>
+  </div>
   </div>
   );
 }
