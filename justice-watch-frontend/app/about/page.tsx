@@ -34,7 +34,7 @@ const teamMembers: Omit<TeamMember, "stats">[] = [
     name: "Hari Shankar",
     username: "harishankar5",
     role: "Full Stack",
-    bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    bio: "Hi! I'm a sophomore in CS and contributed to both the frontend and backend of this website. Outside of academics, I enjoy reading and biking.",
     photoUrl: "/headshots/hari.jpeg",
     gitlabUrl: "https://gitlab.com/harishankar5",
   },
