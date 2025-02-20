@@ -24,6 +24,19 @@ interface ViolencePageProps {
   }>;
 }
 
+interface ScorecardLinkProps {
+  agency_name: string;
+  department_image: string;
+  location_name: string;
+  state: string;
+  latitude: number;
+  longitude: number;
+  calc_police_violence_score: number;
+  police_shooting_avg: number;
+  calc_overall_score: number;
+}
+
+
 const NewsLink = ({ url }: { url: string }) => (
   <Link href={url} target="_blank" rel="noopener noreferrer">
     <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center">
@@ -43,17 +56,7 @@ const ScorecardLink = ({
   calc_police_violence_score,
   police_shooting_avg,
   calc_overall_score,
-}: {
-  agency_name: string;
-  department_image: string;
-  location_name: string;
-  state: string;
-  latitude: number;
-  longitude: number;
-  calc_police_violence_score: number;
-  police_shooting_avg: number;
-  calc_overall_score: number;
-}) => {
+}: ScorecardLinkProps) => {
   const link = `/department/${agency_name.toLowerCase()}`;
   
   return (
@@ -166,7 +169,7 @@ export default async function ViolenceInstancePage({
     return <div>Instance not found</div>;
   }
 
-  const departmentDetails: Record<string, DepartmentInstance> = {
+  const departmentDetails: Record<string, ScorecardLinkProps> = {
     "Houston Police Department": {
       agency_name: "Houston",
       location_name: "Houston",
