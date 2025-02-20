@@ -42,7 +42,7 @@ const teamMembers: Omit<TeamMember, "stats">[] = [
     name: "Long Phan",
     username: "longphan084",
     role: "Frontend",
-    bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    bio: "Hi, I'm a junior in CS and I mainly worked on the frontend of the website. Outside of school, I enjoy going to gym and watching basketball.",
     photoUrl: "/headshots/long.jpeg",
     gitlabUrl: "https://gitlab.com/longphan084",
   },
