@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  app:
+    image: registry.gitlab.com/gjkeller/cs373-spring-2025-group-07:latest
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.local
+      # Add other environment variables as needed
