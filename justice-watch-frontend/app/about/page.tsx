@@ -90,6 +90,17 @@ export default function AboutPage() {
                 GitLab Repository
               </a>
             </p>
+            <p className="text-gray-700">
+              Repository:{" "}
+              <a
+                href="https://documenter.getpostman.com/view/42447157/2sAYdZtYvV#intro07"
+                className="text-blue-500 hover:underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                API Documentation (Postman)
+              </a>
+            </p>
           </section>
 
           <section className="mb-12">
