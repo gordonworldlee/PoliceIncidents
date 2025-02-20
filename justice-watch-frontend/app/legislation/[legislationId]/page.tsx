@@ -1,6 +1,8 @@
 import { getBillContent, obtainSingleBill } from "@/lib/fetch_legislative_data";
 import Link from "next/link";
 import Navbar from "../../components/Navbar";
+import { DepartmentInstances } from "@/public/data/DepartmentData";
+import { DepartmentCard } from "@/components/DepartmentCard";
 
 interface LegislationInstancePageProps {
   params: Promise<{
@@ -129,7 +131,7 @@ export default async function LegislationInstancePage({
 
         <br />
         <h2 className="text-xl font-bold underline">Relevant Instances of Violence</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
             {incidents.map((incident) => (
               <Link
                 key={incident.id}
@@ -164,6 +166,16 @@ export default async function LegislationInstancePage({
                 </div>
               </Link>
             ))}
+          </div>
+
+          <br />
+          <h2 className="text-xl font-bold underline">Relevant Departments</h2>
+
+          <div className="flex flex-col md:flex-row gap-4  mt-2 h-full">
+            {DepartmentInstances.map((department) => {
+              return <DepartmentCard key={department.agency_name} {...department} />;
+            })}
+            ;
           </div>
 
 
