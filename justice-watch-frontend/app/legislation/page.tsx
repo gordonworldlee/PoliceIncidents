@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Navbar from "../components/Navbar";
 import { obtainBillList, obtainSingleBill } from "@/lib/fetch_legislative_data";
-import Image from "next/image";
 
 export default async function LegislationModelPage() {
   // Wait for all bills to be fetched using Promise.all

@@ -1,4 +1,4 @@
-import { getBillContent, obtainSingleBill } from "@/lib/fetch_legislative_data";
+import { obtainSingleBill } from "@/lib/fetch_legislative_data";
 import Link from "next/link";
 import Navbar from "../../components/Navbar";
 import { DepartmentInstances } from "@/public/data/DepartmentData";

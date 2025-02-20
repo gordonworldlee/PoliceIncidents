@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Navbar from "../../components/Navbar";
-import { FaNewspaper, FaClipboardList } from "react-icons/fa";
-import { getBillContent, obtainSingleBill } from "@/lib/fetch_legislative_data";
+import { FaNewspaper } from "react-icons/fa";
+import { obtainSingleBill } from "@/lib/fetch_legislative_data";
 
 
 interface DetailedDepartmentInstance {
@@ -74,7 +74,7 @@ type DepartmentPageProps = {
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-const RelatedIncidents = ({ city, state, incident_id }: { city: string, state: string, incident_id: string }) => {
+const RelatedIncidents = ({ incident_id }: { city: string, state: string, incident_id: string }) => {
   const incident = incidents.find(inc => inc.id === incident_id);
   if (!incident) {
     return <div>Incident not found</div>
@@ -115,7 +115,7 @@ const RelatedIncidents = ({ city, state, incident_id }: { city: string, state: s
   )
 }
 
-const RelatedLegislation = async ({state, bill_id}: {state: string, bill_id: string}) => {
+const RelatedLegislation = async ({ bill_id}: {state: string, bill_id: string}) => {
   const billData = await obtainSingleBill(parseInt(bill_id));
   
   return (
