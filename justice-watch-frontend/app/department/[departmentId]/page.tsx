@@ -74,7 +74,7 @@ type DepartmentPageProps = {
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-const RelatedIncidents = ({ incident_id }: { city: string, state: string, incident_id: string }) => {
+const RelatedIncidents = ({incident_id }: { incident_id: string }) => {
   const incident = incidents.find(inc => inc.id === incident_id);
   if (!incident) {
     return <div>Incident not found</div>
@@ -115,7 +115,7 @@ const RelatedIncidents = ({ incident_id }: { city: string, state: string, incide
   )
 }
 
-const RelatedLegislation = async ({ bill_id}: {state: string, bill_id: string}) => {
+const RelatedLegislation = async ({bill_id}: {bill_id: string}) => {
   const billData = await obtainSingleBill(parseInt(bill_id));
   
   return (
@@ -284,7 +284,7 @@ export default async function DepartmentPage({
             </div>
             <p className="mt-4 text-xl font-bold underline">View Incidents in {stateTranslation[departmentInstance.state]}</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <RelatedIncidents city={departmentName} state={departmentInstance.state} incident_id={departmentInstance.incident_id} />
+              <RelatedIncidents incident_id={departmentInstance.incident_id} />
               {Object.values(departmentInstances)
                 .filter(dept => 
                   dept.agency_name !== departmentInstance.agency_name && 
@@ -292,20 +292,14 @@ export default async function DepartmentPage({
                 )
                 .slice(0, 1)
                 .map(dept => (
-                  <RelatedIncidents 
-                    key={dept.ori}
-                    city={dept.location_name.charAt(0).toUpperCase() +
-                      dept.location_name.slice(1).toLowerCase()}
-                    state={dept.state}
-                    incident_id={dept.incident_id}
-                  />
+                  <RelatedIncidents key={dept.ori} incident_id={dept.incident_id} />
                 ))
               }
             </div>
             <p className="mt-4 text-xl font-bold underline">View Legislation from {stateTranslation[departmentInstance.state]}</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <RelatedLegislation state={departmentInstance.state} bill_id="1891028" />
-              <RelatedLegislation state={departmentInstance.state} bill_id="1890795" />
+              <RelatedLegislation bill_id="1891028" />
+              <RelatedLegislation bill_id="1890795" />
             </div>
 
           </div>
