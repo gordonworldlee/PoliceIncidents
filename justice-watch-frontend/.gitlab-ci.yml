@@ -1,0 +1,49 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  DOCKER_REGISTRY: your-registry.example.com
+  IMAGE_NAME: $DOCKER_REGISTRY/your-app-name
+  DOCKER_HOST: tcp://docker:2375
+
+# This service allows using docker-in-docker
+services:
+  - docker:dind
+
+# Build stage
+build:
+  stage: build
+  image: docker:latest
+  script:
+    - docker build -t $IMAGE_NAME:$CI_COMMIT_SHA .
+    - docker build -t $IMAGE_NAME:latest .
+  rules:
+    - if: $CI_COMMIT_BRANCH
+      exists:
+        - Dockerfile
+
+# Test stage
+test:
+  stage: test
+  image: node:18
+  script:
+    - npm install
+    - npm run test
+  rules:
+    - if: $CI_COMMIT_BRANCH
+
+# Deploy stage
+deploy:
+  stage: deploy
+  image: docker:latest
+  variables:
+    DEPLOY_SERVER: your-server.example.com
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
+    - docker push $IMAGE_NAME:$CI_COMMIT_SHA
+    - docker push $IMAGE_NAME:latest
+    # Add your deployment commands here
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
