@@ -41,11 +41,6 @@ export default async function LegislationModelPage() {
             
             ))}
           </div>
-          <div className="mt-8">
-            <Link href="/" className="text-blue-500 hover:underline">
-              Back to the landing page
-            </Link>
-          </div>
         </div>
       </div>
     </div>

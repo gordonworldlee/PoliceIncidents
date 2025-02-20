@@ -177,13 +177,6 @@ export default async function LegislationInstancePage({
             })}
             ;
           </div>
-
-
-        <div className="mt-8">
-          <Link href="/legislation" className="text-blue-500 hover:underline">
-            Back to the Legislation Model Page
-          </Link>
-        </div>
       </div>
     </div>
   );

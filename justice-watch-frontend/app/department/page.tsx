@@ -127,11 +127,6 @@ export default function DepartmentModelPage() {
             ;
           </div>
           <br />
-          <p>
-            <Link className="text-blue-500 underline" href="/">
-              Link to go back to the landing page.
-            </Link>
-          </p>
         </div>
       </div>
     </div>

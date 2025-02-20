@@ -250,14 +250,6 @@ export default async function ViolenceInstancePage({
             </div>
           </div>
         </div>
-        <div className="mt-6">
-          <Link
-            className="text-blue-500 hover:text-blue-700 underline"
-            href="/violence"
-          >
-            Back to Violence Model Page
-          </Link>
-        </div>
       </div>
     </div>
   );
