@@ -2,7 +2,6 @@ import Link from "next/link";
 import { FaNewspaper } from "react-icons/fa";
 import Navbar from "../../components/Navbar";
 import { obtainBillList, obtainSingleBill } from "@/lib/fetch_legislative_data";
-import Image from "next/image";
 
 interface ViolenceInstance {
   image: string;
