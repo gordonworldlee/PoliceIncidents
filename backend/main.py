@@ -5,7 +5,7 @@ from scrape import extractInfo
 from sqlalchemy import Table, Column, Integer, String, ForeignKey
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1234@localhost:5432/gordonlee'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:pLMcM5RpYjUHXeTGCgby@justicewatch-dev.ct8eyo2wqnhh.us-east-2.rds.amazonaws.com:5432/justicewatch-dev'
 db = SQLAlchemy()
 db.init_app(app)
 
