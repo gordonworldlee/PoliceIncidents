@@ -172,7 +172,7 @@ export default async function LegislationInstancePage({
           <h2 className="text-xl font-bold underline">Relevant Departments</h2>
 
           <div className="flex flex-col md:flex-row gap-4  mt-2 h-full">
-            {DepartmentInstances.map((department) => {
+            {Object.values(DepartmentInstances).map((department) => {
               return <DepartmentCard key={department.agency_name} {...department} />;
             })}
             ;
