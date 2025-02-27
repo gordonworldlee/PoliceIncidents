@@ -5,7 +5,7 @@ from scrape import extractInfo
 from sqlalchemy import Table, Column, Integer, String, ForeignKey
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:pLMcM5RpYjUHXeTGCgby@justicewatch-dev.ct8eyo2wqnhh.us-east-2.rds.amazonaws.com:5432/justicewatch-dev'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1234@localhost:5432/gordonlee'
 db = SQLAlchemy()
 db.init_app(app)
 
@@ -23,8 +23,12 @@ class User(db.Model):
     encounter_type = Column(String)
     county = Column(String)
     news_link = Column(String)
+    date = Column(String)
+    lat = Column(String)
+    long = Column(String)
 
-    def __init__(self, name, street_address, city, agency_responsible, image_url, cause_of_death, description, ori_identifier, encounter_type, county, news_link):
+    def __init__(self, name, street_address, city, agency_responsible, image_url, cause_of_death, description, ori_identifier, 
+                 encounter_type, county, news_link, date, lat, long):
         self.name = name
         self.street_address = street_address
         self.city = city
@@ -36,6 +40,9 @@ class User(db.Model):
         self.encounter_type = encounter_type
         self.county = county
         self.news_link = news_link
+        self.date = date
+        self.lat = lat
+        self.long = long
 
     def __repr__(self):
         return f"<User {self.name}>"
@@ -57,7 +64,10 @@ def populate_db():
                 ori_identifier=row["ORI Agency Identifier (if available)"],
                 encounter_type=row["Encounter Type"],
                 county=row["County"],
-                news_link=row["Link to news article or photo of official document"]
+                news_link=row["Link to news article or photo of official document"],
+                date = row['Date of Incident (month/day/year)'],
+                lat = row['Latitude'],
+                long = row['Longitude']
             )
             db.session.add(user)
         db.session.commit()

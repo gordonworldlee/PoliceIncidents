@@ -22,7 +22,10 @@ def init_db():
                     ori_identifier TEXT,
                     encounter_type TEXT,
                     county TEXT,
-                    news_link TEXT
+                    news_link TEXT,
+                    date TEXT,
+                    lat TEXT,
+                    long TEXT            
                 );
             """))
             session.commit()
