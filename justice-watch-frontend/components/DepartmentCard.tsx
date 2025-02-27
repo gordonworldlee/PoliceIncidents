@@ -38,7 +38,7 @@ export const DepartmentCard = (DepartmentInstance: DepartmentInstance) => {
           </p>
           <p className="text-sm text-gray-600">
             <strong>Coordinates:</strong> {DepartmentInstance.latitude},{" "}
-            {DepartmentInstance.longtitude}
+            {DepartmentInstance.longitude}
           </p>
           <p className="text-sm text-gray-600">
             <strong>Police Violence Score:</strong>{" "}
@@ -50,7 +50,7 @@ export const DepartmentCard = (DepartmentInstance: DepartmentInstance) => {
           </p>
           <p className="text-sm text-gray-600">
             <strong>Overall Score:</strong>{" "}
-            {DepartmentInstance.calc_overall_score}/100
+            {DepartmentInstance.overall_score}/100
           </p>
         </div>
       </Link>
