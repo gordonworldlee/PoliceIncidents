@@ -15,10 +15,9 @@ export default function DepartmentModelPage() {
           <h1 className="text-3xl font-bold mt-8">Department Model Page</h1>
           <br />
           <div className="flex flex-col md:flex-row gap-4 m-4 h-full">
-            {DepartmentInstances.map((department) => {
-              return <DepartmentCard key={department.agency_name} {...department} />;
-            })}
-            ;
+            {Object.values(DepartmentInstances).map((department) => {
+              return <DepartmentCard key={department.agency_name} {...department} />
+            })};
           </div>
           <br />
         </div>

@@ -2,27 +2,9 @@ import Link from "next/link";
 import Navbar from "../../components/Navbar";
 import { FaNewspaper } from "react-icons/fa";
 import { obtainSingleBill } from "@/lib/fetch_legislative_data";
-
-
-interface DetailedDepartmentInstance {
-  agency_name: string;
-  agency_type: string;
-  location_name: string;
-  state: string;
-  ori: string;
-  latitude: number;
-  longitude: number;
-  total_population: number;
-  calc_police_funding_score: number;
-  use_of_force_reported: number;
-  calc_police_violence_score: number;
-  police_shooting_avg: number;
-  calc_police_accountability_score: number;
-  overall_score: number;
-  incident_id: string;
-  dept_website: string;
-  department_image: string;
-}
+import { Map } from "@/app/components/Map";
+import { DepartmentInstance } from "@/public/data/DepartmentData";
+import { DepartmentInstances} from "@/public/data/DepartmentData";
 
 interface ViolenceInstance {
   id: string;
@@ -143,67 +125,67 @@ export default async function DepartmentPage({
 }: DepartmentPageProps) {
   const { departmentId } = await params;
   console.log(searchParams);
-  const departmentInstances: Record<string, DetailedDepartmentInstance> = {
-    dallas: {
-      agency_name: "dallas",
-      agency_type: "Police Department",
-      location_name: "dallas",
-      state: "TEXAS",
-      ori: "TXDPD0000",
-      latitude: 32.76778,
-      longitude: -96.79468,
-      total_population: 1278608,
-      calc_police_funding_score: 38,
-      use_of_force_reported: 268,
-      calc_police_violence_score: 48,
-      police_shooting_avg: 4.3,
-      calc_police_accountability_score: 49,
-      overall_score: 46,
-      incident_id: "incident3",
-      dept_website: "https://dallaspolice.net/home",
-      department_image: "/dallasPD.png"
-    },
-    houston: {
-      agency_name: "houston",
-      agency_type: "Police Department",
-      location_name: "houston",
-      state: "TEXAS",
-      ori: "TXHPD0000",
-      latitude: 29.96826,
-      longitude: -95.36137,
-      total_population: 2297580,
-      calc_police_funding_score: 52,
-      use_of_force_reported: 229,
-      calc_police_violence_score: 42,
-      police_shooting_avg: 3.2,
-      calc_police_accountability_score: 45,
-      overall_score: 47,
-      incident_id: "incident1",
-      dept_website: "https://www.houstontx.gov/police/",
-      department_image: "/houstonPD.png"
-    },
-    austin: {
-      agency_name: "austin",
-      agency_type: "Police Department",
-      location_name: "austin",
-      state: "TEXAS",
-      ori: "TX2270100",
-      latitude: 30.26993,
-      longitude: -97.74315,
-      total_population: 943059,
-      calc_police_funding_score: 41,
-      use_of_force_reported: 301,
-      calc_police_violence_score: 40,
-      police_shooting_avg: 3.5,
-      calc_police_accountability_score: 4,
-      overall_score: 32,
-      incident_id: "incident2",
-      dept_website: "https://www.austintexas.gov/department/police",
-      department_image: "/austinPD.jpeg"
-    },
-  };
+  // const departmentInstances: Record<string, DepartmentInstance> = {
+  //   dallas: {
+  //     agency_name: "dallas",
+  //     agency_type: "Police Department",
+  //     location_name: "dallas",
+  //     state: "TEXAS",
+  //     ori: "TXDPD0000",
+  //     latitude: 32.76778,
+  //     longitude: -96.79468,
+  //     total_population: 1278608,
+  //     calc_police_funding_score: 38,
+  //     use_of_force_reported: 268,
+  //     calc_police_violence_score: 48,
+  //     police_shooting_avg: 4.3,
+  //     calc_police_accountability_score: 49,
+  //     overall_score: 46,
+  //     incident_id: "incident3",
+  //     dept_website: "https://dallaspolice.net/home",
+  //     department_image: "/dallasPD.png"
+  //   },
+  //   houston: {
+  //     agency_name: "houston",
+  //     agency_type: "Police Department",
+  //     location_name: "houston",
+  //     state: "TEXAS",
+  //     ori: "TXHPD0000",
+  //     latitude: 29.96826,
+  //     longitude: -95.36137,
+  //     total_population: 2297580,
+  //     calc_police_funding_score: 52,
+  //     use_of_force_reported: 229,
+  //     calc_police_violence_score: 42,
+  //     police_shooting_avg: 3.2,
+  //     calc_police_accountability_score: 45,
+  //     overall_score: 47,
+  //     incident_id: "incident1",
+  //     dept_website: "https://www.houstontx.gov/police/",
+  //     department_image: "/houstonPD.png"
+  //   },
+  //   austin: {
+  //     agency_name: "austin",
+  //     agency_type: "Police Department",
+  //     location_name: "austin",
+  //     state: "TEXAS",
+  //     ori: "TX2270100",
+  //     latitude: 30.26993,
+  //     longitude: -97.74315,
+  //     total_population: 943059,
+  //     calc_police_funding_score: 41,
+  //     use_of_force_reported: 301,
+  //     calc_police_violence_score: 40,
+  //     police_shooting_avg: 3.5,
+  //     calc_police_accountability_score: 4,
+  //     overall_score: 32,
+  //     incident_id: "incident2",
+  //     dept_website: "https://www.austintexas.gov/department/police",
+  //     department_image: "/austinPD.jpeg"
+  //   },
+  // };
 
-  const departmentInstance = departmentInstances[departmentId];
+  const departmentInstance = DepartmentInstances[departmentId];
   const departmentName =
     departmentInstance.agency_name.charAt(0).toUpperCase() +
     departmentInstance.agency_name.slice(1).toLowerCase();
@@ -226,53 +208,59 @@ export default async function DepartmentPage({
         </div>
         <div>
           <div className="text-left border-b-2 border-gray-300 rounded-lg shadow-md p-4 bg-white">
-            <p>
-              <strong>Agency Name:</strong> {departmentName}
-            </p>
-            <p>
-              <strong>Agency Type:</strong> {departmentInstance.agency_type}
-            </p>
-            <p>
-              <strong>Location:</strong> {location}
-            </p>
-            <p>
-              <strong>State:</strong> {departmentInstance.state}
-            </p>
-            <p>
-              <strong>ORI:</strong> {departmentInstance.ori}
-            </p>
-            <p>
-              <strong>Coordinates:</strong> {departmentInstance.latitude},{" "}
-              {departmentInstance.longitude}
-            </p>
-            <p>
-              <strong>Total Population:</strong>{" "}
-              {departmentInstance.total_population.toLocaleString()}
-            </p>
-            <p>
-              <strong>Police Funding Score:</strong>{" "}
-              {departmentInstance.calc_police_funding_score}/100
-            </p>
-            <p>
-              <strong>Use of Force Reported:</strong>{" "}
-              {departmentInstance.use_of_force_reported}
-            </p>
-            <p>
-              <strong>Police Violence Score:</strong>{" "}
-              {departmentInstance.calc_police_violence_score}/100
-            </p>
-            <p>
-              <strong>Police Shooting Average:</strong>{" "}
-              {departmentInstance.police_shooting_avg}
-            </p>
-            <p>
-              <strong>Police Accountability Score:</strong>{" "}
-              {departmentInstance.calc_police_accountability_score}/100
-            </p>
-            <p>
-              <strong>Overall Score:</strong> {departmentInstance.overall_score}
-              /100
-            </p>
+            <div className="flex flex-row justify-between">
+              <div className="w-1/2">
+                <p>
+                  <strong>Agency Name:</strong> {departmentName}
+                </p>
+                <p>
+                  <strong>Agency Type:</strong> {departmentInstance.agency_type}
+                </p>
+                <p>
+                  <strong>Location:</strong> {location}
+                </p>
+                <p>
+                  <strong>State:</strong> {departmentInstance.state}
+                </p>
+                <p>
+                  <strong>ORI:</strong> {departmentInstance.ori}
+                </p>
+                <p>
+                  <strong>Coordinates:</strong> {departmentInstance.latitude},{" "}
+                  {departmentInstance.longitude}
+                </p>
+                <p>
+                  <strong>Total Population:</strong>{" "}
+                  {departmentInstance.total_population.toLocaleString()}
+                </p>
+                <p>
+                  <strong>Police Funding Score:</strong>{" "}
+                  {departmentInstance.calc_police_funding_score}/100
+                </p>
+                <p>
+                  <strong>Use of Force Reported:</strong>{" "}
+                  {departmentInstance.use_of_force_reported}
+                </p>
+                <p>
+                  <strong>Police Violence Score:</strong>{" "}
+                  {departmentInstance.calc_police_violence_score}/100
+                </p>
+                <p>
+                  <strong>Police Shooting Average:</strong>{" "}
+                  {departmentInstance.police_shooting_avg}
+                </p>
+                <p>
+                  <strong>Police Accountability Score:</strong>{" "}
+                  {departmentInstance.calc_police_accountability_score}/100
+                </p>
+                <p>
+                  <strong>Overall Score:</strong> {departmentInstance.overall_score}/100
+                </p>
+              </div>
+              <div className="mr-4 w-1/2">
+                  <Map department={departmentInstance}/>
+              </div>
+            </div>
             <div>
             </div>
             <div>
@@ -287,7 +275,7 @@ export default async function DepartmentPage({
             <p className="mt-4 text-xl font-bold underline">View Incidents in {stateTranslation[departmentInstance.state]}</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <RelatedIncidents incident_id={departmentInstance.incident_id} />
-              {Object.values(departmentInstances)
+              {Object.values(DepartmentInstances)
                 .filter(dept => 
                   dept.agency_name !== departmentInstance.agency_name && 
                   dept.state === departmentInstance.state
