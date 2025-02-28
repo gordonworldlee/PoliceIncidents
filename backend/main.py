@@ -70,25 +70,25 @@ class Scorecard(db.Model):
    location_name = db.Column(db.String)
    state = db.Column(db.String)
    ori_identifier = db.Column(db.String)
-   latitude = db.Column(db.Float)
-   longitude = db.Column(db.Float)
-   total_population = db.Column(db.Integer)
-   calc_police_funding_score = db.Column(db.Float)
-   calc_police_violence_score = db.Column(db.Float)
-   calc_police_accountability_score = db.Column(db.Float)
-   use_of_force_complaints_reported = db.Column(db.Integer)
-   police_shootings_2013 = db.Column(db.Integer)
-   police_shootings_2014 = db.Column(db.Integer)
-   police_shootings_2015 = db.Column(db.Integer)
-   police_shootings_2016 = db.Column(db.Integer)
-   police_shootings_2017 = db.Column(db.Integer)
-   police_shootings_2018 = db.Column(db.Integer)
-   police_shootings_2019 = db.Column(db.Integer)
-   police_shootings_2020 = db.Column(db.Integer)
-   police_shootings_2021 = db.Column(db.Integer)
-   calc_overall_score = db.Column(db.Float)
-   criminal_complaints_reported = db.Column(db.Integer)
-   civilian_complaints_reported = db.Column(db.Integer)
+   latitude = db.Column(db.String)
+   longitude = db.Column(db.String)
+   total_population = db.Column(db.String)
+   calc_police_funding_score = db.Column(db.String)
+   calc_police_violence_score = db.Column(db.String)
+   calc_police_accountability_score = db.Column(db.String)
+   use_of_force_complaints_reported = db.Column(db.String)
+   police_shootings_2013 = db.Column(db.String)
+   police_shootings_2014 = db.Column(db.String)
+   police_shootings_2015 = db.Column(db.String)
+   police_shootings_2016 = db.Column(db.String)
+   police_shootings_2017 = db.Column(db.String)
+   police_shootings_2018 = db.Column(db.String)
+   police_shootings_2019 = db.Column(db.String)
+   police_shootings_2020 = db.Column(db.String)
+   police_shootings_2021 = db.Column(db.String)
+   calc_overall_score = db.Column(db.String)
+   criminal_complaints_reported = db.Column(db.String)
+   civilian_complaints_reported = db.Column(db.String)
 
 
    def __init__(self, agency_name, agency_type, location_name, state, ori_identifier, latitude, longitude,
@@ -204,12 +204,11 @@ if __name__ == '__main__':
            populate_db()
        else:
            print("Police Incidents data already exists.")
-
-
        if Scorecard.query.count() == 0:
            populate_scorecard()
        else:
            print("Scorecard data already exists.")
 
 
+    
    app.run(debug=True)

@@ -10,6 +10,7 @@ def init_db():
    with app.app_context():
        with Session(db.engine) as session:
            session.execute(text("""
+               DROP TABLE "Police Incidents";
                CREATE TABLE IF NOT EXISTS "Police Incidents" (
                    id SERIAL PRIMARY KEY,
                    name TEXT,
@@ -34,7 +35,8 @@ def init_db():
 
 
            session.execute(text("""
-               CREATE TABLE IF NOT EXISTS "Department" (
+               DROP TABLE "scorecard";
+               CREATE TABLE IF NOT EXISTS "scorecard" (
                    id SERIAL PRIMARY KEY,
                    agency_name TEXT,
                    agency_type TEXT,

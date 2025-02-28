@@ -98,3 +98,4 @@ def extractScorecard():
 
 
    return filter_card_df
+
