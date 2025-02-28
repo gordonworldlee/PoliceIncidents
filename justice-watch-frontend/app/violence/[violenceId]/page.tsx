@@ -2,6 +2,7 @@ import Link from "next/link";
 import { FaNewspaper } from "react-icons/fa";
 import Navbar from "../../components/Navbar";
 import { obtainBillList, obtainSingleBill } from "@/lib/fetch_legislative_data";
+import { Map } from "@/app/components/Map";
 
 interface ViolenceInstance {
   image: string;
@@ -218,14 +219,21 @@ export default async function ViolenceInstancePage({
           className="w-32 h-32 mb-6 mx-auto"
         />
         <div className="mt-4 text-left space-y-2">
-          <p><strong>City:</strong> {instance.city}</p>
-          <p><strong>State:</strong> {instance.state}</p>
-          <p><strong>Address:</strong> {instance.address}</p>
-          <p><strong>ID:</strong> {instance.ori}</p>
-          <p><strong>Encounter Type:</strong> {instance.encounter_type}</p>
-          <p><strong>Agency Responsible:</strong> {instance.agency_responsible}</p>
-          <p><strong>Cause of Death:</strong> {instance.cause}</p>
-          <p><strong>Date:</strong> {instance.date}</p>
+          <div className="flex flex-row">
+            <div className="w-1/2">
+              <p><strong>City:</strong> {instance.city}</p>
+              <p><strong>State:</strong> {instance.state}</p>
+              <p><strong>Address:</strong> {instance.address}</p>
+              <p><strong>ID:</strong> {instance.ori}</p>
+              <p><strong>Encounter Type:</strong> {instance.encounter_type}</p>
+              <p><strong>Agency Responsible:</strong> {instance.agency_responsible}</p>
+              <p><strong>Cause of Death:</strong> {instance.cause}</p>
+              <p><strong>Date:</strong> {instance.date}</p>
+            </div>
+            <div className="w-1/2">
+              <Map latitude={30.26993} longitude={-97.74315}/>
+            </div>
+          </div>
           <p><strong>Description:</strong> {instance.description}</p>
           <NewsLink url={instance.news} />
           <div className="mt-6">

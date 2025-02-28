@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 import { DepartmentInstance } from "@/public/data/DepartmentData"
 
-export function Map({ department }: { department: DepartmentInstance }) {
+export function Map({ latitude, longitude}: { latitude: number,longitude: number }) {
 
     const mapRef = React.useRef<HTMLDivElement>(null);
 
@@ -21,8 +21,8 @@ export function Map({ department }: { department: DepartmentInstance }) {
 
 
             const position = {
-                lat: department.latitude,
-                lng: department.longitude
+                lat: latitude,
+                lng: longitude
             }
 
             const mapOptions: google.maps.MapOptions = {
