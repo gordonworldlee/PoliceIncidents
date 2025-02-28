@@ -1,5 +1,7 @@
 import pandas as pd
-
+import time
+import json
+import requests
 
 def extractInfo():
    df = pd.read_excel('data.xlsx')
@@ -99,3 +101,82 @@ def extractScorecard():
 
    return filter_card_df
 
+
+
+base_url = "https://api.legiscan.com/?key=aaffc8fd91b83d758ae8f159078fa237&op="  # Replace with your API key
+
+def api_request(operation, params=None):
+    url = base_url + operation
+    if params:
+        url += '&' + '&'.join(f'{k}={v}' for k, v in params.items())
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
+        return json.loads(response.content)
+    except requests.exceptions.RequestException as e:
+        print(f"API request failed: {e}")
+        return None
+    except json.JSONDecodeError as e:
+        print(f"JSON decode error: {e}")
+        return None
+
+def search_bills(query, state=None, page=1):
+    params = {'q': query, 'page': page}
+    if state:
+        params['state'] = state
+    return api_request('getSearch', params)  # Using getSearch (50 results per page)
+
+def get_all_search_results(query, state):
+    all_bills = []
+    page_num = 1
+    while True:
+        bills = search_bills(query, state=state, page=page_num)
+        if bills and bills['status'] == 'OK' and 'searchresult' in bills:
+            search_results = bills['searchresult']
+
+            # Check for empty search results (no bills on this page)
+            if not search_results or 'summary' not in search_results:
+                break  # No more results
+
+            # Remove the 'summary' key *before* iterating
+            summary = search_results.pop('summary', None)
+
+            # Add the bills from this page to the all_bills list
+            for key, bill in search_results.items():
+                if isinstance(bill, dict):
+                    all_bills.append(bill)
+            page_num += 1
+
+            time.sleep(0.2)  # Be nice to the API
+
+            # Check if we've reached the last page
+            if int(summary['page_current']) >= int(summary['page_total']):
+                break
+
+        else:
+            print("Error fetching page:", page_num)
+            break
+    return all_bills
+
+
+def print_bills(bills):
+    if bills:
+        for bill in bills:
+            print(f"Bill ID: {bill['bill_id']}")
+            print(f"Title: {bill['title']}")
+            print(f"State: {bill['state']}")
+            print(f"Bill Number: {bill['bill_number']}")
+            print(f"Last Action: {bill['last_action']}")
+            print("---")
+    else:
+        print("No bills found or an error occurred.")
+
+# Example Usage:
+query = '"law enforcement" OR police'
+all_bills = get_all_search_results(query, state='tx')
+
+if all_bills:
+    print(f"Total bills found: {len(all_bills)}")
+    print_bills(all_bills)
+else:
+    print("No bills found.")
