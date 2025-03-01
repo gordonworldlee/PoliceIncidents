@@ -44,3 +44,6 @@ next-env.d.ts
 .env.production.local
 .env
 .env.*
+
+# IntelliJ files
+.idea/*
