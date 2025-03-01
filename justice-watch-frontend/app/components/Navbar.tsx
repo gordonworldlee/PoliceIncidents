@@ -2,6 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import React from 'react';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);

@@ -3,7 +3,6 @@ import Navbar from "../../components/Navbar";
 import { FaNewspaper } from "react-icons/fa";
 import { obtainSingleBill } from "@/lib/fetch_legislative_data";
 import { Map } from "@/app/components/Map";
-import { DepartmentInstance } from "@/public/data/DepartmentData";
 import { DepartmentInstances} from "@/public/data/DepartmentData";
 
 interface ViolenceInstance {
