@@ -8,8 +8,8 @@ export const DepartmentCard = (DepartmentInstance: DepartmentInstance) => {
     const state = DepartmentInstance.state.toLowerCase();
     return (
       <Link href={link}>
-        <div className="h-full p-6 bg-white border-2 transition-all text-center duration-300 hover:shadow-xl hover:translate-y-[-2px] rounded-lg shadow-lg flex flex-col items-center justify-center">
-          <h2 className="text-xl font-bold text-blue-600">
+        <div className="p-4 bg-white border-[1px] hover:border-black border-gray-100 transition-all text-center duration-300 hover:shadow-xl hover:translate-y-[-2px] rounded-lg shadow-lg flex flex-col items-center justify-center">
+          <h2 className="text-xl mb-2 font-bold text-[#4195E2]">
             {deptName.charAt(0).toUpperCase() + deptName.slice(1).toLowerCase()}{" "}
             Police Department Scorecard
           </h2>

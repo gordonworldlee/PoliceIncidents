@@ -1,10 +1,8 @@
 "use client"
-
 import React, { useEffect } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
-import { DepartmentInstance } from "@/public/data/DepartmentData"
 
-export function Map({ latitude, longitude}: { latitude: number,longitude: number }) {
+export function Map({ latitude, longitude }: { latitude: number,longitude: number }) {
 
     const mapRef = React.useRef<HTMLDivElement>(null);
 
@@ -16,7 +14,6 @@ export function Map({ latitude, longitude}: { latitude: number,longitude: number
             });
 
             const { Map } = await loader.importLibrary('maps');
-            
             const { Marker} = await loader.importLibrary('marker') as google.maps.MarkerLibrary;
 
 
@@ -39,13 +36,13 @@ export function Map({ latitude, longitude}: { latitude: number,longitude: number
             });
 
             // might have to add this to clean up the marker
-            // return () => {
-            //     marker.setMap(null);
-            // };
+            return () => {
+                marker.setMap(null);
+            };
         }
 
         initMap();
-    }, []); // might have to add department as a dependency
+    }, [latitude, longitude]); // might have to add department as a dependency
 
     return (
 
