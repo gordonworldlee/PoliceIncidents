@@ -2,7 +2,7 @@ import pandas as pd
 import time
 import json
 import requests
-
+from datetime import datetime
 def extractInfo():
    df = pd.read_excel('data.xlsx')
    columns_to_check = [
@@ -103,80 +103,85 @@ def extractScorecard():
 
 
 
-base_url = "https://api.legiscan.com/?key=aaffc8fd91b83d758ae8f159078fa237&op="  # Replace with your API key
+API_KEY = "aaffc8fd91b83d758ae8f159078fa237"
+BASE_URL = "https://api.legiscan.com/?key=" + API_KEY
 
-def api_request(operation, params=None):
-    url = base_url + operation
-    if params:
-        url += '&' + '&'.join(f'{k}={v}' for k, v in params.items())
-    try:
-        response = requests.get(url)
-        response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
-        return json.loads(response.content)
-    except requests.exceptions.RequestException as e:
-        print(f"API request failed: {e}")
-        return None
-    except json.JSONDecodeError as e:
-        print(f"JSON decode error: {e}")
-        return None
+#base_url = "https://api.legiscan.com/?key=aaffc8fd91b83d758ae8f159078fa237&op="  # Replace with your API key
 
-def search_bills(query, state=None, page=1):
-    params = {'q': query, 'page': page}
-    if state:
-        params['state'] = state
-    return api_request('getSearch', params)  # Using getSearch (50 results per page)
+def search_bills(state, query):
+    params = {
+        "op": "search",
+        "state": state,
+        "query": query
+    }
+    response = requests.get(BASE_URL, params=params)
+    return json.loads(response.text)
 
-def get_all_search_results(query, state):
-    all_bills = []
-    page_num = 1
-    while True:
-        bills = search_bills(query, state=state, page=page_num)
-        if bills and bills['status'] == 'OK' and 'searchresult' in bills:
-            search_results = bills['searchresult']
+def get_bill_details(bill_id):
+    params = {
+        "op": "getBill",
+        "id": bill_id
+    }
+    response = requests.get(BASE_URL, params=params)
+    return json.loads(response.text)
+"""
+states = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", 
+          "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", 
+          "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", 
+          "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", 
+          "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
+"""
+states = ["TX"]
 
-            # Check for empty search results (no bills on this page)
-            if not search_results or 'summary' not in search_results:
-                break  # No more results
+search_terms = ["police", "law enforcement", "officer safety"]
+keywords = ['police', 'law enforcement', 'officer', 'patrol', 'sheriff', 'trooper', 'detective']
 
-            # Remove the 'summary' key *before* iterating
-            summary = search_results.pop('summary', None)
+results = []
 
-            # Add the bills from this page to the all_bills list
-            for key, bill in search_results.items():
-                if isinstance(bill, dict):
-                    all_bills.append(bill)
-            page_num += 1
+for state in states:
+    for term in search_terms:
+        print(f"Searching {state} for '{term}'...")
+        search_results = search_bills(state, term)
+        
+        if search_results['status'] == 'OK':
+            for bill in search_results['searchresult']:
+                if bill != 'summary':
+                    bill_data = search_results['searchresult'][bill]
+                    
+                    # Get more details about the bill
+                    bill_details = get_bill_details(bill_data['bill_id'])
+                    
+                    if bill_details['status'] == 'OK':
+                        bill_info = bill_details['bill']
+                        
+                        # Check if any of the keywords are in the description (case-insensitive)
+                        if any(keyword.lower() in bill_info['description'].lower() for keyword in keywords):
+                            results.append({
+                                'state': bill_info['state'],
+                                'bill_number': bill_info['bill_number'],
+                                'title': bill_info['title'],
+                                'description': bill_info['description'],
+                                'url': bill_info['url'],
+                                'session': bill_info['session']['session_name'],
+                                'session_year': f"{bill_info['session']['year_start']}-{bill_info['session']['year_end']}",
+                                'sponsors': [sponsor['name'] for sponsor in bill_info['sponsors']],
+                                'subjects': [subject['subject_name'] for subject in bill_info['subjects']],
+                                'last_action': bill_info['history'][0]['action'] if bill_info['history'] else '',
+                            })
 
-            time.sleep(0.2)  # Be nice to the API
+        time.sleep(1)  # To avoid hitting rate limits
+# Save results to a JSON file
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+filename = f"police_law_enforcement_bills_{timestamp}.json"
 
-            # Check if we've reached the last page
-            if int(summary['page_current']) >= int(summary['page_total']):
-                break
+with open(filename, 'w') as f:
+    json.dump(results, f, indent=2)
 
-        else:
-            print("Error fetching page:", page_num)
-            break
-    return all_bills
+print(f"Results saved to {filename}")
 
-
-def print_bills(bills):
-    if bills:
-        for bill in bills:
-            print(f"Bill ID: {bill['bill_id']}")
-            print(f"Title: {bill['title']}")
-            print(f"State: {bill['state']}")
-            print(f"Bill Number: {bill['bill_number']}")
-            print(f"Last Action: {bill['last_action']}")
-            print("---")
-    else:
-        print("No bills found or an error occurred.")
-
-# Example Usage:
-query = '"law enforcement" OR police'
-all_bills = get_all_search_results(query, state='tx')
-
-if all_bills:
-    print(f"Total bills found: {len(all_bills)}")
-    print_bills(all_bills)
-else:
-    print("No bills found.")
+# Print summary
+print(f"\nTotal bills found: {len(results)}")
+for state in states:
+    state_bills = [bill for bill in results if bill['state'] == state]
+    if state_bills:
+        print(f"{state}: {len(state_bills)} bills")

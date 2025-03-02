@@ -4,13 +4,12 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 #pLMcM5RpYjUHXeTGCgby
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1234@localhost:5432/gordonlee'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:example567@justicewatch.me:5432/postgres'
 db = SQLAlchemy(app)
 def init_db():
    with app.app_context():
        with Session(db.engine) as session:
            session.execute(text("""
-               DROP TABLE "Police Incidents";
                CREATE TABLE IF NOT EXISTS "Police Incidents" (
                    id SERIAL PRIMARY KEY,
                    name TEXT,
@@ -35,7 +34,6 @@ def init_db():
 
 
            session.execute(text("""
-               DROP TABLE "scorecard";
                CREATE TABLE IF NOT EXISTS "scorecard" (
                    id SERIAL PRIMARY KEY,
                    agency_name TEXT,

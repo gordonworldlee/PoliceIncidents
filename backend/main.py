@@ -6,7 +6,8 @@ from sqlalchemy import Table, Column, Integer, String, Float
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1234@localhost:5432/gordonlee'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1234@localhost:5432/gordonlee'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:example567@justicewatch.me:5432/postgres'
 db = SQLAlchemy()
 db.init_app(app)
 
