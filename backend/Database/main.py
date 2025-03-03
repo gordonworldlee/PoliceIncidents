@@ -46,6 +46,7 @@ class PoliceIncident(Base):
     date = Column(String)
     lat = Column(String)
     long = Column(String)
+    state = Column(String)
 
     def __repr__(self):
         return f"<PoliceIncident {self.name}, {self.city}>"
@@ -100,7 +101,8 @@ def populate_db():
                 news_link=row["Link to news article or photo of official document"],
                 date=row['Date of Incident (month/day/year)'],
                 lat=row['Latitude'],
-                long=row['Longitude']
+                long=row['Longitude'],
+                state=row['State']
             )
             session.add(incident)
         session.commit()

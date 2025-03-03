@@ -13,7 +13,7 @@ def extractInfo():
        "Cause of death", "A brief description of the circumstances surrounding the death",
        "ORI Agency Identifier (if available)", "Encounter Type", "County",
        "Link to news article or photo of official document", "Date of Incident (month/day/year)",
-       "Latitude", "Longitude"
+       "Latitude", "Longitude", "State"
    ]
   
    filtered_df = df.loc[

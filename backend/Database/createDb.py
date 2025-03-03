@@ -30,7 +30,8 @@ def init_db():
                    news_link TEXT,
                    date TEXT,
                    lat TEXT,
-                   long TEXT           
+                   long TEXT,
+                   state TEXT          
                );
            """))
            session.commit()

@@ -68,6 +68,81 @@ def get_legislation_by_id(legislation_id):
         return jsonify(data[0])
     else:
         return jsonify({"error": "Legislation not found."}), 404
+    
+
+
+@app.route("/api/police_incidents", methods=["GET"])
+def get_police_incidents():
+    """
+    You can now query police incidents using any combination of parameters, for example:
+    /api/police_incidents?state=CA
+    /api/police_incidents?city=Dallas&cause_of_death=Gunshot
+    /api/police_incidents?state=TX&name=John%20Doe
+    """
+    params = request.args.to_dict()
+    where_clauses = []
+    query_params = {}
+    for key, value in params.items():
+        where_clauses.append(f"\"{key}\" = :{key}")
+        query_params[key] = value
+    
+    query = "SELECT * FROM \"Police Incidents\""
+    if where_clauses:
+        query += " WHERE " + " AND ".join(where_clauses)
+    
+    data = fetch_data(query, query_params)
+    
+    if data:
+        return jsonify(data)
+    else:
+        return jsonify({"error": "No matching police incidents found."}), 404
+
+@app.route("/api/police_incidents/<int:incident_id>", methods=["GET"])
+def get_police_incident_by_id(incident_id):
+    query = "SELECT * FROM \"Police Incidents\" WHERE id = :id"
+    data = fetch_data(query, {"id": incident_id})
+
+    if data:
+        return jsonify(data[0])
+    else:
+        return jsonify({"error": "Police incident not found."}), 404
+
+
+@app.route("/api/scorecard", methods=["GET"])
+def get_scorecard():
+    """
+    You can now query police incidents using any combination of parameters, for example:
+    /api/scorecard?state=IL
+    /api/scorecard?agency_name=CHICAGO&agency_type=police-department
+    """
+    params = request.args.to_dict()
+    where_clauses = []
+    query_params = {}
+    for key, value in params.items():
+        where_clauses.append(f"\"{key}\" = :{key}")
+        query_params[key] = value
+    
+    query = "SELECT * FROM \"scorecard\""
+    if where_clauses:
+        query += " WHERE " + " AND ".join(where_clauses)
+    
+    data = fetch_data(query, query_params)
+    
+    if data:
+        return jsonify(data)
+    else:
+        return jsonify({"error": "No matching scorecard found."}), 404
+
+@app.route("/api/scorecard/<int:scorecard_id>", methods=["GET"])
+def get_scorecard_by_id(scorecard_id):
+    query = "SELECT * FROM \"scorecard\" WHERE id = :id"
+    data = fetch_data(query, {"id": scorecard_id})
+
+    if data:
+        return jsonify(data[0])
+    else:
+        return jsonify({"error": "Scorecard not found."}), 404
+
 
 if __name__ == "__main__":
     app.run(debug=True)  # Turn off debug mode in production
