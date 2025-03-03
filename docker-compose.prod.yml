@@ -1,0 +1,62 @@
+services:
+  frontend:
+    image: justicewatch-frontend:latest-prod
+    env_file:
+      - .env.prod
+    command: make prod
+    networks:
+      - proxy-tier
+
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - certs:/etc/nginx/certs
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    restart: always
+    networks:
+      - proxy-tier
+
+  acme-companion:
+    image: nginxproxy/acme-companion
+    container_name: nginx-proxy-acme
+    volumes_from:
+      - nginx-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - acme:/etc/acme.sh
+    environment:
+      - DEFAULT_EMAIL=${CERTBOT_EMAIL}
+    depends_on:
+      - nginx-proxy
+    restart: always
+    networks:
+      - proxy-tier
+
+networks:
+  proxy-tier:
+    driver: bridge
+
+volumes:
+  certs:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PWD}/docker/nginx/certs
+      o: bind
+  html:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PWD}/docker/nginx/html
+      o: bind
+  acme:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PWD}/docker/nginx/acme
+      o: bind

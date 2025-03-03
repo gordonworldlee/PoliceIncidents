@@ -1,89 +1,11 @@
 version: "3.8"
 services:
-  db:
-    image: postgres:15
-    container_name: justicewatch-db
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
-    ports:
-      - "${DB_PORT}:5432"
-    volumes:
-      - ${DB_VOLUME}:/var/lib/postgresql/data
-    networks:
-      - internal-network
-
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: justicewatch-backend
-    environment:
-      FLASK_ENV: ${FLASK_ENV}
-      FLASK_APP: main.py
-      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
-    ports:
-      - "${BACKEND_PORT}:5000" # Direct access in dev
-    depends_on:
-      - db
-    networks:
-      - internal-network
-      - external-network
-
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: justicewatch-frontend
-    environment:
-      NODE_ENV: ${NODE_ENV}
-      NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL}
-      GITLAB_ACCESS_TOKEN: ${GITLAB_ACCESS_TOKEN}
-      GITLAB_PROJECT_ID: ${GITLAB_PROJECT_ID}
-      GITLAB_BASE_URL: ${GITLAB_BASE_URL}
-      BACKEND_URL: ${BACKEND_URL}
+    image: justicewatch-frontend:latest
     ports:
-      - "${FRONTEND_PORT}:3000"
-    depends_on:
-      - backend
-    networks:
-      - external-network
-
-  # Production-only services
-  nginx:
-    image: nginx:alpine
-    container_name: justicewatch-nginx
-    profiles: ["prod"] # Only runs in production
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/ssl:/etc/nginx/ssl
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    depends_on:
-      - frontend
-      - backend
-    networks:
-      - external-network
-    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
-
-  certbot:
-    image: certbot/certbot
-    container_name: justicewatch-certbot
-    profiles: ["prod"] # Only runs in production
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    depends_on:
-      - nginx
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-
-networks:
-  internal-network:
-    name: justicewatch-internal
-    internal: true
-  external-network:
-    name: justicewatch-external
+      - "3000:3000"
+      - "3001:3001"
