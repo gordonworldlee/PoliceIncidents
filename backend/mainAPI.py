@@ -74,7 +74,7 @@ def get_legislation_by_id(legislation_id):
     
 
 
-@app.route("/api/police_incidents", methods=["GET"])
+@app.route("/api/violence", methods=["GET"])
 def get_police_incidents():
     """
     You can now query police incidents using any combination of parameters, for example:
@@ -100,7 +100,7 @@ def get_police_incidents():
     else:
         return jsonify({"error": "No matching police incidents found."}), 404
 
-@app.route("/api/police_incidents/<int:incident_id>", methods=["GET"])
+@app.route("/api/violence/<int:incident_id>", methods=["GET"])
 def get_police_incident_by_id(incident_id):
     query = "SELECT * FROM \"Police Incidents\" WHERE id = :id"
     data = fetch_data(query, {"id": incident_id})
@@ -111,7 +111,7 @@ def get_police_incident_by_id(incident_id):
         return jsonify({"error": "Police incident not found."}), 404
 
 
-@app.route("/api/scorecard", methods=["GET"])
+@app.route("/api/departments", methods=["GET"])
 def get_scorecard():
     """
     You can now query police incidents using any combination of parameters, for example:
@@ -136,7 +136,7 @@ def get_scorecard():
     else:
         return jsonify({"error": "No matching scorecard found."}), 404
 
-@app.route("/api/scorecard/<int:scorecard_id>", methods=["GET"])
+@app.route("/api/departments/<int:scorecard_id>", methods=["GET"])
 def get_scorecard_by_id(scorecard_id):
     query = "SELECT * FROM \"scorecard\" WHERE id = :id"
     data = fetch_data(query, {"id": scorecard_id})
