@@ -18,6 +18,8 @@ services:
       - html:/usr/share/nginx/html
       - /var/run/docker.sock:/tmp/docker.sock:ro
     restart: always
+    env_file:
+      - .env.prod
     networks:
       - proxy-tier
 
@@ -29,6 +31,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - acme:/etc/acme.sh
+    env_file:
+      - .env.prod
     environment:
       - DEFAULT_EMAIL=${CERTBOT_EMAIL}
     depends_on:
