@@ -13,7 +13,7 @@ prod: build
 
 # Build step
 build:
-	@echo "Building production bundle..."
+	@echo "Building production build..."
 	npm run build
 
 # Default target
