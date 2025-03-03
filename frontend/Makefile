@@ -8,8 +8,9 @@ dev:
 # Production build and start
 prod: build
 	@echo "Starting in production mode..."
-	npm install -g pm2
-	pm2 start npm -- start
+	# npm install -g pm2
+	# pm2 start npm -- start
+	npm start
 
 # Build step
 build:
