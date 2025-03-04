@@ -1,0 +1,56 @@
+services:
+  frontend:
+    image: justicewatch-frontend:latest-prod
+    env_file:
+      - .env.prod
+    networks:
+      - int
+
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - certs:/etc/nginx/certs
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    restart: always
+    env_file:
+      - .env.prod
+    networks:
+      - int
+      - ext
+    depends_on:
+      - frontend
+
+  acme-companion:
+    image: nginxproxy/acme-companion
+    container_name: nginx-proxy-acme
+    volumes_from:
+      - nginx-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - acme:/etc/acme.sh
+    env_file:
+      - .env.prod
+    depends_on:
+      - nginx-proxy
+    restart: always
+    networks:
+      - int
+      - ext
+
+  db:
+    container_name: justicewatch-db-prod
+    env_file:
+      - .env.prod
+    volumes:
+      - db-prod:/var/lib/postgresql/data
+
+volumes:
+  db-prod:
+  certs:
+  html:
+  acme:
