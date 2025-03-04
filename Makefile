@@ -13,24 +13,24 @@
 
 .PHONY: build-staging
 build-staging: ## Build the staging docker image.
-	docker compose -f compose-base.yml -f compose-staging.yml build
+	docker-compose -f compose-base.yml -f compose-staging.yml build
 
 .PHONY: start-staging
 start-staging: ## Start the staging docker container.
-	docker compose -f compose-base.yml -f compose-staging.yml up -d
+	docker-compose -f compose-base.yml -f compose-staging.yml up -d
 
 .PHONY: stop-staging
 stop-staging: ## Stop the staging docker container.
-	docker compose -f compose-base.yml -f compose-staging.yml down
+	docker-compose -f compose-base.yml -f compose-staging.yml down
 
 .PHONY: build-production
 build-production: ## Build the production docker image.
-	docker compose -f compose-base.yml -f compose-prod.yml build
+	docker-compose -f compose-base.yml -f compose-prod.yml build
 
 .PHONY: start-production
 start-production: ## Start the production docker container.
-	docker compose -f compose-base.yml -f compose-prod.yml up -d
+	docker-compose -f compose-base.yml -f compose-prod.yml up -d
 
 .PHONY: stop-production
 stop-production: ## Stop the production docker container.
-	docker compose -f compose-base.yml -f compose-prod.yml down
+	docker-compose -f compose-base.yml -f compose-prod.yml down
