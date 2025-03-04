@@ -62,13 +62,13 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Make it scrollable
+      {/* Make it scrollable */}
       <div className="max-w-3xl mx-auto mt-12 px-4 pb-32">
         <h2 className="text-lg font-semibold mb-4"></h2>
         {[...Array(20)].map((_, i) => (
           <div key={i} className="bg-white p-4 mb-2 rounded"></div>
         ))}
-      </div> */}
+      </div>
 
       {/* Footer Links */}
       <div className="max-w-3xl mx-auto mt-16 text-left px-4 py-8">
@@ -76,7 +76,8 @@ export default function Home() {
           className="block text-lg font-semibold mb-2"
           href="/department/austin"
         >
-          POLICE SCORECARD FOR AUSTIN, TX &gt;
+          POLICE SCORECARD FOR AUSTIN, TX &gt; TEST - if this shows up, website
+          updates automatically
         </Link>
       </div>
     </div>
