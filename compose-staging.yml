@@ -10,7 +10,7 @@ services:
     env_file:
       - .env.prod
     volumes:
-      - justicewatch-db-staging:/var/lib/postgresql/data
+      - db-staging:/var/lib/postgresql/data
 
 volumes:
-  justicewatch-db-staging:
+  db-staging:

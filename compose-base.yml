@@ -8,17 +8,14 @@ services:
   db:
     container_name: justicewatch-db
     image: postgres:latest
-    # environment:
-    #   POSTGRES_USER: justicewatch
-    #   POSTGRES_PASSWORD: test
-    #   POSTGRES_DB: justicewatch
+    # Need env variables, imported from another compose file
     ports:
       - "5432:5432"
     volumes:
-      - justicewatch-db-default:/var/lib/postgresql/data
+      - db-default:/var/lib/postgresql/data
 
 volumes:
-  dbdata-default:
+  db-default:
 
 networks:
   ext:

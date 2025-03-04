@@ -13,8 +13,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - justicewatch-certs:/etc/nginx/certs
-      - justicewatch-html:/usr/share/nginx/html
+      - certs:/etc/nginx/certs
+      - html:/usr/share/nginx/html
       - /var/run/docker.sock:/tmp/docker.sock:ro
     restart: always
     env_file:
@@ -32,7 +32,7 @@ services:
       - nginx-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - justicewatch-acme:/etc/acme.sh
+      - acme:/etc/acme.sh
     env_file:
       - .env.prod
     depends_on:
@@ -47,10 +47,10 @@ services:
     env_file:
       - .env.prod
     volumes:
-      - justicewatch-db-prod:/var/lib/postgresql/data
+      - db-prod:/var/lib/postgresql/data
 
 volumes:
-  justicewatch-db-staging:
-  justicewatch-certs:
-  justicewatch-html:
-  justicewatch-acme:
+  db-staging:
+  certs:
+  html:
+  acme:
