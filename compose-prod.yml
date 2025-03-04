@@ -68,6 +68,7 @@ services:
 
 volumes:
   db-prod:
+    external: true
   certs:
   html:
   acme:
