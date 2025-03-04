@@ -50,7 +50,7 @@ services:
       - db-prod:/var/lib/postgresql/data
 
 volumes:
-  db-staging:
+  db-prod:
   certs:
   html:
   acme:
