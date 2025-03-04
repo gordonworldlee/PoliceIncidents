@@ -1,0 +1,25 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: justicewatch-frontend
+    image: justicewatch-frontend:latest
+  db:
+    container_name: justicewatch-db
+    image: postgres:17.4
+    # Need env variables, imported from another compose file
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-default:/var/lib/postgresql/data
+
+volumes:
+  db-default:
+
+networks:
+  ext:
+    driver: bridge
+  int:
+    driver: bridge
+    internal: true
