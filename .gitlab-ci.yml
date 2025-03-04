@@ -3,9 +3,8 @@ image: docker:latest
 services:
   - docker:dind
 
-stages:
-  - build
-  - push
+variables:
+  DOCKER_TLS_CERTDIR: "/certs"
 
 before_script:
   - apk add --no-cache make
@@ -13,11 +12,27 @@ before_script:
 build_production:
   stage: build
   script:
+    # Build step
+    - echo "Building production image..."
     - make build-production
+    - echo Printing all images
+    - docker images
+    # Save the image to a tar file
+    - echo Saving image to tar file
+    - docker save justicewatch-frontend:latest-prod > image.tar
+  artifacts:
+    paths:
+      - image.tar
+    expire_in: 1 hour
 
 push_to_registry:
-  stage: push
+  stage: build
+  needs: [build_production]
   script:
+    # Load the image from the tar file
+    - echo Loading image from tar file
+    - docker load < image.tar
+    - echo Uploading to registry
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker tag justicewatch-frontend:latest-prod registry.gitlab.com/gjkeller1/cs373-spring-2025-group-07/justicewatch-frontend:latest-prod
     - docker push registry.gitlab.com/gjkeller1/cs373-spring-2025-group-07/justicewatch-frontend:latest-prod
