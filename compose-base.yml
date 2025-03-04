@@ -15,7 +15,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - dbdata-default:/var/lib/postgresql/data
+      - justicewatch-db-default:/var/lib/postgresql/data
 
 volumes:
   dbdata-default:
