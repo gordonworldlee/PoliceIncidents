@@ -70,7 +70,7 @@ services:
       - ext
 
 volumes:
-  justice_atch_db-prod:
+  justicewatch_db-prod:
     external: true
   certs:
   html:
