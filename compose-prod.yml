@@ -52,7 +52,7 @@ services:
     env_file:
       - .env.prod
     volumes:
-      - justice_watch-db-prod:/var/lib/postgresql/data
+      - justicewatch_db-prod:/var/lib/postgresql/data
 
   watchtower:
     image: containrrr/watchtower
@@ -70,7 +70,7 @@ services:
       - ext
 
 volumes:
-  justice_watch-db-prod:
+  justice_atch_db-prod:
     external: true
   certs:
   html:
