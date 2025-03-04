@@ -1,16 +1,26 @@
 services:
   frontend:
+    build:
+      tags:
+        - registry.gitlab.com/gjkeller1/cs373-spring-2025-group-07/justicewatch-frontend:latest-staging
+      args:
+        ENV_FILE: .env.local
+    image: registry.gitlab.com/gjkeller1/cs373-spring-2025-group-07/justicewatch-frontend:latest-staging
     env_file:
-      - .env.prod
+      - .env.staging
     ports:
       - "3000:3000"
-    container_name: justicewatch-frontend-staging
+    networks:
+      - int
+      - ext
+
   db:
     container_name: justicewatch-db-staging
     env_file:
-      - .env.prod
+      - .env.staging
     volumes:
       - db-staging:/var/lib/postgresql/data
 
 volumes:
   db-staging:
+    external: true
