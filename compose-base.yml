@@ -7,7 +7,7 @@ services:
     image: justicewatch-frontend:latest
   db:
     container_name: justicewatch-db
-    image: postgres:latest
+    image: postgres:17.4
     # Need env variables, imported from another compose file
     ports:
       - "5432:5432"
