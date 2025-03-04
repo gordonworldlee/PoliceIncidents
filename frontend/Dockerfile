@@ -22,10 +22,6 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY frontend/ .
 
-# Add ARG for environment file
-ARG ENV_FILE=.env
-COPY ${ENV_FILE} .env
-
 # This will do the trick, use the corresponding env file for each environment.
 RUN npm run build
 
@@ -37,7 +33,6 @@ RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
 
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.env .env
 
 # Automatically leverage output traces to reduce image size
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./

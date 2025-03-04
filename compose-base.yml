@@ -3,8 +3,8 @@ services:
     build:
       context: .
       dockerfile: frontend/Dockerfile
-      args:
-        ENV_FILE: .env.local
+    volumes:
+      - .env.local:/app/.env
     container_name: justicewatch-frontend
     image: justicewatch-frontend:latest
   db:
