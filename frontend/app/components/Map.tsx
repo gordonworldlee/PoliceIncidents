@@ -1,51 +1,58 @@
-"use client"
+"use client";
 import React, { useEffect } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
+import { env } from "next-runtime-env";
 
-export function Map({ latitude, longitude }: { latitude: number,longitude: number }) {
+export function Map({
+  latitude,
+  longitude,
+}: {
+  latitude: number;
+  longitude: number;
+}) {
+  const mapsApiKey = env("NEXT_PUBLIC_MAPS_API_KEY") as string;
+  const mapRef = React.useRef<HTMLDivElement>(null);
 
-    const mapRef = React.useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const initMap = async () => {
+      const loader = new Loader({
+        apiKey: mapsApiKey,
+        version: "weekly",
+      });
 
-    useEffect(() => {
-        const initMap = async () => {
-            const loader = new Loader({
-                apiKey: process.env.NEXT_PUBLIC_MAPS_API_KEY as string,
-                version: 'weekly'
-            });
+      const { Map } = await loader.importLibrary("maps");
+      const { Marker } = (await loader.importLibrary(
+        "marker",
+      )) as google.maps.MarkerLibrary;
 
-            const { Map } = await loader.importLibrary('maps');
-            const { Marker} = await loader.importLibrary('marker') as google.maps.MarkerLibrary;
+      const position = {
+        lat: latitude,
+        lng: longitude,
+      };
 
+      const mapOptions: google.maps.MapOptions = {
+        center: position,
+        zoom: 17,
+        mapId: "MY_NEXTJS_MAPID",
+      };
 
-            const position = {
-                lat: latitude,
-                lng: longitude
-            }
+      const map = new Map(mapRef.current as HTMLDivElement, mapOptions);
 
-            const mapOptions: google.maps.MapOptions = {
-                center: position,
-                zoom: 17,
-                mapId: 'MY_NEXTJS_MAPID'
-            }
+      const marker = new Marker({
+        map: map,
+        position: position,
+      });
 
-            const map = new Map(mapRef.current as HTMLDivElement, mapOptions);
+      // might have to add this to clean up the marker
+      return () => {
+        marker.setMap(null);
+      };
+    };
 
-            const marker = new Marker({
-                map: map,
-                position: position
-            });
+    initMap();
+  }, [latitude, longitude]); // might have to add department as a dependency
 
-            // might have to add this to clean up the marker
-            return () => {
-                marker.setMap(null);
-            };
-        }
-
-        initMap();
-    }, [latitude, longitude]); // might have to add department as a dependency
-
-    return (
-
-        <div className='h-full w-full rounded-2xl inline-block' ref={mapRef} />
-    )
+  return (
+    <div className="h-full w-full rounded-2xl inline-block" ref={mapRef} />
+  );
 }

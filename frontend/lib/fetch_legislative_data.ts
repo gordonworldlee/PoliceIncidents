@@ -4,11 +4,12 @@ import {
   LegislativeBill,
 } from "@/types/legi_search_result";
 import { Bill, BillResponse } from "@/types/bill";
+import { env } from "next-runtime-env";
 
 export async function obtainBillList(): Promise<number[]> {
   /* In the future, this will be an actual REST API Call. Right, now it's "fetching" from a file" */
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/data/bill_text_search.json`,
+    `${env("NEXT_PUBLIC_BASE_URL")}/data/bill_text_search.json`,
     {
       cache: "no-store", // Ensures fresh data on every request
     },
@@ -30,7 +31,7 @@ export async function obtainBillList(): Promise<number[]> {
 export async function obtainSingleBill(bill_id: number): Promise<Bill> {
   /* In the future, this will be an actual REST API Call. Right, now it's "fetching" from a file" */
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/data/sample_bills.json`,
+    `${env("NEXT_PUBLIC_BASE_URL")}/data/sample_bills.json`,
     {
       cache: "no-store", // Ensures fresh data on every request
     },

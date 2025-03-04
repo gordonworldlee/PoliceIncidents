@@ -37,13 +37,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# env variables
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.env
-.env.*
-
 # IntelliJ files
 .idea/*

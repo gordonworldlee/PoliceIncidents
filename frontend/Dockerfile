@@ -22,7 +22,16 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY frontend/ .
 
-# This will do the trick, use the corresponding env file for each environment.
+# Set args
+ARG NEXT_PUBLIC_BASE_URL=http://localhost:3000
+ARG NODE_ENV=production
+ENV NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
+ENV NODE_ENV=$NODE_ENV
+
+# Check env variables (for debugging)
+RUN env
+
+# Build
 RUN npm run build
 
 # 3. Production image, copy all the files and run next
