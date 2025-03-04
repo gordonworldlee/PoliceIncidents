@@ -4,7 +4,7 @@ services:
       tags:
         - registry.gitlab.com/gjkeller1/cs373-spring-2025-group-07/justicewatch-frontend:latest-staging
       args:
-        ENV_FILE: .env.local
+        ENV_FILE: .env.staging
     image: registry.gitlab.com/gjkeller1/cs373-spring-2025-group-07/justicewatch-frontend:latest-staging
     env_file:
       - .env.staging

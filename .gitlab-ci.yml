@@ -13,6 +13,7 @@ build_production:
   stage: build
   script:
     # Build step
+    - echo "NODE_ENV=production" > .env.prod
     - echo "Building production image..."
     - make build-production
     - echo Printing all images
