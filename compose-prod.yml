@@ -13,6 +13,7 @@ services:
       - .env.prod
     networks:
       - int
+      - ext
 
   nginx-proxy:
     image: nginxproxy/nginx-proxy

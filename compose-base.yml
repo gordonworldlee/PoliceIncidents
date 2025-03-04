@@ -1,8 +1,8 @@
 services:
   frontend:
     build:
-      context: .
-      dockerfile: frontend/Dockerfile
+      context: frontend/
+      dockerfile: Dockerfile
     volumes:
       - .env.local:/app/.env
     container_name: justicewatch-frontend
