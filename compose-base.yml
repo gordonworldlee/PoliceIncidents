@@ -1,0 +1,28 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: justicewatch-frontend
+    image: justicewatch-frontend:latest
+  db:
+    container_name: justicewatch-db
+    image: postgres:latest
+    # environment:
+    #   POSTGRES_USER: justicewatch
+    #   POSTGRES_PASSWORD: test
+    #   POSTGRES_DB: justicewatch
+    ports:
+      - "5432:5432"
+    volumes:
+      - dbdata-default:/var/lib/postgresql/data
+
+volumes:
+  dbdata-default:
+
+networks:
+  ext:
+    driver: bridge
+  int:
+    driver: bridge
+    internal: true

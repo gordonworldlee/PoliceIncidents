@@ -3,12 +3,8 @@ services:
     image: justicewatch-frontend:latest-prod
     env_file:
       - .env.prod
-    command: make prod
-    ports:
-      - "3000:3000"
     networks:
-      # - proxy-tier
-      - external-tier
+      - int
 
   nginx-proxy:
     image: nginxproxy/nginx-proxy
@@ -24,7 +20,10 @@ services:
     env_file:
       - .env.prod
     networks:
-      - proxy-tier
+      - int
+      - ext
+    depends_on:
+      - frontend
 
   acme-companion:
     image: nginxproxy/acme-companion
@@ -36,19 +35,12 @@ services:
       - acme:/etc/acme.sh
     env_file:
       - .env.prod
-    environment:
-      - DEFAULT_EMAIL=${CERTBOT_EMAIL}
     depends_on:
       - nginx-proxy
     restart: always
     networks:
-      - proxy-tier
-
-networks:
-  proxy-tier:
-    driver: bridge
-  external-tier:
-    driver: bridge
+      - int
+      - ext
 
 volumes:
   certs:

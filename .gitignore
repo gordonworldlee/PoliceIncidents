@@ -62,3 +62,6 @@ next-env.d.ts
 .env.prod
 .env
 .env.*
+
+# db
+db/*

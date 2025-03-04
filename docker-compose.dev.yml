@@ -1,8 +1,0 @@
-services:
-  frontend:
-    image: justicewatch-frontend:latest-dev
-    env_file:
-      - .env.local
-    volumes:
-      - ./frontend:/app
-    command: make dev
