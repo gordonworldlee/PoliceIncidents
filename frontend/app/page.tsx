@@ -76,8 +76,7 @@ export default function Home() {
           className="block text-lg font-semibold mb-2"
           href="/department/austin"
         >
-          POLICE SCORECARD FOR AUSTIN, TX &gt; TEST - if this shows up, website
-          updates automatically
+          POLICE SCORECARD FOR AUSTIN, TX &gt;
         </Link>
       </div>
     </div>
