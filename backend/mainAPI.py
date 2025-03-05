@@ -38,22 +38,22 @@ def get_legislation():
     """
     # Get query parameters
     params = request.args.to_dict()
-    
+
     # Build the WHERE clause dynamically
     where_clauses = []
     query_params = {}
     for key, value in params.items():
         where_clauses.append(f"\"{key}\" = :{key}")
         query_params[key] = value
-    
+
     # Construct the SQL query
     query = "SELECT * FROM \"Legislation\""
     if where_clauses:
         query += " WHERE " + " AND ".join(where_clauses)
-    
+
     # Execute the query
     data = fetch_data(query, query_params)
-    
+
     if data:
         return jsonify(data)
     else:
@@ -68,7 +68,7 @@ def get_legislation_by_id(legislation_id):
         return jsonify(data[0])
     else:
         return jsonify({"error": "Legislation not found."}), 404
-    
+
 
 
 @app.route("/api/violence", methods=["GET"])
@@ -85,13 +85,13 @@ def get_police_incidents():
     for key, value in params.items():
         where_clauses.append(f"\"{key}\" = :{key}")
         query_params[key] = value
-    
+
     query = "SELECT * FROM \"Police Incidents\""
     if where_clauses:
         query += " WHERE " + " AND ".join(where_clauses)
-    
+
     data = fetch_data(query, query_params)
-    
+
     if data:
         return jsonify(data)
     else:
@@ -121,13 +121,13 @@ def get_scorecard():
     for key, value in params.items():
         where_clauses.append(f"\"{key}\" = :{key}")
         query_params[key] = value
-    
+
     query = "SELECT * FROM \"scorecard\""
     if where_clauses:
         query += " WHERE " + " AND ".join(where_clauses)
-    
+
     data = fetch_data(query, query_params)
-    
+
     if data:
         return jsonify(data)
     else:
@@ -145,4 +145,4 @@ def get_scorecard_by_id(scorecard_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)  # Turn off debug mode in production
+    app.run(host='0.0.0.0', port=5001, debug=True)  # Turn off debug mode in production
