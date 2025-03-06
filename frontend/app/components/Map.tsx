@@ -50,7 +50,7 @@ export function Map({
     };
 
     initMap();
-  }, [latitude, longitude]); // might have to add department as a dependency
+  }, [latitude, longitude, mapsApiKey]); // might have to add department as a dependency
 
   return (
     <div className="h-full w-full rounded-2xl inline-block" ref={mapRef} />

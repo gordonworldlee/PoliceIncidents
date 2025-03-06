@@ -1,8 +1,8 @@
-import Link from "next/link";
+// import Link from "next/link";
 import React from 'react';
 import { DepartmentInstance } from "@/public/data/DepartmentData";
 import {
-  MapPin, Building2, Users, Shield,
+  MapPin, Building2, Shield,
   BarChart2, Target, AlertTriangle
 } from 'lucide-react';
 
@@ -34,7 +34,7 @@ const getScoreColor = (score: number) => {
 
 export const DepartmentCard = (DepartmentInstance: DepartmentInstance) => {
   const deptName = DepartmentInstance.agency_name.toLowerCase();
-  const link = `/department/${deptName}`;
+  // const link = `/department/${deptName}`;
   const locationName = DepartmentInstance.location_name.toLowerCase();
   const state = DepartmentInstance.state.toLowerCase();
   const agencyType = DepartmentInstance.agency_type;
