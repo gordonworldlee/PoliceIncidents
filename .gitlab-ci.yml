@@ -30,6 +30,8 @@ build_production:
 push_to_registry:
   stage: build
   needs: [build_production]
+  only:
+    - main
   script:
     # Load the image from the tar file
     - echo Loading image from tar file
