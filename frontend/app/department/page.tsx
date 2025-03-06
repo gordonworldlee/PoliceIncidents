@@ -18,7 +18,7 @@ export default function DepartmentModelPage() {
       <div className="flex items-center justify-center">
         <div className="max-w-7xl px-4 sm:px-6 lg:px-8">
           <br />
-          <div className="flex flex-col md:flex-row gap-4 m-4 h-full">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 m-4">
             {Object.values(DepartmentInstances).map((department) => {
               return <DepartmentCard key={department.agency_name} {...department} />
             })}

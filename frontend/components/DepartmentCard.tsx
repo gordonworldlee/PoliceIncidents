@@ -1,58 +1,107 @@
 import Link from "next/link";
+import React from 'react';
 import { DepartmentInstance } from "@/public/data/DepartmentData";
+import {
+  MapPin, Building2, Users, Shield,
+  BarChart2, Target, AlertTriangle
+} from 'lucide-react';
+
+const getScoreColor = (score: number) => {
+  if (score < 30)
+    return {
+      bg: "bg-red-100",
+      text: "text-red-700",
+      icon: "red", // Darker shade for icons
+    };
+  if (score < 50)
+    return {
+      bg: "bg-orange-100",
+      text: "text-orange-700",
+      icon: "orange",
+    };
+  if (score < 70)
+    return {
+      bg: "bg-yellow-100",
+      text: "text-yellow-700",
+      icon: "yellow",
+    };
+  return {
+    bg: "bg-green-100",
+    text: "text-green-700",
+    icon: "green",
+  };
+};
 
 export const DepartmentCard = (DepartmentInstance: DepartmentInstance) => {
-    const deptName = DepartmentInstance.agency_name.toLowerCase();
-    const link = `/department/${deptName}`;
-    const locationName = DepartmentInstance.location_name.toLowerCase();
-    const state = DepartmentInstance.state.toLowerCase();
-    return (
-      <Link href={link}>
-        <div className="p-4 bg-white border-[1px] hover:border-black border-gray-100 transition-all text-center duration-300 hover:shadow-xl hover:translate-y-[-2px] rounded-lg shadow-lg flex flex-col items-center justify-center">
-          <h2 className="text-xl mb-2 font-bold text-[#4195E2]">
-            {deptName.charAt(0).toUpperCase() + deptName.slice(1).toLowerCase()}{" "}
-            Police Department Scorecard
-          </h2>
-          <div className="w-32 h-32 mb-4">
-            <img
-              src={DepartmentInstance.department_image}
-              alt={deptName + "Police Department"}
-              width={200}
-              height={200}
-              className="w-full h-full object-contain"
-            />
+  const deptName = DepartmentInstance.agency_name.toLowerCase();
+  const link = `/department/${deptName}`;
+  const locationName = DepartmentInstance.location_name.toLowerCase();
+  const state = DepartmentInstance.state.toLowerCase();
+  const agencyType = DepartmentInstance.agency_type;
+  const coordinates = `${DepartmentInstance.latitude}, ${DepartmentInstance.longitude}`;
+  const violenceScore = DepartmentInstance.calc_police_violence_score;
+  const policeShootingAverage = DepartmentInstance.police_shooting_avg;
+  const overallScore = DepartmentInstance.overall_score;
+
+  const violenceColor = getScoreColor(violenceScore);
+  const policeShootingColor = getScoreColor(policeShootingAverage);
+  const overallColor = getScoreColor(overallScore)
+  console.log(violenceColor.icon)
+  return (
+    // Card Container
+    <div className="rounded-lg shadow-lg border-[1px] bg-white border-gray-300 hover:border-black hover:shadow-xl hover:-translate-y-2">
+      {/* Header start */}
+      <div className="pb-2 bg-[#E7F3FA] pt-4 px-4 flex gap-4">
+        <span className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-200">
+          <Building2 color="blue" size={32} />
+        </span>
+        <header className="inline-block flex flex-col">
+          <div className="font-bold text-lg">{deptName.charAt(0).toUpperCase() + deptName.slice(1).toLowerCase()} Police Department</div>
+          <div className="text-gray-600">{agencyType}</div>
+        </header>
+      </div>
+      {/* Header end */}
+      {/* Location and Coordinates */}
+      <div className="px-2 sm:px-4 grid grid-cols-2 gap-2">
+        <div className="flex items-start gap-x-1">
+          <span className="mt-1 flex-shrink-0">
+            <MapPin color="gray" size={20} />
+          </span>
+          <div className="min-w-0">
+            <header className="font-bold whitespace-nowrap">Location</header>
+            <div className="text-[0.85rem] lg:text-sm ">{locationName.charAt(0).toUpperCase() + locationName.slice(1).toLowerCase()}, {state.toUpperCase()}</div>
           </div>
-          <p className="text-sm text-gray-600">
-            <strong>Agency Name:</strong>{" "}
-            {deptName.charAt(0).toUpperCase() + deptName.slice(1).toLowerCase()}{" "}
-            Police Department
-          </p>
-          <p className="text-sm text-gray-600">
-            <strong>Location:</strong>{" "}
-            {locationName.charAt(0).toUpperCase() +
-              locationName.slice(1).toLowerCase()}
-          </p>
-          <p className="text-sm text-gray-600">
-            <strong>State:</strong>{" "}
-            {state.charAt(0).toUpperCase() + state.slice(1).toLowerCase()}
-          </p>
-          <p className="text-sm text-gray-600">
-            <strong>Coordinates:</strong> {DepartmentInstance.latitude},{" "}
-            {DepartmentInstance.longitude}
-          </p>
-          <p className="text-sm text-gray-600">
-            <strong>Police Violence Score:</strong>{" "}
-            {DepartmentInstance.calc_police_violence_score}/100
-          </p>
-          <p className="text-sm text-gray-600">
-            <strong>Police Shooting Average:</strong>{" "}
-            {DepartmentInstance.police_shooting_avg}
-          </p>
-          <p className="text-sm text-gray-600">
-            <strong>Overall Score:</strong>{" "}
-            {DepartmentInstance.overall_score}/100
-          </p>
         </div>
-      </Link>
-    );
-  };
+        <div className="flex items-start gap-x-1">
+          <span className="mt-1 flex-shrink-0">
+            <Target color="gray" size={20} />
+          </span>
+          <div className="min-w-0">
+            <header className="font-bold whitespace-nowrap">Coordinates</header>
+            <div className="text-[0.85rem] lg:text-sm ">{coordinates}</div>
+          </div>
+        </div>
+      </div>
+      {/* Location and Coordinates End */}
+      {/* 3 categories start */}
+      <div className="flex justify-center items-stretch p-4 gap-1 sm:gap-2">
+        <div className={`rounded-lg flex-1 p-2 ${violenceColor.bg} flex flex-col items-center justify-center`}>
+          <Shield color={violenceColor.icon} size={20} />
+          <p className={`${violenceColor.text} text-xs sm:text-sm font-semibold text-center`}>Police Violence</p>
+          <p className={`${violenceColor.text} text-sm font-extrabold`}>{violenceScore}</p>
+        </div>
+        <div className={`rounded-lg flex-1 p-2 ${policeShootingColor.bg} flex flex-col items-center justify-center`}>
+          <AlertTriangle color={policeShootingColor.icon} size={20} />
+          <p className={`${policeShootingColor.text} text-xs sm:text-sm font-semibold text-center`}>Police Shooting</p>
+          <p className={`${policeShootingColor.text} text-sm font-extrabold`}>{policeShootingAverage}</p>
+        </div>
+        <div className={`rounded-lg flex-1 p-2 ${overallColor.bg} flex flex-col items-center justify-center`}>
+          <BarChart2 color={overallColor.icon} size={20} />
+          <p className={`${overallColor.text} text-xs sm:text-sm font-semibold text-center`}>Overall</p>
+          <p className={`${overallColor.text} text-sm font-extrabold`}>{overallScore}</p>
+        </div>
+      </div>
+    </div>
+
+  );
+};
