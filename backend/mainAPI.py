@@ -115,23 +115,59 @@ def get_scorecard():
     /api/scorecard?state=IL
     /api/scorecard?agency_name=CHICAGO&agency_type=police-department
     """
+    # get pagination parameters
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 12, type=int)
+
+    # copy parameters excluding pagination params
     params = request.args.to_dict()
+    if 'page' in params:
+        del params['page']
+    if 'per_page' in params:
+        del params['per_page']
+
     where_clauses = []
     query_params = {}
     for key, value in params.items():
         where_clauses.append(f"\"{key}\" = :{key}")
         query_params[key] = value
 
+    count_query = "SELECT COUNT(*) FROM  \"scorecard\""
+    if where_clauses:
+        count_query += " WHERE " + " AND ".join(where_clauses)
+    
+    count_data = fetch_data(count_query, query_params)
+    total_count = count_data[0]['count'] if count_data else 0
+
+    #calculate total pages
+    total_pages = (total_count + per_page - 1) // per_page if total_count > 0 else 0
+
+    # calculate offset for pagination
+    offset = (page - 1) * per_page
+
     query = "SELECT * FROM \"scorecard\""
     if where_clauses:
         query += " WHERE " + " AND ".join(where_clauses)
 
+    #added this
+    query += f" LIMIT {per_page} OFFSET {offset}"
+
     data = fetch_data(query, query_params)
 
-    if data:
-        return jsonify(data)
-    else:
-        return jsonify({"error": "No matching scorecard found."}), 404
+    response = {
+        "departments": data if data else [],
+        "total_count": total_count,
+        "total_pages": total_pages,
+        "current_page": page,
+        "per_page": per_page
+    }
+    
+    return jsonify(response)
+    # GORDON'S CODE
+    # if data:
+    #     return jsonify(data)
+    # else:
+    #     return jsonify({"error": "No matching scorecard found."}), 404
 
 @app.route("/api/departments/<int:scorecard_id>", methods=["GET"])
 def get_scorecard_by_id(scorecard_id):
