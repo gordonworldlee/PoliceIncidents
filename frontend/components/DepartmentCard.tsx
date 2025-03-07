@@ -62,7 +62,10 @@ export const DepartmentCard = (DepartmentInstance: any) => {
   // const link = `/department/${deptName}`;
   const locationName = DepartmentInstance.location_name.toLowerCase();
   const state = DepartmentInstance.state.toLowerCase();
-  const agencyType = DepartmentInstance.agency_type;
+  let agencyType = DepartmentInstance.agency_type.replace("-", " ").split(" ");
+  agencyType[0].charAt(0).toUpperCase() + agencyType[0].slice(1)
+  agencyType[1].charAt(0).toUpperCase() + agencyType[1].slice(1)
+  agencyType.join(" ")
   const coordinates = `${DepartmentInstance.latitude}, ${DepartmentInstance.longitude}`;
   const violenceScore = parseFloat(DepartmentInstance.calc_police_violence_score);
   const policeShootingAverage = parseFloat(DepartmentInstance.police_shootings_2021);
