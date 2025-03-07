@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Navbar from "../../components/Navbar";
-import { FaNewspaper } from "react-icons/fa";
+// import { FaNewspaper } from "react-icons/fa";
 import { obtainSingleBill } from "@/lib/fetch_legislative_data";
 import { Map } from "@/app/components/Map";
 import { DepartmentInstances} from "@/public/data/DepartmentData";
