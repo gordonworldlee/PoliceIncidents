@@ -1,109 +1,94 @@
-# JusticeWatch: Software Engineering Group 7 Sp25
+# JusticeWatch Backend
 
-## Team Members:
+This repository contains the backend API for the Justice Watch platform, which provides data on legislation, police violence incidents, and police department scorecards.
 
-- Gordon Lee / @gordonworldlee
-- Gabriel Keller / @gjkeller
-- Andres Osornio / @andyo1
-- Hari Shankar / @harishankar5
-- Long Phan / @longphan084
+## Getting Started
 
-## Phase 1:
+### Prerequisites
 
-git sha: 9ba7fb1f706a730f2e3d1fde57243de119f99aa2
+- Git
+- Miniconda or Anaconda
 
+### Setup Instructions
 
-API Design: https://documenter.getpostman.com/view/42447157/2sAYdZtYvV 
+#### 1. Install Miniconda (if not already installed)
 
-Website Link: https://justicewatch.me/ 
+**For MacOS/Linux:**
 
-Phase Leader: Gordon Lee
-  - Organized team meetings and organized tasks for each member.
+```bash
+curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh
+```
 
-- Gordon Lee - est: 5 Hours, actual 3 hours
-- Gabriel Keller - est: 5 Hours, actual 3 hours
-- Andres Osornio - est: 5 Hours, actual 3 hours
-- Hari Shankar - est: 5 Hours, actual 3 hours
-- Long Phan - est: 5 Hours, actual 3 hours
+**For Windows:** Download and install from [Miniconda website](https://docs.conda.io/en/latest/miniconda.html)
 
+#### 2. Create a New Conda Environment
 
+```bash
+# Create a new environment named "justicewatch"
+conda create -n justicewatch python=3.11
+```
 
+#### 3. Activate the Environment
 
+```bash
+conda activate justicewatch
+```
 
+#### 4. Install Required Packages
 
+```bash
+# Make sure pip is installed in the environment
+conda install pip
 
-## Project Proposal
+# Navigate to the backend directory (where requirements.txt is located)
+cd path/to/justicewatch/backend
 
-JusticeWatch is a civic engagement platform that visualizes Texas police brutality hotspots and tracks related legislation, misconduct cases, and police department accountability. Users can explore incidents, legislation, and department scorecards on an interactive map. It guides users to explore all of these across different large and small Texas cities to learn more about how police brutality is present and being addressed in their state.
+# Install required packages
+pip install -r requirements.txt
+```
 
-## Data Sources
+#### 5. Run the Application
 
-Mapping Police Violence Dataset: https://mappingpoliceviolence.us/ (CSV dataset for police killings and misconduct incidents).
-National Conference of State Legislatures (NCSL) Policing Legislation Database: https://www.ncsl.org/civil-and-criminal-justice/policing-legislation-databaseas
-Police Scorecard API: https://policescorecard.docs.apiary.io/#reference/scorecard/state/get-summary-for-a-single-state (RESTful API for department performance data).
+```bash
+# Make sure you're in the backend directory
+python mainAPI.py
+```
 
-## Models
+The API will be available at http://localhost:8000
 
-1. Police Misconduct Incidents
-2. Legislation Tracker
-3. Police Department Accountability Scorecards
+## Docker Deployment
 
-### 1. Police Misconduct Incidents
+To run the backend using Docker:
 
-- **Estimated Instances:** ~13,000
+```bash
+# Build the Docker image
+docker build -t justicewatch-backend .
 
-- **Attributes:**
+# Run the container
+docker run -p 8000:8000 justicewatch-backend
+```
 
-  - Date of Incident: When the misconduct occurred.
-  - Location: Street address, city, state, and zip code.
-  - Victim Information: Age, race, gender, and image of the victim.
-  - Cause of Death or Misconduct Type: Excessive force, shooting, etc.
-  - Outcome: Official disposition (e.g., justified or not), criminal charges filed, or disciplinary action taken.
+## Adding New Dependencies
 
-- **Media:** News articles, maps, photos
+When adding new Python packages to the project, follow these steps to ensure proper dependency management:
 
-- **Connections:**
-  - Connect to the score to see if they correlate
-  - Connect to the legislation passed to see if there's any correlation
+1. **Always start with a fresh environment** to avoid including unnecessary packages. Use the instructions provided above to set up a new Conda environment.
 
-### 2. Legislation Tracker
+2. **Install only the required packages** using pip:
 
-- **Estimated Instances:** ~8000
+   ```bash
+   # Install new packages you need
+   pip install new-package-name
+   ```
 
-- **Attributes:**
+3. **Update the requirements.txt file**:
 
-  - Bill Title and Summary: Name of the bill and its key details.
-  - State and Legislative Body: Where the bill was introduced (e.g., California Senate).
-  - Status of Bill: Pending, passed or failed status with last action date.
-  - Author Information: Name and political party of the bill's sponsor(s).
-  - Topics Covered: Areas like use-of-force policies, body cameras, or qualified immunity reforms.
+   ```bash
+   pip freeze > requirements.txt
+   ```
 
-- **Media:** Website, Text
+4. **Test the application** with the updated requirements to ensure everything works correctly. (if you'd like to double/triple check, follow the above instructions to create a new environment and install the packages from the newly generated requirements.txt)
+   ```
 
-- **Connections:**
-  - Connect to incidents to see if they had an effect
-  - Connect to scorecards to see if the legislation affects them
-
-### 3. Police Department Accountability Scorecards
-
-- **Estimated Instances:** 1000+
-
-- **Attributes:**
-
-  - Overall Accountability Score: A grade based on metrics like transparency and use-of-force policies.
-  - Funding Information: Annual budget allocated to the department.
-  - Arrest Data by Race: Number of arrests broken down by racial demographics.
-  - Homicide Rates by Race: Rate of homicides committed against specific racial groups within the jurisdiction.
-  - State/city
-
-- **Media:** Maps, Images, Text Feeds of Descriptions
-
-- **Connections:**
-  - Connect to incidents to see if the amount matches the score
-  - Connect to legislation to see if the number passed matches the score
-
-## Questions our Site will Answer:
-
-- Has the passed reform legislation had a positive effect on policing?
-- Where and to whom are negative policing incidents likely to happen?
-- What types of legislation passed & funding amount affect policing positively/negatively?
+   ```
