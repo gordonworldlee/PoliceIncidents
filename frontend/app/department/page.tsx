@@ -11,8 +11,8 @@ const lato = Lato({
   weight: ['400', '700'],
 });
 
-// Increased number of cards per page
-const ITEMS_PER_PAGE = 12; // Changed from 6 to 12
+// amount of card per page
+const ITEMS_PER_PAGE = 12; // changed from 6 to 12
 
 export default function DepartmentModelPage() {
   const [departments, setDepartments] = useState<Department[]>([]);
@@ -22,7 +22,6 @@ export default function DepartmentModelPage() {
   const [totalPages, setTotalPages] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
 
-  // Fetch departments from API
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
@@ -49,17 +48,16 @@ export default function DepartmentModelPage() {
     fetchDepartments();
   }, [currentPage]);
 
-  // Handle page change
+  // handle page change
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
     window.scrollTo(0, 0);
   };
 
-  // Render pagination controls with ellipsis for large page counts
   const renderPaginationControls = () => {
     const pages = [];
     
-    // Add previous button
+    // add previous button
     pages.push(
       <button 
         key="prev" 
@@ -71,7 +69,7 @@ export default function DepartmentModelPage() {
       </button>
     );
     
-    // Logic for showing page numbers with ellipsis
+    // for showing page number
     let startPage = Math.max(1, currentPage - 2);
     let endPage = Math.min(totalPages, startPage + 4);
     
@@ -79,7 +77,7 @@ export default function DepartmentModelPage() {
       startPage = Math.max(1, endPage - 4);
     }
     
-    // First page
+    // the first page
     if (startPage > 1) {
       pages.push(
         <button
@@ -96,7 +94,7 @@ export default function DepartmentModelPage() {
       }
     }
     
-    // Page numbers
+    // page numbers
     for (let i = startPage; i <= endPage; i++) {
       pages.push(
         <button
@@ -109,7 +107,7 @@ export default function DepartmentModelPage() {
       );
     }
     
-    // Last page
+    // last page
     if (endPage < totalPages) {
       if (endPage < totalPages - 1) {
         pages.push(<span key="ellipsis2" className="px-2">...</span>);
@@ -126,7 +124,7 @@ export default function DepartmentModelPage() {
       );
     }
     
-    // Add next button
+    // next button
     pages.push(
       <button 
         key="next" 
@@ -146,7 +144,7 @@ export default function DepartmentModelPage() {
       <Navbar />
       <h1 className={`${lato.className} text-[#D63C68] text-5xl text-center font-bold mt-8`}>DEPARTMENT MODEL</h1>
       
-      {/* Results count */}
+      {/* display the amount of instances showing */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
         <p className="text-gray-600">
           Showing {departments.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0} - {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)} of {totalCount} departments
@@ -174,14 +172,14 @@ export default function DepartmentModelPage() {
                 ))}
               </div>
               
-              {/* No departments message */}
+              {/* unable to find department */}
               {departments.length === 0 && !loading && (
                 <div className="text-center p-8">
                   <p className="text-lg text-gray-600">No departments found.</p>
                 </div>
               )}
               
-              {/* Pagination controls */}
+              {/* pagination logic */}
               {totalPages > 1 && (
                 <div className="flex justify-center my-8">
                   {renderPaginationControls()}
