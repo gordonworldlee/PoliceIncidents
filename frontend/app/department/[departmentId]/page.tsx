@@ -143,9 +143,6 @@ export default async function DepartmentPage({
         <h1 className="my-8 text-center text-3xl font-bold">
           {departmentName} Police Department
         </h1>
-        <div className="flex flex-row justify-center">
-          <img className="w-48 h-48 rounded-lg" src={departmentInstance.department_image} alt="outline of Texas State" />
-        </div>
         <div>
           <div className="text-left border-b-2 border-gray-300 rounded-lg shadow-md p-4 bg-white">
             <div className="flex flex-row justify-between">
@@ -163,7 +160,7 @@ export default async function DepartmentPage({
                   <strong>State:</strong> {departmentInstance.state}
                 </p>
                 <p>
-                  <strong>ORI:</strong> {departmentInstance.ori}
+                  <strong>ORI:</strong> {departmentInstance.ori_identifier}
                 </p>
                 <p>
                   <strong>Coordinates:</strong> {departmentInstance.latitude},{" "}
@@ -179,7 +176,7 @@ export default async function DepartmentPage({
                 </p>
                 <p>
                   <strong>Use of Force Reported:</strong>{" "}
-                  {departmentInstance.use_of_force_reported}
+                  {departmentInstance.use_of_force_complaints_reported}
                 </p>
                 <p>
                   <strong>Police Violence Score:</strong>{" "}
@@ -187,30 +184,30 @@ export default async function DepartmentPage({
                 </p>
                 <p>
                   <strong>Police Shooting Average:</strong>{" "}
-                  {departmentInstance.police_shooting_avg}
+                  {departmentInstance.police_shootings_2021}
                 </p>
                 <p>
                   <strong>Police Accountability Score:</strong>{" "}
                   {departmentInstance.calc_police_accountability_score}/100
                 </p>
                 <p>
-                  <strong>Overall Score:</strong> {departmentInstance.overall_score}/100
+                  <strong>Overall Score:</strong> {departmentInstance.calc_overall_score}/100
                 </p>
               </div>
               <div className="mr-4 w-1/2">
-                  <Map latitude={departmentInstance.latitude} longitude={departmentInstance.longitude}/>
+                  <Map latitude={parseFloat(departmentInstance.latitude)} longitude={parseFloat(departmentInstance.longitude)}/>
               </div>
             </div>
             <div>
             </div>
             <div>
-              <Link
+              {/* <Link
                 className="inline-block mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 hover:shadow-lg"
                 href={departmentInstance.dept_website}
               >
                 <FaNewspaper className="mr-2 mb-1 inline-block" />
                 Department Website
-              </Link>
+              </Link> */}
             </div>
             <p className="mt-4 text-xl font-bold underline">View Incidents in {stateTranslation[departmentInstance.state]}</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -222,7 +219,7 @@ export default async function DepartmentPage({
                 )
                 .slice(0, 1)
                 .map(dept => (
-                  <RelatedIncidents key={dept.ori} incident_id={dept.incident_id} />
+                  <RelatedIncidents key={dept.ori_identifier} incident_id={dept.incident_id} />
                 ))
               }
             </div>

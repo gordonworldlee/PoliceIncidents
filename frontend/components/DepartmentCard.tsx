@@ -1,6 +1,5 @@
 // import Link from "next/link";
 import React from 'react';
-import { DepartmentInstance } from "@/public/data/DepartmentData";
 import {
   MapPin, Building2, Shield,
   BarChart2, Target, AlertTriangle
@@ -21,9 +20,9 @@ const getScoreColor = (score: number) => {
     };
   if (score < 70)
     return {
-      bg: "bg-yellow-100",
+      bg: "bg-yellow-200",
       text: "text-yellow-700",
-      icon: "yellow",
+      icon: "orange",
     };
   return {
     bg: "bg-green-100",
@@ -32,19 +31,45 @@ const getScoreColor = (score: number) => {
   };
 };
 
-export const DepartmentCard = (DepartmentInstance: DepartmentInstance) => {
+const getPoliceShootingColor = (shootings: number) => {
+  if (shootings < 10)
+    return {
+      bg: "bg-green-100",
+      text: "text-green-700",
+      icon: "green", // Darker shade for icons
+    };
+  if (shootings < 30)
+    return {
+      bg: "bg-yellow-200",
+      text: "text-yellow-700",
+      icon: "orange",
+    };
+  if (shootings < 50)
+    return {
+      bg: "bg-orange-100",
+      text: "text-orange-700",
+      icon: "orange",
+    };
+  return {
+    bg: "bg-red-100",
+    text: "text-red-700",
+    icon: "red",
+  };
+};
+
+export const DepartmentCard = (DepartmentInstance: any) => {
   const deptName = DepartmentInstance.agency_name.toLowerCase();
   // const link = `/department/${deptName}`;
   const locationName = DepartmentInstance.location_name.toLowerCase();
   const state = DepartmentInstance.state.toLowerCase();
   const agencyType = DepartmentInstance.agency_type;
   const coordinates = `${DepartmentInstance.latitude}, ${DepartmentInstance.longitude}`;
-  const violenceScore = DepartmentInstance.calc_police_violence_score;
-  const policeShootingAverage = DepartmentInstance.police_shooting_avg;
-  const overallScore = DepartmentInstance.overall_score;
+  const violenceScore = parseFloat(DepartmentInstance.calc_police_violence_score);
+  const policeShootingAverage = parseFloat(DepartmentInstance.police_shootings_2021);
+  const overallScore = parseFloat(DepartmentInstance.calc_overall_score);
 
   const violenceColor = getScoreColor(violenceScore);
-  const policeShootingColor = getScoreColor(policeShootingAverage);
+  const policeShootingColor = getPoliceShootingColor(policeShootingAverage);
   const overallColor = getScoreColor(overallScore)
   console.log(violenceColor.icon)
   return (

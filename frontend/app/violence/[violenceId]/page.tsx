@@ -58,7 +58,7 @@ const ScorecardLink = ({
   police_shooting_avg,
   calc_overall_score,
 }: ScorecardLinkProps) => {
-  const link = `/department/${agency_name.toLowerCase()}`;
+  const link = `/department/${agency_name}`;
   
   return (
     <Link href={link}>
@@ -172,7 +172,7 @@ export default async function ViolenceInstancePage({
 
   const departmentDetails: Record<string, ScorecardLinkProps> = {
     "Houston Police Department": {
-      agency_name: "Houston",
+      agency_name: "HOUSTON",
       location_name: "Houston",
       state: "Texas",
       latitude: 29.7604,
@@ -183,7 +183,7 @@ export default async function ViolenceInstancePage({
       department_image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png",
     },
     "Austin Police Department": {
-      agency_name: "Austin",
+      agency_name: "AUSTIN",
       location_name: "Austin",
       state: "Texas",
       latitude: 30.26993,
@@ -194,7 +194,7 @@ export default async function ViolenceInstancePage({
       department_image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png",
     },
     "Dallas Police Department": {
-      agency_name: "Dallas",
+      agency_name: "DALLAS",
       location_name: "Dallas",
       state: "Texas",
       latitude: 32.76778,
