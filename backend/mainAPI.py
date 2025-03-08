@@ -92,6 +92,7 @@ def get_police_incidents():
     query = "SELECT * FROM \"Police Incidents\""
     if where_clauses:
         query += " WHERE " + " AND ".join(where_clauses)
+    print(query)
     
     data = fetch_data(query, query_params)
     
