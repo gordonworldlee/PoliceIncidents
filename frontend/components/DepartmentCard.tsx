@@ -58,7 +58,7 @@ const getPoliceShootingColor = (shootings: number) => {
 };
 
 export function capitalize (word: string, delimeter: string) {
-  let result = word.split(delimeter);
+  const result = word.split(delimeter);
   for (let i = 0; i < result.length; i++) {
     result[i] = result[i].charAt(0).toUpperCase() + result[i].slice(1);
   }

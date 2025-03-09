@@ -120,8 +120,9 @@ const stateTranslation: {[key: string]: string} = {
 }
 
 export default async function DepartmentPage({
-  params,
-  searchParams,
+  params
+  // ,
+  // searchParams,
 }: DepartmentPageProps) {
   const { departmentId } = await params;
 
