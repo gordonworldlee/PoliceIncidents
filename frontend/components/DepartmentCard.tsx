@@ -57,34 +57,19 @@ const getPoliceShootingColor = (shootings: number) => {
   };
 };
 
+export function capitalize (word: string, delimeter: string) {
+  let result = word.split(delimeter);
+  for (let i = 0; i < result.length; i++) {
+    result[i] = result[i].charAt(0).toUpperCase() + result[i].slice(1);
+  }
+  return result.join(" ")
+}
+
 export const DepartmentCard = (DepartmentInstance: any) => {
-  let deptName = DepartmentInstance.agency_name.toLowerCase();
-  deptName = deptName.split(" ");
-  deptName[0] = deptName[0].charAt(0).toUpperCase() + deptName[0].slice(1);
-  if (deptName.length > 1) {
-    deptName[1] = deptName[1].charAt(0).toUpperCase() + deptName[1].slice(1);
-  }
-  deptName = deptName.join(" ");
-  // const link = `/department/${deptName}`;
-  let locationName = DepartmentInstance.location_name.toLowerCase();
-  locationName = locationName.split(" ");
-  locationName[0] = locationName[0].charAt(0).toUpperCase() + locationName[0].slice(1);
-  if (locationName.length > 1) {
-    locationName[1] = locationName[1].charAt(0).toUpperCase() + locationName[1].slice(1);
-  }
-  locationName = locationName.join(" ");
-
+  const deptName = capitalize(DepartmentInstance.agency_name.toLowerCase(), " ");
+  const locationName = capitalize(DepartmentInstance.location_name.toLowerCase(), " ");
   const state = DepartmentInstance.state.toLowerCase();
-
-  let agencyType = DepartmentInstance.agency_type.split("-");
-  if (agencyType) {
-    agencyType[0] = agencyType[0].charAt(0).toUpperCase() + agencyType[0].slice(1)
-    if (agencyType.length > 1) {
-    agencyType[1] = agencyType[1].charAt(0).toUpperCase() + agencyType[1].slice(1)
-    }
-  }
-  
-  agencyType = agencyType.join(" ")
+  const agencyType = capitalize(DepartmentInstance.agency_type.toLowerCase(), "-");
   const coordinates = `${DepartmentInstance.latitude}, ${DepartmentInstance.longitude}`;
   const violenceScore = parseFloat(DepartmentInstance.calc_police_violence_score);
   const policeShootingAverage = parseFloat(DepartmentInstance.police_shootings_2021);

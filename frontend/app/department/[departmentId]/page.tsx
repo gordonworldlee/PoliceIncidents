@@ -4,6 +4,7 @@ import Navbar from "../../components/Navbar";
 import { obtainSingleBill } from "@/lib/fetch_legislative_data";
 import { Map } from "@/app/components/Map";
 import { DepartmentInstances} from "@/public/data/DepartmentData";
+import { capitalize } from '@/components/DepartmentCard'
 
 interface ViolenceInstance {
   id: string;
@@ -123,15 +124,20 @@ export default async function DepartmentPage({
   searchParams,
 }: DepartmentPageProps) {
   const { departmentId } = await params;
-  console.log(searchParams);
 
-  const departmentInstance = DepartmentInstances[departmentId];
-  const departmentName =
-    departmentInstance.agency_name.charAt(0).toUpperCase() +
-    departmentInstance.agency_name.slice(1).toLowerCase();
-  const location =
-    departmentInstance.location_name.charAt(0).toUpperCase() +
-    departmentInstance.location_name.slice(1).toLowerCase();
+  const getDepartmentData = async () => {
+    const response = await fetch(`http://localhost:5001/api/departments?agency_name=${encodeURIComponent(departmentId)}`)
+    if (!response.ok) {
+      throw new Error('Failed to fetch departments');
+    }
+    const data = await response.json();
+    return data.departments;
+  }
+  let departmentInstance = await getDepartmentData();
+  departmentInstance = departmentInstance[0];
+
+  const departmentName = capitalize(departmentInstance.agency_name.toLowerCase(), " ");
+  const location = capitalize(departmentInstance.location_name.toLowerCase(), " ");
   if (!departmentInstance) {
     return <div>Department not found</div>;
   }
@@ -151,7 +157,7 @@ export default async function DepartmentPage({
                   <strong>Agency Name:</strong> {departmentName}
                 </p>
                 <p>
-                  <strong>Agency Type:</strong> {departmentInstance.agency_type}
+                  <strong>Agency Type:</strong> {capitalize(departmentInstance.agency_type, "-")}
                 </p>
                 <p>
                   <strong>Location:</strong> {location}
@@ -172,7 +178,7 @@ export default async function DepartmentPage({
                 </p>
                 <p>
                   <strong>Police Funding Score:</strong>{" "}
-                  {departmentInstance.calc_police_funding_score}/100
+                  {parseFloat(departmentInstance.calc_police_funding_score)}/100
                 </p>
                 <p>
                   <strong>Use of Force Reported:</strong>{" "}
@@ -180,7 +186,7 @@ export default async function DepartmentPage({
                 </p>
                 <p>
                   <strong>Police Violence Score:</strong>{" "}
-                  {departmentInstance.calc_police_violence_score}/100
+                  {parseFloat(departmentInstance.calc_police_violence_score)}/100
                 </p>
                 <p>
                   <strong>Police Shooting Average:</strong>{" "}
@@ -188,10 +194,10 @@ export default async function DepartmentPage({
                 </p>
                 <p>
                   <strong>Police Accountability Score:</strong>{" "}
-                  {departmentInstance.calc_police_accountability_score}/100
+                  {parseFloat(departmentInstance.calc_police_accountability_score)}/100
                 </p>
                 <p>
-                  <strong>Overall Score:</strong> {departmentInstance.calc_overall_score}/100
+                  <strong>Overall Score:</strong> {parseFloat(departmentInstance.calc_overall_score)}/100
                 </p>
               </div>
               <div className="mr-4 w-1/2">
