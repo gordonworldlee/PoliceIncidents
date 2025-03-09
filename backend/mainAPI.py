@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from sqlalchemy import create_engine, text
 from flask_cors import CORS  
-
+import math
 
 app = Flask(__name__)
 CORS(app)
@@ -170,8 +170,8 @@ def get_scorecard():
     total_count = count_data[0]['count'] if count_data else 0
 
     #calculate total pages
-    total_pages = (total_count + per_page - 1) // per_page if total_count > 0 else 0
-
+    total_pages = math.ceil(total_count / per_page) if total_count > 0 else 0
+    
     # calculate offset for pagination
     offset = (page - 1) * per_page
 
