@@ -39,28 +39,54 @@ def get_legislation():
     /api/legislation?bill_number=AB123&session_year=2025
     /api/legislation?subjects=Education&sponsors=John%20Doe
     """
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 12, type=int)  # Fixed parameter name
+
     # Get query parameters
     params = request.args.to_dict()
 
-    # Build the WHERE clause dynamically
+    if 'page' in params:
+        del params['page']
+    if 'per_page' in params:
+        del params['per_page']
+
     where_clauses = []
     query_params = {}
     for key, value in params.items():
         where_clauses.append(f"\"{key}\" = :{key}")
         query_params[key] = value
 
-    # Construct the SQL query
+    # make SQL query
+    count_query = "SELECT COUNT(*) as count FROM \"Legislation\""   #get count of matchings
+    if where_clauses:
+        count_query += " WHERE " + " AND ".join(where_clauses)
+
+
+    count_data = fetch_data(count_query, query_params)
+    total_count = count_data[0]['count'] if count_data else 0  
+
+    total_pages = math.ceil(total_count / per_page) if total_count > 0 else 0
+    offset = (page - 1) * per_page
+
+    # construct the main SQL query
     query = "SELECT * FROM \"Legislation\""
     if where_clauses:
         query += " WHERE " + " AND ".join(where_clauses)
+    
+    #  pagination
+    query += f" LIMIT {per_page} OFFSET {offset}"
 
-    # Execute the query
+    # execute the query
     data = fetch_data(query, query_params)
+    response = {
+        "legislation": data if data else [], 
+        "total_count": total_count, 
+        "total_pages": total_pages,
+        "current_page": page,
+        "per_page": per_page
+    }
+    return jsonify(response)
 
-    if data:
-        return jsonify(data)
-    else:
-        return jsonify({"error": "No matching legislation found."}), 404
 
 @app.route("/api/legislation/<int:legislation_id>", methods=["GET"])
 def get_legislation_by_id(legislation_id):
@@ -71,81 +97,6 @@ def get_legislation_by_id(legislation_id):
         return jsonify(data[0])
     else:
         return jsonify({"error": "Legislation not found."}), 404
-    
-
-
-@app.route("/api/violence", methods=["GET"])
-def get_police_incidents():
-    """
-    You can now query police incidents using any combination of parameters, for example:
-    /api/police_incidents?state=CA
-    /api/police_incidents?city=Dallas&cause_of_death=Gunshot
-    /api/police_incidents?state=TX&name=John%20Doe
-    """
-    params = request.args.to_dict()
-    where_clauses = []
-    query_params = {}
-    for key, value in params.items():
-        where_clauses.append(f"\"{key}\" = :{key}")
-        query_params[key] = value
-    
-    query = "SELECT * FROM \"Police Incidents\""
-    if where_clauses:
-        query += " WHERE " + " AND ".join(where_clauses)
-    print(query)
-    
-    data = fetch_data(query, query_params)
-    
-    if data:
-        return jsonify(data)
-    else:
-        return jsonify({"error": "No matching police incidents found."}), 404
-
-@app.route("/api/violence/<int:incident_id>", methods=["GET"])
-def get_police_incident_by_id(incident_id):
-    query = "SELECT * FROM \"Police Incidents\" WHERE id = :id"
-    data = fetch_data(query, {"id": incident_id})
-
-    if data:
-        return jsonify(data[0])
-    else:
-        return jsonify({"error": "Police incident not found."}), 404
-
-
-@app.route("/api/departments", methods=["GET"])
-def get_scorecard():
-    """
-    You can now query police incidents using any combination of parameters, for example:
-    /api/scorecard?state=IL
-    /api/scorecard?agency_name=CHICAGO&agency_type=police-department
-    """
-    params = request.args.to_dict()
-    where_clauses = []
-    query_params = {}
-    for key, value in params.items():
-        where_clauses.append(f"\"{key}\" = :{key}")
-        query_params[key] = value
-    
-    query = "SELECT * FROM \"scorecard\""
-    if where_clauses:
-        query += " WHERE " + " AND ".join(where_clauses)
-    
-    data = fetch_data(query, query_params)
-    
-    if data:
-        return jsonify(data)
-    else:
-        return jsonify({"error": "No matching scorecard found."}), 404
-
-@app.route("/api/departments/<int:scorecard_id>", methods=["GET"])
-def get_scorecard_by_id(scorecard_id):
-    query = "SELECT * FROM \"scorecard\" WHERE id = :id"
-    data = fetch_data(query, {"id": scorecard_id})
-
-    if data:
-        return jsonify(data[0])
-    else:
-        return jsonify({"error": "Scorecard not found."}), 404
 
 
 
@@ -242,11 +193,7 @@ def get_scorecard():
     }
     
     return jsonify(response)
-    # GORDON'S CODE
-    # if data:
-    #     return jsonify(data)
-    # else:
-    #     return jsonify({"error": "No matching scorecard found."}), 404
+
 
 @app.route("/api/departments/<int:scorecard_id>", methods=["GET"])
 def get_scorecard_by_id(scorecard_id):
