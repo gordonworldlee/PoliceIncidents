@@ -23,7 +23,8 @@ export interface Department {
   police_shootings_2021: string;
   state: string;
   total_population: string;
-  use_of_force_complaints_reported: string
+  use_of_force_complaints_reported: string;
+  incident_id : string;
 }
 
 export const DepartmentInstances: Record<string, Department> = {
@@ -52,7 +53,8 @@ export const DepartmentInstances: Record<string, Department> = {
       "police_shootings_2021": "1.0",
       "state": "TX",
       "total_population": "1278608",
-      "use_of_force_complaints_reported": "268.0"
+      "use_of_force_complaints_reported": "268.0",
+      "incident_id" : "incident2"
     },
     HOUSTON: {
       "agency_name": "HOUSTON",
@@ -79,7 +81,8 @@ export const DepartmentInstances: Record<string, Department> = {
       "police_shootings_2021": "29.0",
       "state": "TX",
       "total_population": "2297580",
-      "use_of_force_complaints_reported": "229.0"
+      "use_of_force_complaints_reported": "229.0", 
+      "incident_id" : "incident1"
     },
     AUSTIN: {
       "agency_name": "AUSTIN",
@@ -106,6 +109,7 @@ export const DepartmentInstances: Record<string, Department> = {
       "police_shootings_2021": "8.0",
       "state": "TX",
       "total_population": "943059",
-      "use_of_force_complaints_reported": "301.0"
+      "use_of_force_complaints_reported": "301.0",
+      "incident_id" : "incident3"
     },
 };
