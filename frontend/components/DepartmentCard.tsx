@@ -58,13 +58,32 @@ const getPoliceShootingColor = (shootings: number) => {
 };
 
 export const DepartmentCard = (DepartmentInstance: any) => {
-  const deptName = DepartmentInstance.agency_name.toLowerCase();
+  let deptName = DepartmentInstance.agency_name.toLowerCase();
+  deptName = deptName.split(" ");
+  deptName[0] = deptName[0].charAt(0).toUpperCase() + deptName[0].slice(1);
+  if (deptName.length > 1) {
+    deptName[1] = deptName[1].charAt(0).toUpperCase() + deptName[1].slice(1);
+  }
+  deptName = deptName.join(" ");
   // const link = `/department/${deptName}`;
-  const locationName = DepartmentInstance.location_name.toLowerCase();
+  let locationName = DepartmentInstance.location_name.toLowerCase();
+  locationName = locationName.split(" ");
+  locationName[0] = locationName[0].charAt(0).toUpperCase() + locationName[0].slice(1);
+  if (locationName.length > 1) {
+    locationName[1] = locationName[1].charAt(0).toUpperCase() + locationName[1].slice(1);
+  }
+  locationName = locationName.join(" ");
+
   const state = DepartmentInstance.state.toLowerCase();
-  let agencyType = DepartmentInstance.agency_type.replace("-", " ").split(" ");
-  agencyType[0] = agencyType[0].charAt(0).toUpperCase() + agencyType[0].slice(1)
-  agencyType[1] = agencyType[1].charAt(0).toUpperCase() + agencyType[1].slice(1)
+
+  let agencyType = DepartmentInstance.agency_type.split("-");
+  if (agencyType) {
+    agencyType[0] = agencyType[0].charAt(0).toUpperCase() + agencyType[0].slice(1)
+    if (agencyType.length > 1) {
+    agencyType[1] = agencyType[1].charAt(0).toUpperCase() + agencyType[1].slice(1)
+    }
+  }
+  
   agencyType = agencyType.join(" ")
   const coordinates = `${DepartmentInstance.latitude}, ${DepartmentInstance.longitude}`;
   const violenceScore = parseFloat(DepartmentInstance.calc_police_violence_score);
@@ -74,7 +93,6 @@ export const DepartmentCard = (DepartmentInstance: any) => {
   const violenceColor = getScoreColor(violenceScore);
   const policeShootingColor = getPoliceShootingColor(policeShootingAverage);
   const overallColor = getScoreColor(overallScore)
-  console.log(violenceColor.icon)
   return (
     // Card Container
     <div className="rounded-lg shadow-lg border-[1px] bg-white border-gray-300 hover:border-black hover:shadow-xl hover:-translate-y-2">
@@ -84,7 +102,7 @@ export const DepartmentCard = (DepartmentInstance: any) => {
           <Building2 color="blue" size={32} />
         </span>
         <header className="inline-block flex flex-col">
-          <div className="font-bold text-lg">{deptName.charAt(0).toUpperCase() + deptName.slice(1).toLowerCase()} Police Department</div>
+          <div className="font-bold text-lg">{deptName} Police Department</div>
           <div className="text-gray-600">{agencyType}</div>
         </header>
       </div>
@@ -97,7 +115,7 @@ export const DepartmentCard = (DepartmentInstance: any) => {
           </span>
           <div className="min-w-0">
             <header className="font-bold whitespace-nowrap">Location</header>
-            <div className="text-[0.85rem] lg:text-sm ">{locationName.charAt(0).toUpperCase() + locationName.slice(1).toLowerCase()}, {state.toUpperCase()}</div>
+            <div className="text-[0.85rem] lg:text-sm ">{locationName}, {state.toUpperCase()}</div>
           </div>
         </div>
         <div className="flex items-start gap-x-1">
