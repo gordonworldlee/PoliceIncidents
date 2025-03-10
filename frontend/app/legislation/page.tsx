@@ -201,7 +201,7 @@ export default function LegislationModelPage() {
             <>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {legislationData.map((bill) => (
-                   <Link href={`/legislation/${bill.id}`} className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow flex flex-col justify-center items-center text-center space-y-4 min-h-[250px] w-full">
+                   <Link key={bill.id} href={`/legislation/${bill.id}`} className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow flex flex-col justify-center items-center text-center space-y-4 min-h-[250px] w-full">
                   <div 
                     key={bill.id}
                     className=""
