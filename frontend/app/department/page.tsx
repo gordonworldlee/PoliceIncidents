@@ -164,7 +164,7 @@ export default function DepartmentModelPage() {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {departments.map((department) => (
                   <Link key={department.id || department.agency_name} href={`/department/${department.agency_name}`}>
                     <DepartmentCard {...department} />

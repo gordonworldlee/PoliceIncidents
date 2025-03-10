@@ -97,23 +97,23 @@ const RelatedIncidents = ({incident_id }: { incident_id: string }) => {
   )
 }
 
-const RelatedLegislation = async ({bill_id}: {bill_id: string}) => {
-  const billData = await obtainSingleBill(parseInt(bill_id));
+// const RelatedLegislation = async ({bill_id}: {bill_id: string}) => {
+//   const billData = await obtainSingleBill(parseInt(bill_id));
   
-  return (
-    <Link href={`/legislation/${bill_id}`}>
-      <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow flex flex-col justify-center space-y-4">        
-        <img src="/texas-state-outline.png" alt="Outline of Texas State" className="w-24 h-24"/>
-        <div className="text-gray-700 space-y-1">
-          <p className="text-sm"><strong>State:</strong> {billData.state}</p>
-          <p className="text-sm"><strong>Bill Number:</strong> {billData.bill_number}</p>
-          <p className="text-sm"><strong>Date Filed:</strong> {billData.history[0].date}</p>
-          <p className="text-sm"><strong>First Sponsor:</strong> {billData.sponsors[0].name}</p>
-        </div>
-      </div>
-    </Link>
-  )
-}
+//   return (
+//     <Link href={`/legislation/${bill_id}`}>
+//       <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow flex flex-col justify-center space-y-4">        
+//         <img src="/texas-state-outline.png" alt="Outline of Texas State" className="w-24 h-24"/>
+//         <div className="text-gray-700 space-y-1">
+//           <p className="text-sm"><strong>State:</strong> {billData.state}</p>
+//           <p className="text-sm"><strong>Bill Number:</strong> {billData.bill_number}</p>
+//           <p className="text-sm"><strong>Date Filed:</strong> {billData.history[0].date}</p>
+//           <p className="text-sm"><strong>First Sponsor:</strong> {billData.sponsors[0].name}</p>
+//         </div>
+//       </div>
+//     </Link>
+//   )
+// }
 
 const stateTranslation: {[key: string]: string} = {
   "TEXAS": "TX"
@@ -127,11 +127,12 @@ export default async function DepartmentPage({
   const { departmentId } = await params;
 
   const getDepartmentData = async () => {
-    const response = await fetch(`http://localhost:5001/api/departments?agency_name=${encodeURIComponent(departmentId)}`)
+    const response = await fetch(`http://localhost:5001/api/departments?agency_name=${departmentId}`)
     if (!response.ok) {
       throw new Error('Failed to fetch departments');
     }
     const data = await response.json();
+    // console.log(data);
     return data.departments;
   }
   let departmentInstance = await getDepartmentData();
@@ -231,10 +232,10 @@ export default async function DepartmentPage({
               }
             </div>
             <p className="mt-4 text-xl font-bold underline">View Legislation from {stateTranslation[departmentInstance.state]}</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <RelatedLegislation bill_id="1891028" />
               <RelatedLegislation bill_id="1890795" />
-            </div>
+            </div> */}
 
           </div>
           <div className="mt-6 text-center">
