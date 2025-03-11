@@ -145,7 +145,6 @@ export default async function DepartmentPage({
   departmentInstance = departmentInstance[0];
 
   const departmentName = capitalize(departmentInstance.agency_name.toLowerCase(), " ");
-  const location = capitalize(departmentInstance.location_name.toLowerCase(), " ");
   if (!departmentInstance) {
     return <div>Department not found</div>;
   }
