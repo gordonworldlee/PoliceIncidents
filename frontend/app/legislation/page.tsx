@@ -24,6 +24,58 @@ export interface Legislation {
   url: string;
 }
 
+const stateTranslation: {[key: string]: string} = {
+  AL: "alabama",
+  AK: "alaska",
+  AR: "arkansas",
+  AZ: "arizona",
+  CA: "california",
+  CO: "colorado",
+  CT: "connecticut",
+  DE: "delaware",
+  FL: "florida",
+  GA: "georgia",
+  HI: "hawaii",
+  ID: "idaho",
+  IL: "illinois",
+  IN: "indiana",
+  IA: "iowa",
+  KS: "kansas",
+  KY: "kentucky",
+  LA: "louisiana",
+  ME: "maine",
+  MD: "maryland",
+  MA: "massachusetts",
+  MI: "michigan",
+  MN: "minnesota",
+  MS: "mississippi",
+  MO: "missouri",
+  MT: "montana",
+  NE: "nebraska",
+  NV: "nevada",
+  NH: "newhampshire",
+  NJ: "newjersey",
+  NM: "newmexico",
+  NY: "newyork",
+  NC: "northcarolina",
+  ND: "northdakota",
+  OH: "ohio",
+  OK: "oklahoma",
+  OR: "oregon",
+  PA: "pennsylvania",
+  RI: "rhodeisland",
+  SC: "southcarolina",
+  SD: "southdakota",
+  TN: "tennessee",
+  TX: "texas",
+  UT: "utah",
+  VA: "virginia",
+  WA: "washington",
+  WI: "wisconsin",
+  WY: "wyoming",
+  WV: "westvirginia"
+}
+
 // interface ApiResponse {
 //   current_page: number;
 //   legislation: Legislation[];
@@ -209,8 +261,8 @@ export default function LegislationModelPage() {
                       <h2 className="text-xl font-bold text-blue-600">{bill.title}</h2>
                     
                     <img
-                      src="/texas-state-outline.png"
-                      alt="Outline of Texas State"
+                      src={`/flags/${stateTranslation[bill.state]}.png`}
+                      alt={`flag of ${bill.state}`}
                       className="w-24 h-24"
                     />
                     
