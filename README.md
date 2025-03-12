@@ -26,7 +26,23 @@ Phase Leader: Gordon Lee
 - Hari Shankar - est: 5 Hours, actual 3 hours
 - Long Phan - est: 5 Hours, actual 3 hours
 
+## Phase 2:
 
+git sha: 9ba7fb1f706a730f2e3d1fde57243de119f99aa2
+
+
+API Design: https://documenter.getpostman.com/view/42447157/2sAYdZtYvV 
+
+Website Link: https://justicewatch.me/ 
+
+Phase Leader: Gordon Lee
+  - Organized team meetings and organized tasks for each member, led by rule of fear and example.
+
+- Gordon Lee - est: 5 Hours, actual 8 hours
+- Gabriel Keller - est: 5 Hours, actual 8 hours
+- Andres Osornio - est: 5 Hours, actual 8 hours
+- Hari Shankar - est: 5 Hours, actual 8 hours
+- Long Phan - est: 5 Hours, actual 8 hours
 
 
 
