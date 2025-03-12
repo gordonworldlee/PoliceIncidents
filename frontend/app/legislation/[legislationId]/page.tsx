@@ -4,6 +4,59 @@ import Navbar from "../../components/Navbar";
 import { DepartmentInstances } from "@/public/data/DepartmentData";
 import { DepartmentCard } from "@/components/DepartmentCard";
 
+const stateTranslation: {[key: string]: string} = {
+  AL: "alabama",
+  AK: "alaska",
+  AR: "arkansas",
+  AZ: "arizona",
+  CA: "california",
+  CO: "colorado",
+  CT: "connecticut",
+  DE: "delaware",
+  FL: "florida",
+  GA: "georgia",
+  HI: "hawaii",
+  ID: "idaho",
+  IL: "illinois",
+  IN: "indiana",
+  IA: "iowa",
+  KS: "kansas",
+  KY: "kentucky",
+  LA: "louisiana",
+  ME: "maine",
+  MD: "maryland",
+  MA: "massachusetts",
+  MI: "michigan",
+  MN: "minnesota",
+  MS: "mississippi",
+  MO: "missouri",
+  MT: "montana",
+  NE: "nebraska",
+  NV: "nevada",
+  NH: "newhampshire",
+  NJ: "newjersey",
+  NM: "newmexico",
+  NY: "newyork",
+  NC: "northcarolina",
+  ND: "northdakota",
+  OH: "ohio",
+  OK: "oklahoma",
+  OR: "oregon",
+  PA: "pennsylvania",
+  RI: "rhodeisland",
+  SC: "southcarolina",
+  SD: "southdakota",
+  TN: "tennessee",
+  TX: "texas",
+  UT: "utah",
+  VA: "virginia",
+  WA: "washington",
+  WI: "wisconsin",
+  WY: "wyoming",
+  WV: "westvirginia",
+  VT: "vermont"
+}
+
 interface LegislationInstancePageProps {
   params: Promise<{
     legislationId: string;
@@ -85,18 +138,13 @@ export default async function LegislationInstancePage({
   // const billData = await obtainSingleBill(parseInt(legislationId));
   const getBill = await fetchBillData();
   const billData = getBill[0];
-
   
   return (
     <div>
       <Navbar />
       <div className="p-8">
         <div className="flex items-center space-x-4">
-          <img
-            src="/texas-state-outline.png"
-            alt="Outline of Texas State"
-            className="w-16 h-16"
-          />
+          <img src={`/flags/${stateTranslation[billData.state]}.png`} alt={`flag of ${billData.state}`} className="w-16 h-16" />
           <h1 className="text-3xl font-bold">{billData.title}</h1>
         </div>
         <br />

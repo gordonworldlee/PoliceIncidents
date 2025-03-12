@@ -73,7 +73,8 @@ const stateTranslation: {[key: string]: string} = {
   WA: "washington",
   WI: "wisconsin",
   WY: "wyoming",
-  WV: "westvirginia"
+  WV: "westvirginia",
+  VT: "vermont"
 }
 
 // interface ApiResponse {
@@ -254,25 +255,14 @@ export default function LegislationModelPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {legislationData.map((bill) => (
                    <Link key={bill.id} href={`/legislation/${bill.id}`} className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow flex flex-col justify-center items-center text-center space-y-4 min-h-[250px] w-full">
-                  <div 
-                    key={bill.id}
-                    className=""
-                  >
-                      <h2 className="text-xl font-bold text-blue-600">{bill.title}</h2>
-                    
-                    <img
-                      src={`/flags/${stateTranslation[bill.state]}.png`}
-                      alt={`flag of ${bill.state}`}
-                      className="w-24 h-24"
-                    />
-                    
+                    <h2 className="text-xl font-bold text-blue-600">{bill.title}</h2>
+                    <img src={`/flags/${stateTranslation[bill.state]}.png`} alt={`flag of ${bill.state}`} className="w-32 h-24"/>
                     <div className="text-gray-700 space-y-1">
                       <p className="text-sm"><strong>State:</strong> {bill.state}</p>
                       <p className="text-sm"><strong>Bill Number:</strong> {bill.bill_number}</p>
                       <p className="text-sm"><strong>Last Action:</strong> {bill.last_action || "N/A"}</p>
                       <p className="text-sm"><strong>Sponsors:</strong> {bill.sponsors || "N/A"}</p>
                     </div>
-                  </div>
                   </Link>
                 ))}
               </div>
