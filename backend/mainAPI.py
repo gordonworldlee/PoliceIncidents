@@ -103,29 +103,53 @@ def get_legislation_by_id(legislation_id):
 
 @app.route("/api/violence", methods=["GET"])
 def get_police_incidents():
-    """
-    You can now query police incidents using any combination of parameters, for example:
-    /api/police_incidents?state=CA
-    /api/police_incidents?city=Dallas&cause_of_death=Gunshot
-    /api/police_incidents?state=TX&name=John%20Doe
-    """
+    # Get pagination parameters
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 12, type=int)
+    
+    # Copy parameters excluding pagination params
     params = request.args.to_dict()
+    if 'page' in params:
+        del params['page']
+    if 'per_page' in params:
+        del params['per_page']
+    
     where_clauses = []
     query_params = {}
     for key, value in params.items():
         where_clauses.append(f"\"{key}\" = :{key}")
         query_params[key] = value
-
+    
+    # Get count for pagination
+    count_query = "SELECT COUNT(*) as count FROM \"Police Incidents\""
+    if where_clauses:
+        count_query += " WHERE " + " AND ".join(where_clauses)
+    
+    count_data = fetch_data(count_query, query_params)
+    total_count = count_data[0]['count'] if count_data else 0
+    
+    # Calculate pagination values
+    total_pages = math.ceil(total_count / per_page) if total_count > 0 else 0
+    offset = (page - 1) * per_page
+    
+    # Main query with pagination
     query = "SELECT * FROM \"Police Incidents\""
     if where_clauses:
         query += " WHERE " + " AND ".join(where_clauses)
-
+    
+    query += f" LIMIT {per_page} OFFSET {offset}"
+    
     data = fetch_data(query, query_params)
-
-    if data:
-        return jsonify(data)
-    else:
-        return jsonify({"error": "No matching police incidents found."}), 404
+    
+    response = {
+        "incidents": data if data else [],
+        "total_count": total_count,
+        "total_pages": total_pages,
+        "current_page": page,
+        "per_page": per_page
+    }
+    
+    return jsonify(response)
 
 @app.route("/api/violence/<int:incident_id>", methods=["GET"])
 def get_police_incident_by_id(incident_id):
