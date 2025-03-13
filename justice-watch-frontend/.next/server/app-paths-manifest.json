@@ -1,9 +1,0 @@
-{
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/about/page": "app/about/page.js",
-  "/page": "app/page.js",
-  "/department/page": "app/department/page.js",
-  "/violence/page": "app/violence/page.js",
-  "/legislation/page": "app/legislation/page.js",
-  "/legislation/[legislationId]/page": "app/legislation/[legislationId]/page.js"
-}
