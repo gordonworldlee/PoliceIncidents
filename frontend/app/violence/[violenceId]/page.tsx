@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { FaNewspaper } from "react-icons/fa";
 import Navbar from "../../components/Navbar";
-import { obtainBillList, obtainSingleBill } from "@/lib/fetch_legislative_data";
 import { Map } from "@/app/components/Map";
 
 interface ViolenceInstance {
@@ -20,9 +19,9 @@ interface ViolenceInstance {
 }
 
 interface ViolencePageProps {
-  params: Promise<{
+  params: {
     violenceId: string;
-  }>;
+  };
 }
 
 interface ScorecardLinkProps {
@@ -108,63 +107,20 @@ const LegislationCard = ({ bill }: { bill: any }) => (
   </div>
 );
 
+async function fetchViolenceById(violenceId : string) {
+  const response = await fetch(`http://localhost:5001/api/violence/${violenceId}`);
+  const data = await response.json();
+  return data;
+}
+
 export default async function ViolenceInstancePage({
   params,
 }: ViolencePageProps) {
   const { violenceId } = await params;
-
-  // Mock data for violence instances (use actual API data here)
-  const violenceInstances: Record<string, ViolenceInstance> = {
-    incident1: {
-      image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png",
-      id: "incident1",
-      city: "Houston",
-      state: "TX",
-      address: "300 Buffalo Branch Rd",
-      ori: "KYKSP2500",
-      encounter_type: "Domestic Disturbance",
-      agency_responsible: "Houston Police Department",
-      cause: "Gun",
-      date: "1/31/25",
-      description: "Officers investigating a separate case on West Broadway were diverted to a reported shooting near the MTS trolley platform. According to police, Officer Daniel Gold, a two-year veteran of the San Diego Police Department assigned to Central Division, encountered Wilson near Kettner Boulevard and the Santa Fe Depot. Officer Gold shot and killed the teen.",
-      news: "https://vtdigger.org/2025/01/24/federal-prosecutors-file-charges-in-probe-of-fatal-shooting-of-border-patrol-agent-in-vermont/",
-    },
-    incident2: {
-      image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png",
-      id: "incident2",
-      city: "Austin",
-      state: "TX",
-      address: "1203 Main Blvd",
-      ori: "AUSTIN123",
-      encounter_type: "Suspicious Activity",
-      agency_responsible: "Austin Police Department",
-      cause: "Unknown",
-      date: "2/02/25",
-      description: "Atchison Police Department responded to a call about a person with a gun and a second call of a subject breaking into an apartment. As officers arrived at 508 N 9th St. in Atchison, an officer exited his vehicle and shots were fired at him, striking his police vehicle multiple times. The officer was not struck. The man, identified as Bryson McCray, 36, of St. Joseph, Mo., then fled back into a residence. Preliminary information indicates that at around 2:30 a.m., an attempt was made to rescue the female hostage. During the rescue attempt, McCray and the hostage were separated momentarily, and a KHP trooper fired at McCray striking him.",
-      news: "https://www.fox8live.com/2025/01/18/father-kills-wife-shoots-3-children-before-being-killed-by-jpso-deputies-river-ridge/",
-    },
-    incident3: {
-      image: "https://dallaspolice.net/PublishingImages/badge-dpd.png",
-      id: "incident3",
-      city: "Dallas",
-      state: "TX",
-      address: "450 Elm St",
-      ori: "DALLSP1234",
-      encounter_type: "Traffic Stop",
-      agency_responsible: "Dallas Police Department",
-      cause: "Traffic Violations",
-      date: "2/01/25",
-      description: "Deputies shot and killed a man who had allegedly killed his father, after a standoff following a welfare check.",
-      news: "https://www.fox10phoenix.com/news/phoenix-police-scene-officer-involved-shooting-laveen",
-    },
-  };
-
-  const instance = violenceInstances[violenceId];
+  
+  const instance = await fetchViolenceById(violenceId);
 
   // Fetching legislation data for all violence instances
-  const bill_data = await Promise.all(
-    (await obtainBillList()).map((bill_id) => obtainSingleBill(bill_id))
-  );
 
   if (!instance) {
     return <div>Instance not found</div>;
@@ -214,7 +170,7 @@ export default async function ViolenceInstancePage({
       <div className="flex-grow w-full max-w-full p-6 bg-white shadow-md rounded-lg min-h-full">
         <h1 className="text-3xl font-bold text-center mb-4">Violence Instance Details</h1>
         <img
-          src={instance.image}
+          src={instance.image_url}
           alt={`${instance.agency_responsible} logo`}
           className="w-32 h-32 mb-6 mx-auto"
         />
@@ -235,8 +191,8 @@ export default async function ViolenceInstancePage({
             </div>
           </div>
           <p><strong>Description:</strong> {instance.description}</p>
-          <NewsLink url={instance.news} />
-          <div className="mt-6">
+          <NewsLink url={instance.news_link} />
+          {/* <div className="mt-6">
             <ScorecardLink 
               agency_name={departmentInfo.agency_name} 
               department_image={departmentInfo.department_image}
@@ -248,15 +204,7 @@ export default async function ViolenceInstancePage({
               police_shooting_avg={departmentInfo.police_shooting_avg}
               calc_overall_score={departmentInfo.calc_overall_score}
             />
-          </div>
-          <div className="mt-8">
-            <h2 className="text-2xl font-bold">Related Legislation</h2>
-            <div className="flex gap-4 mt-4 justify-center">
-              {bill_data.map((bill) => (
-                <LegislationCard key={bill.bill_id} bill={bill} />
-              ))}
-            </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

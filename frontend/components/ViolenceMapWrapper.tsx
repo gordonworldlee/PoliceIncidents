@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import TotalIncidentMap from "./TotalIncidentMap"; // Assuming you have this component for the map
 import { Violence } from "./ViolenceCardGrid";
 import IncidentCard from "./ViolenceCard";
 
-const ITEMS_TO_LOAD = 1634;
+const ITEMS_TO_LOAD = 500;
 
-export default function ViolenceMapWrapper() {
+const ViolenceMapWrapper = () => {
   const [violenceData, setViolenceData] = useState<Violence[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -35,6 +35,11 @@ export default function ViolenceMapWrapper() {
     fetchViolence();
   }, []);
 
+  // Memoize the map rendering to avoid unnecessary re-renders
+  const handleMarkerClick = useCallback((item: Violence) => {
+    setCurrSelection(item);
+  }, []);
+
   return (
     <div>
       {loading ? (
@@ -48,28 +53,30 @@ export default function ViolenceMapWrapper() {
       ) : (
         <>
           <div className="text-gray-600 mb-4">
-            <p>Displaying {violenceData.length} incidents on the map</p>
+            <p>Displaying {violenceData.length} incidents on the map - <span className="font-bold">Click on a circle to learn more!</span></p>
           </div>
 
           {/* Render the map and pass the latitudes and longitudes of all incidents */}
           <div className="md:flex">
             <div className="w-full md:w-2/3">
-                <TotalIncidentMap
-                    locations={violenceData.map((incident) => ({
-                    lat: parseFloat(incident.lat),
-                    lng: parseFloat(incident.long),
-                    incident: incident
-                    }))}
-                    onMarkerClick={(item) => setCurrSelection(item)}
-                />
+              <TotalIncidentMap
+                locations={violenceData.map((incident) => ({
+                  lat: parseFloat(incident.lat),
+                  lng: parseFloat(incident.long),
+                  incident: incident
+                }))}
+                onMarkerClick={handleMarkerClick} // Passing memoized callback
+              />
             </div>
             <div className="w-full md:w-1/3 px-4">
-                
-                {currSelection && <IncidentCard incident={currSelection} />}
+              {/* Only render IncidentCard if there is a current selection */}
+              {currSelection && <IncidentCard incident={currSelection} />}
             </div>
           </div>
         </>
       )}
     </div>
   );
-}
+};
+
+export default ViolenceMapWrapper;
