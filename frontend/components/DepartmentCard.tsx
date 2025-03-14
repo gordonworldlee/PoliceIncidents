@@ -4,8 +4,9 @@ import {
   MapPin, Building2, Shield,
   BarChart2, Target, AlertTriangle
 } from 'lucide-react';
+import { Department } from '@/public/data/DepartmentData';
 
-const getScoreColor = (score: number) => {
+export const getScoreColor = (score: number) => {
   if (score < 30)
     return {
       bg: "bg-red-100",
@@ -65,7 +66,7 @@ export function capitalize (word: string, delimeter: string) {
   return result.join(" ")
 }
 
-export const DepartmentCard = (DepartmentInstance: any) => {
+export const DepartmentCard = (DepartmentInstance: Department) => {
   const deptName = capitalize(DepartmentInstance.agency_name.toLowerCase(), " ");
   const locationName = capitalize(DepartmentInstance.location_name.toLowerCase(), " ");
   const state = DepartmentInstance.state.toLowerCase();
