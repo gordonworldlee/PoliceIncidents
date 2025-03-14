@@ -1,15 +1,15 @@
 "use client"
-import Link from "next/link";
+// import Link from "next/link";
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { Lato } from 'next/font/google';
 import PaginationControls from "@/components/PaginationControls";
 import LegislationCard from "@/components/LegislationCard";
 
-const lato = Lato({
-  subsets: ["latin"],
-  weight: ['400', '700'],
-});
+// const lato = Lato({
+//   subsets: ["latin"],
+//   weight: ['400', '700'],
+// });
 
 // Define TypeScript interfaces
 export interface Legislation {
