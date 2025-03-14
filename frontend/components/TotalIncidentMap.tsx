@@ -1,17 +1,18 @@
-"use client"
+"use client";
 
 import React, { useEffect, useRef, useState } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 
 interface TotalIncidentMapProps {
-  locations: { lat: number; lng: number; incident: any }[]; // Include incident data
-  onMarkerClick: (incident: any) => void; // Function to call when a marker is clicked
+  locations: { lat: number; lng: number; incident: any }[];
+  onMarkerClick: (incident: any) => void;
 }
 
 const TotalIncidentMap: React.FC<TotalIncidentMapProps> = ({ locations, onMarkerClick }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
   const mapsApiKey = process.env.NEXT_PUBLIC_MAPS_API_KEY as string;
+  const mapInstanceRef = useRef<google.maps.Map | null>(null); // Ref to store map instance
 
   useEffect(() => {
     if (!mapsApiKey) {
@@ -21,6 +22,9 @@ const TotalIncidentMap: React.FC<TotalIncidentMapProps> = ({ locations, onMarker
 
     const loadMap = async () => {
       try {
+        // If map is already initialized, do nothing
+        if (mapInstanceRef.current) return;
+
         const loader = new Loader({
           apiKey: mapsApiKey,
           version: "weekly",
@@ -34,43 +38,32 @@ const TotalIncidentMap: React.FC<TotalIncidentMapProps> = ({ locations, onMarker
           return;
         }
 
-        // Set the initial map center and zoom (we can set a default location or dynamically choose one)
+        // Initialize the map
         const initialPosition = locations.length > 0 ? locations[0] : { lat: 0, lng: 0 };
         const mapOptions: google.maps.MapOptions = {
           center: initialPosition,
-          zoom: 10, // Adjust zoom level as necessary
+          zoom: 10,
         };
 
-        const map = new Map(mapRef.current, mapOptions);
+        // Initialize map only once and store it in a ref
+        mapInstanceRef.current = new Map(mapRef.current, mapOptions);
 
-        // Add custom circular markers to the map
+        // Add markers
         locations.forEach((location, index) => {
           const marker = new Marker({
-            map: map,
+            map: mapInstanceRef.current,
             position: { lat: location.lat, lng: location.lng },
             title: `Incident ${index + 1}`,
             icon: {
-              url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png", // Optional: Change default icon to something simple
-              size: new google.maps.Size(32, 32),
-              anchor: new google.maps.Point(16, 16),
-              scaledSize: new google.maps.Size(32, 32), // Rescale the marker image size if needed
+              path: google.maps.SymbolPath.CIRCLE,
+              scale: 10,
+              fillColor: "#FF6347",
+              fillOpacity: 0.7,
+              strokeColor: "#FFFFFF",
+              strokeWeight: 2,
             },
           });
 
-          // Create a custom circular marker with divIcon (no image, just a circle)
-          const circleIcon = {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 10, // Size of the circle (scale is in pixels)
-            fillColor: "#FF6347", // Circle color (red)
-            fillOpacity: 0.7,
-            strokeColor: "#FFFFFF", // Circle border color (white)
-            strokeWeight: 2, // Border width
-          };
-
-          // Apply the custom circular icon to the marker
-          marker.setIcon(circleIcon);
-
-          // Trigger the onMarkerClick function when a marker is clicked
           marker.addListener("click", () => {
             onMarkerClick(location.incident);
           });
