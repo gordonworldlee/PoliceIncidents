@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react";
+import IncidentCard from "./ViolenceCard";
+import PaginationControls from "./PaginationControls";
 
 export interface Violence {
     id: number;
@@ -38,14 +40,14 @@ export default function ViolenceCardGrid() {
             try {
                 setLoading(true);
                 const response = await fetch(`http://localhost:5001/api/violence?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`);
-                console.log(`http://localhost:5001/api/violence?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`)
+                
                 console.log(response)
                 if (!response.ok) {
                     throw new Error(`Can't fetch legislation :(`);
                 }
                 const data = await response.json();
                 console.log(data)
-                setViolenceData(data.legislation || []);
+                setViolenceData(data.incidents || []);
 
                 if (data.current_page) {
                     setCurrentPage(data.current_page);
@@ -68,9 +70,45 @@ export default function ViolenceCardGrid() {
         fetchViolence();
     }, [currentPage])
 
+    const handlePageChange = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+        window.scrollTo(0, 0); // scroll to top
+      };
+    
+
     return(
         <div>
-            Hello, it's the violence card view.
+            <p className="text-gray-600">
+                Showing {violenceData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0} - {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)} of {totalCount} Bills
+            </p>
+            <div className="my-2">
+                <br />
+                {loading ? (
+                    <div className="flex justify-center items-center h-64">
+                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#D63C68]"></div>
+                    </div>
+                ) : error ? (
+                    <div className="text-center text-red-500 p-4">
+                    Error: {error}
+                    </div>
+                ) : (
+                    <>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {violenceData.map((incident, index) => <IncidentCard key = {index} incident = {incident}/>)}
+                    </div>
+                    
+                    {/* No legislation found message */}
+                    {violenceData.length === 0 && !loading && (
+                        <div className="text-center p-8">
+                        <p className="text-lg text-gray-600">No violence found.</p>
+                        </div>
+                    )}
+                    
+                    </>
+                )}
+                <br />
+                </div>
+                <PaginationControls currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange} />
         </div>
     )
     
