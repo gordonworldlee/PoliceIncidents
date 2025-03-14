@@ -1,0 +1,8 @@
+{
+  "/violence/[violenceId]/page": "app/violence/[violenceId]/page.js",
+  "/legislation/page": "app/legislation/page.js",
+  "/department/page": "app/department/page.js",
+  "/legislation/[legislationId]/page": "app/legislation/[legislationId]/page.js",
+  "/department/[departmentId]/page": "app/department/[departmentId]/page.js",
+  "/violence/page": "app/violence/page.js"
+}
