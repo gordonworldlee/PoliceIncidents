@@ -1,20 +1,20 @@
-import Link from "next/link";
+// import Link from "next/link";
 import Navbar from "../components/Navbar";
 import ToggleView from "@/components/ToggleSliderView";
 // import Image from "next/image";
 // import { MapContainer, TileLayer, Marker } from "react-leaflet";
 // import MarkerClusterGroup from "react-leaflet-markercluster";
 
-interface ViolenceInstance {
-  id: string;
-  city: string;
-  state: string;
-  encounter_type: string;
-  cause: string;
-  date: string;
-  agency: string;
-  image: string;
-}
+// interface ViolenceInstance {
+//   id: string;
+//   city: string;
+//   state: string;
+//   encounter_type: string;
+//   cause: string;
+//   date: string;
+//   agency: string;
+//   image: string;
+// }
 
 export default function ViolenceModelPage() {
 
