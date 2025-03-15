@@ -14,96 +14,96 @@ const lato = Lato({
   weight: ['400', '700'],
 });
 
-interface ViolenceInstance {
-  id: string;
-  city: string;
-  state: string;
-  encounter_type: string;
-  cause: string;
-  date: string;
-  agency: string;
-  image: string;
-}
+// interface ViolenceInstance {
+//   id: string;
+//   city: string;
+//   state: string;
+//   encounter_type: string;
+//   cause: string;
+//   date: string;
+//   agency: string;
+//   image: string;
+// }
 
-// This is a mock data structure. In a real application, you'd fetch this data from an API or database
-const incidents: ViolenceInstance[] = [
-  {
-    id: "incident1",
-    city: "Houston",
-    state: "TX",
-    encounter_type: "Domestic Disturbance",
-    cause: "Gun",
-    date: "1/31/25",
-    agency: "Farmington Police Department",
-    image: "/houstonPD.png",
-  },
-  {
-    id: "incident2",
-    city: "Austin",
-    state: "TX",
-    encounter_type: "Mental Health/Welfare Check",
-    cause: "Taser",
-    date: "2/15/25",
-    agency: "Volusia County Sheriff's Office",
-    image: "/austinPD.jpeg",
-  },
-  {
-    id: "incident3",
-    city: "Dallas",
-    state: "TX",
-    encounter_type: "Violent Crime",
-    cause: "Aphyxsiation",
-    date: "3/1/25",
-    agency: "Douglas County Sheriff's Office",
-    image: "/dallasPD.png",
-  },
-];
+// // This is a mock data structure. In a real application, you'd fetch this data from an API or database
+// const incidents: ViolenceInstance[] = [
+//   {
+//     id: "incident1",
+//     city: "Houston",
+//     state: "TX",
+//     encounter_type: "Domestic Disturbance",
+//     cause: "Gun",
+//     date: "1/31/25",
+//     agency: "Farmington Police Department",
+//     image: "/houstonPD.png",
+//   },
+//   {
+//     id: "incident2",
+//     city: "Austin",
+//     state: "TX",
+//     encounter_type: "Mental Health/Welfare Check",
+//     cause: "Taser",
+//     date: "2/15/25",
+//     agency: "Volusia County Sheriff's Office",
+//     image: "/austinPD.jpeg",
+//   },
+//   {
+//     id: "incident3",
+//     city: "Dallas",
+//     state: "TX",
+//     encounter_type: "Violent Crime",
+//     cause: "Aphyxsiation",
+//     date: "3/1/25",
+//     agency: "Douglas County Sheriff's Office",
+//     image: "/dallasPD.png",
+//   },
+// ];
 
 type DepartmentPageProps = {
   params: Promise<{ departmentId: string }>;
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-const RelatedIncidents = ({ incident_id }: { incident_id: string }) => {
-  const incident = incidents.find(inc => inc.id === incident_id);
-  if (!incident) {
-    return <div>Incident not found</div>
-  }
-  return (
-    <Link
-      key={incident.id}
-      href={`/violence/${incident.id}`}
-      className="block"
-    >
-      <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-        <div className="flex items-center mb-4">
-          <div className="w-32 h-32 mb-4">
-            <img
-              src={incident.image}
-              alt={`${incident.agency} logo`}
-              className="w-full h-full object-contain"
-            />
-          </div>
-          <h2 className="text-lg font-semibold text-blue-600">
-            {incident.city}, {incident.state}
-          </h2>
-        </div>
-        <p className="text-sm text-gray-600">
-          <strong>Agency:</strong> {incident.agency}
-        </p>
-        <p className="text-sm text-gray-600">
-          <strong>Type:</strong> {incident.encounter_type}
-        </p>
-        <p className="text-sm text-gray-600">
-          <strong>Cause:</strong> {incident.cause}
-        </p>
-        <p className="text-sm text-gray-600">
-          <strong>Date:</strong> {incident.date}
-        </p>
-      </div>
-    </Link>
-  )
-}
+// const RelatedIncidents = ({ incident_id }: { incident_id: string }) => {
+//   const incident = incidents.find(inc => inc.id === incident_id);
+//   if (!incident) {
+//     return <div>Incident not found</div>
+//   }
+//   return (
+//     <Link
+//       key={incident.id}
+//       href={`/violence/${incident.id}`}
+//       className="block"
+//     >
+//       <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+//         <div className="flex items-center mb-4">
+//           <div className="w-32 h-32 mb-4">
+//             <img
+//               src={incident.image}
+//               alt={`${incident.agency} logo`}
+//               className="w-full h-full object-contain"
+//             />
+//           </div>
+//           <h2 className="text-lg font-semibold text-blue-600">
+//             {incident.city}, {incident.state}
+//           </h2>
+//         </div>
+//         <p className="text-sm text-gray-600">
+//           <strong>Agency:</strong> {incident.agency}
+//         </p>
+//         <p className="text-sm text-gray-600">
+//           <strong>Type:</strong> {incident.encounter_type}
+//         </p>
+//         <p className="text-sm text-gray-600">
+//           <strong>Cause:</strong> {incident.cause}
+//         </p>
+//         <p className="text-sm text-gray-600">
+//           <strong>Date:</strong> {incident.date}
+//         </p>
+//       </div>
+//     </Link>
+//   )
+// }
 
 // const RelatedLegislation = async ({bill_id}: {bill_id: string}) => {
 //   const billData = await obtainSingleBill(parseInt(bill_id));
@@ -155,7 +155,7 @@ export default async function DepartmentPage({
 
   let departmentInstance = await getDepartmentData();
   departmentInstance = departmentInstance[0];
-  let related_violence : Violence[] = await getViolenceConnections(departmentInstance.ori_identifier)
+  const related_violence : Violence[] = await getViolenceConnections(departmentInstance.ori_identifier)
 
   const departmentName = capitalize(departmentInstance.agency_name.toLowerCase(), " ");
   if (!departmentInstance) {

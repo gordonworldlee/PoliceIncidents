@@ -1,5 +1,5 @@
 "use client"
-import { Violence, ViolenceAPIResponse } from "@/types/important"
+import {ViolenceAPIResponse } from "@/types/important"
 import { useEffect, useState, Dispatch, SetStateAction } from "react";
 import IncidentCard from "./ViolenceCard";
 

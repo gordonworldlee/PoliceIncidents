@@ -10,17 +10,17 @@ interface ViolencePageProps {
   };
 }
 
-interface ScorecardLinkProps {
-  agency_name: string;
-  department_image: string;
-  location_name: string;
-  state: string;
-  latitude: number;
-  longitude: number;
-  calc_police_violence_score: number;
-  police_shooting_avg: number;
-  calc_overall_score: number;
-}
+// interface ScorecardLinkProps {
+//   agency_name: string;
+//   department_image: string;
+//   location_name: string;
+//   state: string;
+//   latitude: number;
+//   longitude: number;
+//   calc_police_violence_score: number;
+//   police_shooting_avg: number;
+//   calc_overall_score: number;
+// }
 
 
 const NewsLink = ({ url }: { url: string }) => (
@@ -112,41 +112,41 @@ export default async function ViolenceInstancePage({
     return <div>Instance not found</div>;
   }
 
-  const departmentDetails: Record<string, ScorecardLinkProps> = {
-    "Houston Police Department": {
-      agency_name: "HOUSTON",
-      location_name: "Houston",
-      state: "Texas",
-      latitude: 29.7604,
-      longitude: -95.3698,
-      calc_police_violence_score: 42,
-      police_shooting_avg: 3.8,
-      calc_overall_score: 47,
-      department_image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png",
-    },
-    "Austin Police Department": {
-      agency_name: "AUSTIN",
-      location_name: "Austin",
-      state: "Texas",
-      latitude: 30.26993,
-      longitude: -97.74315,
-      calc_police_violence_score: 40,
-      police_shooting_avg: 3.5,
-      calc_overall_score: 32,
-      department_image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png",
-    },
-    "Dallas Police Department": {
-      agency_name: "DALLAS",
-      location_name: "Dallas",
-      state: "Texas",
-      latitude: 32.76778,
-      longitude: -96.79468,
-      calc_police_violence_score: 48,
-      police_shooting_avg: 4.3,
-      calc_overall_score: 46,
-      department_image: "https://dallaspolice.net/PublishingImages/badge-dpd.png",
-    },
-  };
+  // const departmentDetails: Record<string, ScorecardLinkProps> = {
+  //   "Houston Police Department": {
+  //     agency_name: "HOUSTON",
+  //     location_name: "Houston",
+  //     state: "Texas",
+  //     latitude: 29.7604,
+  //     longitude: -95.3698,
+  //     calc_police_violence_score: 42,
+  //     police_shooting_avg: 3.8,
+  //     calc_overall_score: 47,
+  //     department_image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png",
+  //   },
+  //   "Austin Police Department": {
+  //     agency_name: "AUSTIN",
+  //     location_name: "Austin",
+  //     state: "Texas",
+  //     latitude: 30.26993,
+  //     longitude: -97.74315,
+  //     calc_police_violence_score: 40,
+  //     police_shooting_avg: 3.5,
+  //     calc_overall_score: 32,
+  //     department_image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png",
+  //   },
+  //   "Dallas Police Department": {
+  //     agency_name: "DALLAS",
+  //     location_name: "Dallas",
+  //     state: "Texas",
+  //     latitude: 32.76778,
+  //     longitude: -96.79468,
+  //     calc_police_violence_score: 48,
+  //     police_shooting_avg: 4.3,
+  //     calc_overall_score: 46,
+  //     department_image: "https://dallaspolice.net/PublishingImages/badge-dpd.png",
+  //   },
+  // };
 
   // const departmentInfo = departmentDetails[instance.agency_responsible];
 
