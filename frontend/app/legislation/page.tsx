@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 // import { Lato } from 'next/font/google';
+// import { Lato } from 'next/font/google';
 import PaginationControls from "@/components/PaginationControls";
 import LegislationCard from "@/components/LegislationCard";
 

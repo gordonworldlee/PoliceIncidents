@@ -238,9 +238,11 @@ export default async function LegislationInstancePage({
 
         <div>
           <h2 className="text-xl font-bold underline mb-2">Relevant Departments</h2>
-          <div className="flex flex-col md:flex-row md:justify-between items-center gap-4 mt-2 h-full">
+          <div className="flex flex-col md:flex-row items-center gap-4 mt-2 h-full">
             {Object.values(DepartmentInstances).map((department) => (
-              <DepartmentCard key={department.agency_name} {...department} />
+              <Link className="w-full" key={department.agency_name} href={`/department/${department.agency_name}`}>
+                <DepartmentCard {...department} />
+              </Link>
             ))}
           </div>
         </div>
