@@ -2,9 +2,21 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 from sqlalchemy.orm import Session
-#pLMcM5RpYjUHXeTGCgby
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+POSTGRES_USER = os.getenv("POSTGRES_USER")
+POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+POSTGRES_DB = os.getenv("POSTGRES_DB")
+DB_ADDRESS = os.getenv("DB_ADDRESS")
+DB_PORT = os.getenv("DB_PORT")
+DB_CONNECTION_STRING = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{DB_ADDRESS}:{DB_PORT}/{POSTGRES_DB}"
+print(f"Connecting to DB with string: {DB_CONNECTION_STRING}")
+
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:example567@justicewatch.me:5432/postgres'
+app.config['SQLALCHEMY_DATABASE_URI'] = DB_CONNECTION_STRING
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1234@localhost:5432/gordonlee'
 db = SQLAlchemy(app)
 def init_db():
@@ -13,7 +25,7 @@ def init_db():
            session.execute(text("""
                 DROP TABLE IF EXISTS "Police Incidents";
                 """))
-           session.commit() 
+           session.commit()
            session.execute(text("""
                CREATE TABLE IF NOT EXISTS "Police Incidents" (
                    id SERIAL PRIMARY KEY,
@@ -31,7 +43,7 @@ def init_db():
                    date TEXT,
                    lat TEXT,
                    long TEXT,
-                   state TEXT          
+                   state TEXT
                );
            """))
            session.commit()
@@ -39,7 +51,7 @@ def init_db():
            session.execute(text("""
                 DROP TABLE IF EXISTS "scorecard";
                 """))
-           session.commit() 
+           session.commit()
            session.execute(text("""
                CREATE TABLE IF NOT EXISTS "scorecard" (
                    id SERIAL PRIMARY KEY,
@@ -66,7 +78,9 @@ def init_db():
                    police_shootings_2021 TEXT,
                    calc_overall_score TEXT,
                    criminal_complaints_reported TEXT,
-                   civilian_complaints_reported TEXT
+                   civilian_complaints_reported TEXT,
+                   connections_legislation INT[] DEFAULT '{}',
+                   connections_agencies INT[] DEFAULT '{}'
                );
            """))
            session.commit()
@@ -74,8 +88,8 @@ def init_db():
            session.execute(text("""
                 DROP TABLE IF EXISTS "Legislation";
                 """))
-           session.commit()  
-           
+           session.commit()
+
 
            session.execute(text("""
             CREATE TABLE IF NOT EXISTS "Legislation" (
@@ -89,7 +103,9 @@ def init_db():
                 session_year TEXT,
                 sponsors TEXT,
                 subjects TEXT,
-                last_action TEXT
+                last_action TEXT,
+                connections_agencies INT[] DEFAULT '{}',
+                connections_misconduct INT[] DEFAULT '{}'
             );
         """))
            session.commit()

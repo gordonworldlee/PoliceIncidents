@@ -1,10 +1,22 @@
-from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String, Array
 from sqlalchemy.orm import sessionmaker, declarative_base
 from scrape import extractInfo, extractScorecard, extractLegislation
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+POSTGRES_USER = os.getenv("POSTGRES_USER")
+POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+POSTGRES_DB = os.getenv("POSTGRES_DB")
+DB_ADDRESS = os.getenv("DB_ADDRESS")
+DB_PORT = os.getenv("DB_PORT")
+DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{DB_ADDRESS}:{DB_PORT}/{POSTGRES_DB}"
+print(f"Connecting to DB with string: {DATABASE_URL}")
 
 # Database setup
 #DATABASE_URL = 'postgresql://postgres:1234@localhost:5432/gordonlee'  # Replace with your actual database URL
-DATABASE_URL = 'postgresql://postgres:example567@justicewatch.me:5432/postgres'
+# DATABASE_URL = 'postgresql://postgres:example567@justicewatch.me:5432/postgres'
 engine = create_engine(DATABASE_URL)
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -12,7 +24,7 @@ session = Session()
 Base = declarative_base()
 
 class Legislation(Base):
-    __tablename__ = 'Legislation'
+    __tablename__ = 'legislation'
     id = Column(Integer, primary_key=True)
     state = Column(String)
     bill_number = Column(String)
@@ -24,12 +36,14 @@ class Legislation(Base):
     sponsors = Column(String)
     subjects = Column(String)
     last_action = Column(String)
+    connections_incidents = Column(Array(Integer))
+    connections_agencies = Column(Array(Integer))
 
     def __repr__(self):
         return f"<Legislation {self.title}, {self.state}>"
 
-class PoliceIncident(Base):
-    __tablename__ = 'Police Incidents'
+class Incident(Base):
+    __tablename__ = 'incidents'
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
@@ -47,12 +61,14 @@ class PoliceIncident(Base):
     lat = Column(String)
     long = Column(String)
     state = Column(String)
+    connections_misconduct = Column(Array(Integer))
+    connections_agencies = Column(Array(Integer))
 
     def __repr__(self):
-        return f"<PoliceIncident {self.name}, {self.city}>"
+        return f"<Incident {self.name}, {self.city}>"
 
-class Scorecard(Base):
-    __tablename__ = 'scorecard'
+class Agency(Base):
+    __tablename__ = 'agencies'
 
     id = Column(Integer, primary_key=True)
     agency_name = Column(String)
@@ -79,6 +95,7 @@ class Scorecard(Base):
     calc_overall_score = Column(String)
     criminal_complaints_reported = Column(String)
     civilian_complaints_reported = Column(String)
+
 
     def __repr__(self):
         return f"<Scorecard {self.agency_name}, {self.location_name}>"
@@ -186,6 +203,6 @@ if __name__ == '__main__':
     if session.query(Legislation).count() == 0:
         populate_legi()
     else:
-        print("Legislation data already exists.")   
+        print("Legislation data already exists.")
 
     session.close()  # Close the session when done
