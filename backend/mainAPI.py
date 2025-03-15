@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from sqlalchemy import create_engine, text
-from flask_cors import CORS  
+from flask_cors import CORS
 import math
 
 app = Flask(__name__)
@@ -57,30 +57,30 @@ def get_legislation():
         query_params[key] = value
 
     # make SQL query
-    count_query = "SELECT COUNT(*) as count FROM \"Legislation\""   #get count of matchings
+    count_query = "SELECT COUNT(*) as count FROM \"legislation\""   #get count of matchings
     if where_clauses:
         count_query += " WHERE " + " AND ".join(where_clauses)
 
 
     count_data = fetch_data(count_query, query_params)
-    total_count = count_data[0]['count'] if count_data else 0  
+    total_count = count_data[0]['count'] if count_data else 0
 
     total_pages = math.ceil(total_count / per_page) if total_count > 0 else 0
     offset = (page - 1) * per_page
 
     # construct the main SQL query
-    query = "SELECT * FROM \"Legislation\""
+    query = "SELECT * FROM \"legislation\""
     if where_clauses:
         query += " WHERE " + " AND ".join(where_clauses)
-    
+
     #  pagination
     query += f" LIMIT {per_page} OFFSET {offset}"
 
     # execute the query
     data = fetch_data(query, query_params)
     response = {
-        "legislation": data if data else [], 
-        "total_count": total_count, 
+        "legislation": data if data else [],
+        "total_count": total_count,
         "total_pages": total_pages,
         "current_page": page,
         "per_page": per_page
@@ -90,7 +90,7 @@ def get_legislation():
 
 @app.route("/api/legislation/<int:legislation_id>", methods=["GET"])
 def get_legislation_by_id(legislation_id):
-    query = "SELECT * FROM \"Legislation\" WHERE id = :id"
+    query = "SELECT * FROM \"legislation\" WHERE id = :id"
     data = fetch_data(query, {"id": legislation_id})
 
     if data:
@@ -101,46 +101,46 @@ def get_legislation_by_id(legislation_id):
 
 
 
-@app.route("/api/violence", methods=["GET"])
+@app.route("/api/incidents", methods=["GET"])
 def get_police_incidents():
     # Get pagination parameters
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 12, type=int)
-    
+
     # Copy parameters excluding pagination params
     params = request.args.to_dict()
     if 'page' in params:
         del params['page']
     if 'per_page' in params:
         del params['per_page']
-    
+
     where_clauses = []
     query_params = {}
     for key, value in params.items():
         where_clauses.append(f"\"{key}\" = :{key}")
         query_params[key] = value
-    
+
     # Get count for pagination
-    count_query = "SELECT COUNT(*) as count FROM \"Police Incidents\""
+    count_query = "SELECT COUNT(*) as count FROM \"incidents\""
     if where_clauses:
         count_query += " WHERE " + " AND ".join(where_clauses)
-    
+
     count_data = fetch_data(count_query, query_params)
     total_count = count_data[0]['count'] if count_data else 0
-    
+
     # Calculate pagination values
     total_pages = math.ceil(total_count / per_page) if total_count > 0 else 0
     offset = (page - 1) * per_page
-    
+
     # Main query with pagination
-    query = "SELECT * FROM \"Police Incidents\""
+    query = "SELECT * FROM \"incidents\""
     if where_clauses:
         query += " WHERE " + " AND ".join(where_clauses)
-    
+
     query += f" LIMIT {per_page} OFFSET {offset}"
-    
+
     data = fetch_data(query, query_params)
-    
+
     response = {
         "incidents": data if data else [],
         "total_count": total_count,
@@ -148,12 +148,12 @@ def get_police_incidents():
         "current_page": page,
         "per_page": per_page
     }
-    
+
     return jsonify(response)
 
-@app.route("/api/violence/<int:incident_id>", methods=["GET"])
+@app.route("/api/incidents/<int:incident_id>", methods=["GET"])
 def get_police_incident_by_id(incident_id):
-    query = "SELECT * FROM \"Police Incidents\" WHERE id = :id"
+    query = "SELECT * FROM \"incidents\" WHERE id = :id"
     data = fetch_data(query, {"id": incident_id})
 
     if data:
@@ -162,7 +162,7 @@ def get_police_incident_by_id(incident_id):
         return jsonify({"error": "Police incident not found."}), 404
 
 
-@app.route("/api/departments", methods=["GET"])
+@app.route("/api/agencies", methods=["GET"])
 def get_scorecard():
     """
     You can now query police incidents using any combination of parameters, for example:
@@ -186,20 +186,20 @@ def get_scorecard():
         where_clauses.append(f"\"{key}\" = :{key}")
         query_params[key] = value
 
-    count_query = "SELECT COUNT(*) FROM  \"scorecard\""
+    count_query = "SELECT COUNT(*) FROM  \"agencies\""
     if where_clauses:
         count_query += " WHERE " + " AND ".join(where_clauses)
-    
+
     count_data = fetch_data(count_query, query_params)
     total_count = count_data[0]['count'] if count_data else 0
 
     #calculate total pages
     total_pages = math.ceil(total_count / per_page) if total_count > 0 else 0
-    
+
     # calculate offset for pagination
     offset = (page - 1) * per_page
 
-    query = "SELECT * FROM \"scorecard\""
+    query = "SELECT * FROM \"agencies\""
     if where_clauses:
         query += " WHERE " + " AND ".join(where_clauses)
 
@@ -215,13 +215,13 @@ def get_scorecard():
         "current_page": page,
         "per_page": per_page
     }
-    
+
     return jsonify(response)
 
 
-@app.route("/api/departments/<int:scorecard_id>", methods=["GET"])
+@app.route("/api/agencies/<int:scorecard_id>", methods=["GET"])
 def get_scorecard_by_id(scorecard_id):
-    query = "SELECT * FROM \"scorecard\" WHERE id = :id"
+    query = "SELECT * FROM \"agencies\" WHERE id = :id"
     data = fetch_data(query, {"id": scorecard_id})
 
     if data:

@@ -1,6 +1,7 @@
-from sqlalchemy import create_engine, Column, Integer, String, Array
-from sqlalchemy.orm import sessionmaker, declarative_base
-from scrape import extractInfo, extractScorecard, extractLegislation
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from justicewatchtypes import Legislation, Incident, Agency
+from scrape import extractInfo, extractAgency, extractLegislation
 from dotenv import load_dotenv
 import os
 
@@ -21,90 +22,11 @@ engine = create_engine(DATABASE_URL)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-Base = declarative_base()
-
-class Legislation(Base):
-    __tablename__ = 'legislation'
-    id = Column(Integer, primary_key=True)
-    state = Column(String)
-    bill_number = Column(String)
-    title = Column(String)
-    description = Column(String)
-    url = Column(String)
-    session = Column(String)
-    session_year = Column(String)
-    sponsors = Column(String)
-    subjects = Column(String)
-    last_action = Column(String)
-    connections_incidents = Column(Array(Integer))
-    connections_agencies = Column(Array(Integer))
-
-    def __repr__(self):
-        return f"<Legislation {self.title}, {self.state}>"
-
-class Incident(Base):
-    __tablename__ = 'incidents'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    street_address = Column(String)
-    city = Column(String)
-    agency_responsible = Column(String)
-    image_url = Column(String)
-    cause_of_death = Column(String)
-    description = Column(String)
-    ori_identifier = Column(String)
-    encounter_type = Column(String)
-    county = Column(String)
-    news_link = Column(String)
-    date = Column(String)
-    lat = Column(String)
-    long = Column(String)
-    state = Column(String)
-    connections_misconduct = Column(Array(Integer))
-    connections_agencies = Column(Array(Integer))
-
-    def __repr__(self):
-        return f"<Incident {self.name}, {self.city}>"
-
-class Agency(Base):
-    __tablename__ = 'agencies'
-
-    id = Column(Integer, primary_key=True)
-    agency_name = Column(String)
-    agency_type = Column(String)
-    location_name = Column(String)
-    state = Column(String)
-    ori_identifier = Column(String)
-    latitude = Column(String)
-    longitude = Column(String)
-    total_population = Column(String)
-    calc_police_funding_score = Column(String)
-    calc_police_violence_score = Column(String)
-    calc_police_accountability_score = Column(String)
-    use_of_force_complaints_reported = Column(String)
-    police_shootings_2013 = Column(String)
-    police_shootings_2014 = Column(String)
-    police_shootings_2015 = Column(String)
-    police_shootings_2016 = Column(String)
-    police_shootings_2017 = Column(String)
-    police_shootings_2018 = Column(String)
-    police_shootings_2019 = Column(String)
-    police_shootings_2020 = Column(String)
-    police_shootings_2021 = Column(String)
-    calc_overall_score = Column(String)
-    criminal_complaints_reported = Column(String)
-    civilian_complaints_reported = Column(String)
-
-
-    def __repr__(self):
-        return f"<Scorecard {self.agency_name}, {self.location_name}>"
-
 def populate_db():
     data = extractInfo()
     try:
         for _, row in data.iterrows():
-            incident = PoliceIncident(
+            incident = Incident(
                 name=row["Victim's name"],
                 street_address=row["Street Address of Incident"],
                 city=row["City"],
@@ -129,10 +51,10 @@ def populate_db():
         print(f"Error inserting Police Incident data: {e}")
 
 def populate_scorecard():
-    data = extractScorecard()
+    data = extractAgency()
     try:
         for _, row in data.iterrows():
-            entry = Scorecard(
+            entry = Agency(
                 agency_name=row["Agency Name"],
                 agency_type=row["Agency Type"],
                 location_name=row["Location Name"],
@@ -160,10 +82,10 @@ def populate_scorecard():
             )
             session.add(entry)
         session.commit()
-        print("Scorecard data populated successfully.")
+        print("Agency data populated successfully.")
     except Exception as e:
         session.rollback()
-        print(f"Error inserting Scorecard data: {e}")
+        print(f"Error inserting Agency data: {e}")
 
 def populate_legi():
     data = extractLegislation()
@@ -190,15 +112,15 @@ def populate_legi():
 
 
 if __name__ == '__main__':
-    if session.query(PoliceIncident).count() == 0:
+    if session.query(Incident).count() == 0:
         populate_db()
     else:
         print("Police Incidents data already exists.")
 
-    if session.query(Scorecard).count() == 0:
+    if session.query(Agency).count() == 0:
         populate_scorecard()
     else:
-        print("Scorecard data already exists.")
+        print("Agency data already exists.")
 
     if session.query(Legislation).count() == 0:
         populate_legi()
