@@ -15,21 +15,21 @@ def extractInfo():
        "Link to news article or photo of official document", "Date of Incident (month/day/year)",
        "Latitude", "Longitude", "State"
    ]
-  
+
    filtered_df = df.loc[
        (df['Encounter Type'].isin(['Traffic Stop', 'Other Non-Violent Offense', 'Mental Health/Welfare Check', 'None/Unknown'])) &
        df[columns_to_check].notna().all(axis=1) &  # Check if all specified columns are not NaN
        (df[columns_to_check] != '').all(axis=1),  # Check if all specified columns are not empty strings
        columns_to_check
    ]
-  
+
    return filtered_df
 
 
-def extractScorecard():
+def extractAgency():
    # Load the CSV
    card_df = pd.read_csv("scorecard.csv")
-  
+
    # Define a mapping for the expected columns
    column_mapping = {
        'agency_name': 'Agency Name',
@@ -82,7 +82,7 @@ def extractScorecard():
 
    # Rename the columns
    card_df.rename(columns=column_mapping, inplace=True)
-  
+
    # Check for missing columns
    expected_columns = list(column_mapping.values())
    missing_columns = [col for col in expected_columns if col not in card_df.columns]
