@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import IncidentCard from "./ViolenceCard";
 import PaginationControls from "./PaginationControls";
-
+import TipsBox from "@/components/TipsBox"
 export interface Violence {
     id: number;
     name: string;
@@ -78,6 +78,9 @@ export default function ViolenceCardGrid() {
 
     return(
         <div>
+            <div className="mb-6">
+                <TipsBox />
+            </div>
             <p className="text-gray-600">
                 Showing {violenceData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0} - {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)} of {totalCount} incidents
             </p>

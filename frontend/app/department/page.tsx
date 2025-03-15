@@ -145,14 +145,14 @@ export default function DepartmentModelPage() {
       <h1 className={`${lato.className} text-[#D63C68] text-5xl text-center font-bold mt-8`}>DEPARTMENT MODEL</h1>
       
       {/* display the amount of instances showing */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+      <div className="max-w-7xl px-4 sm:px-6 lg:px-8 mt-4">
         <p className="text-gray-600">
           Showing {departments.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0} - {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)} of {totalCount} departments
         </p>
       </div>
       
       <div className="flex items-center justify-center">
-        <div className="max-w-7xl w-full px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           <br />
           {loading ? (
             <div className="flex justify-center items-center h-64">
