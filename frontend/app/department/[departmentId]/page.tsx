@@ -1,9 +1,16 @@
 import Link from "next/link";
 import Navbar from "../../components/Navbar";
 // import { FaNewspaper } from "react-icons/fa";
-import { obtainSingleBill } from "@/lib/fetch_legislative_data";
+// import { obtainSingleBill } from "@/lib/fetch_legislative_data";
 import { Map } from "@/app/components/Map";
-import { DepartmentInstances} from "@/public/data/DepartmentData";
+// import { DepartmentInstances} from "@/public/data/DepartmentData";
+import { capitalize } from '@/components/DepartmentCard'
+import { Lato } from 'next/font/google';
+
+const lato = Lato({
+  subsets: ["latin"],
+  weight: ['400', '700'],
+});
 
 interface ViolenceInstance {
   id: string;
@@ -46,7 +53,7 @@ const incidents: ViolenceInstance[] = [
     cause: "Aphyxsiation",
     date: "3/1/25",
     agency: "Douglas County Sheriff's Office",
-    image:"/dallasPD.png",
+    image: "/dallasPD.png",
   },
 ];
 
@@ -55,19 +62,19 @@ type DepartmentPageProps = {
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-const RelatedIncidents = ({incident_id }: { incident_id: string }) => {
+const RelatedIncidents = ({ incident_id }: { incident_id: string }) => {
   const incident = incidents.find(inc => inc.id === incident_id);
   if (!incident) {
     return <div>Incident not found</div>
   }
   return (
     <Link
-    key={incident.id}
-    href={`/violence/${incident.id}`}
-    className="block"
-  >
-    <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-      <div className="flex items-center mb-4">
+      key={incident.id}
+      href={`/violence/${incident.id}`}
+      className="block"
+    >
+      <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+        <div className="flex items-center mb-4">
           <div className="w-32 h-32 mb-4">
             <img
               src={incident.image}
@@ -75,63 +82,69 @@ const RelatedIncidents = ({incident_id }: { incident_id: string }) => {
               className="w-full h-full object-contain"
             />
           </div>
-        <h2 className="text-lg font-semibold text-blue-600">
-          {incident.city}, {incident.state}
-        </h2>
-      </div>
-      <p className="text-sm text-gray-600">
-        <strong>Agency:</strong> {incident.agency}
-      </p>
-      <p className="text-sm text-gray-600">
-        <strong>Type:</strong> {incident.encounter_type}
-      </p>
-      <p className="text-sm text-gray-600">
-        <strong>Cause:</strong> {incident.cause}
-      </p>
-      <p className="text-sm text-gray-600">
-        <strong>Date:</strong> {incident.date}
-      </p>
-    </div>
-  </Link>
-  )
-}
-
-const RelatedLegislation = async ({bill_id}: {bill_id: string}) => {
-  const billData = await obtainSingleBill(parseInt(bill_id));
-  
-  return (
-    <Link href={`/legislation/${bill_id}`}>
-      <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow flex flex-col justify-center space-y-4">        
-        <img src="/texas-state-outline.png" alt="Outline of Texas State" className="w-24 h-24"/>
-        <div className="text-gray-700 space-y-1">
-          <p className="text-sm"><strong>State:</strong> {billData.state}</p>
-          <p className="text-sm"><strong>Bill Number:</strong> {billData.bill_number}</p>
-          <p className="text-sm"><strong>Date Filed:</strong> {billData.history[0].date}</p>
-          <p className="text-sm"><strong>First Sponsor:</strong> {billData.sponsors[0].name}</p>
+          <h2 className="text-lg font-semibold text-blue-600">
+            {incident.city}, {incident.state}
+          </h2>
         </div>
+        <p className="text-sm text-gray-600">
+          <strong>Agency:</strong> {incident.agency}
+        </p>
+        <p className="text-sm text-gray-600">
+          <strong>Type:</strong> {incident.encounter_type}
+        </p>
+        <p className="text-sm text-gray-600">
+          <strong>Cause:</strong> {incident.cause}
+        </p>
+        <p className="text-sm text-gray-600">
+          <strong>Date:</strong> {incident.date}
+        </p>
       </div>
     </Link>
   )
 }
 
-const stateTranslation: {[key: string]: string} = {
+// const RelatedLegislation = async ({bill_id}: {bill_id: string}) => {
+//   const billData = await obtainSingleBill(parseInt(bill_id));
+
+//   return (
+//     <Link href={`/legislation/${bill_id}`}>
+//       <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow flex flex-col justify-center space-y-4">        
+//         <img src="/texas-state-outline.png" alt="Outline of Texas State" className="w-24 h-24"/>
+//         <div className="text-gray-700 space-y-1">
+//           <p className="text-sm"><strong>State:</strong> {billData.state}</p>
+//           <p className="text-sm"><strong>Bill Number:</strong> {billData.bill_number}</p>
+//           <p className="text-sm"><strong>Date Filed:</strong> {billData.history[0].date}</p>
+//           <p className="text-sm"><strong>First Sponsor:</strong> {billData.sponsors[0].name}</p>
+//         </div>
+//       </div>
+//     </Link>
+//   )
+// }
+
+const stateTranslation: { [key: string]: string } = {
   "TEXAS": "TX"
 }
 
 export default async function DepartmentPage({
-  params,
-  searchParams,
+  params
+  // ,
+  // searchParams,
 }: DepartmentPageProps) {
   const { departmentId } = await params;
-  console.log(searchParams);
 
-  const departmentInstance = DepartmentInstances[departmentId];
-  const departmentName =
-    departmentInstance.agency_name.charAt(0).toUpperCase() +
-    departmentInstance.agency_name.slice(1).toLowerCase();
-  const location =
-    departmentInstance.location_name.charAt(0).toUpperCase() +
-    departmentInstance.location_name.slice(1).toLowerCase();
+  const getDepartmentData = async () => {
+    const response = await fetch(`http://localhost:5001/api/departments?agency_name=${departmentId}`)
+    if (!response.ok) {
+      throw new Error('Failed to fetch departments');
+    }
+    const data = await response.json();
+    // console.log(data);
+    return data.departments;
+  }
+  let departmentInstance = await getDepartmentData();
+  departmentInstance = departmentInstance[0];
+
+  const departmentName = capitalize(departmentInstance.agency_name.toLowerCase(), " ");
   if (!departmentInstance) {
     return <div>Department not found</div>;
   }
@@ -139,104 +152,84 @@ export default async function DepartmentPage({
   return (
     <div>
       <Navbar />
-      <div className="min-h-screen flex flex-col justify-center">
-        <h1 className="my-8 text-center text-3xl font-bold">
+      <div className="min-h-screen flex flex-col justify-center bg-white">
+        <h1 className={`${lato.className} text-[#D63C68] my-8 text-center text-3xl font-bold`}>
           {departmentName} Police Department
         </h1>
-        <div>
-          <div className="text-left border-b-2 border-gray-300 rounded-lg shadow-md p-4 bg-white">
-            <div className="flex flex-row justify-between">
-              <div className="w-1/2">
-                <p>
-                  <strong>Agency Name:</strong> {departmentName}
-                </p>
-                <p>
-                  <strong>Agency Type:</strong> {departmentInstance.agency_type}
-                </p>
-                <p>
-                  <strong>Location:</strong> {location}
-                </p>
-                <p>
-                  <strong>State:</strong> {departmentInstance.state}
-                </p>
-                <p>
-                  <strong>ORI:</strong> {departmentInstance.ori_identifier}
-                </p>
-                <p>
-                  <strong>Coordinates:</strong> {departmentInstance.latitude},{" "}
-                  {departmentInstance.longitude}
-                </p>
-                <p>
-                  <strong>Total Population:</strong>{" "}
-                  {departmentInstance.total_population.toLocaleString()}
-                </p>
-                <p>
-                  <strong>Police Funding Score:</strong>{" "}
-                  {departmentInstance.calc_police_funding_score}/100
-                </p>
-                <p>
-                  <strong>Use of Force Reported:</strong>{" "}
-                  {departmentInstance.use_of_force_complaints_reported}
-                </p>
-                <p>
-                  <strong>Police Violence Score:</strong>{" "}
-                  {departmentInstance.calc_police_violence_score}/100
-                </p>
-                <p>
-                  <strong>Police Shooting Average:</strong>{" "}
-                  {departmentInstance.police_shootings_2021}
-                </p>
-                <p>
-                  <strong>Police Accountability Score:</strong>{" "}
-                  {departmentInstance.calc_police_accountability_score}/100
-                </p>
-                <p>
-                  <strong>Overall Score:</strong> {departmentInstance.calc_overall_score}/100
-                </p>
-              </div>
-              <div className="mr-4 w-1/2">
-                  <Map latitude={parseFloat(departmentInstance.latitude)} longitude={parseFloat(departmentInstance.longitude)}/>
-              </div>
+        <div className="rounded-lg mx-4 border p-4 my-4 shadow-lg">
+          <header className="border-b border-gray-300 font-bold text-xl">Department Information</header>
+          <div className="flex flex-col">
+            <div className="flex border-b pb-2 border-gray-300 justify-between pt-4">
+              <section className="font-bold text-gray-600">Agency Name: </section> <span>{capitalize(departmentInstance.agency_name.toLowerCase(), " ")}</span>
             </div>
-            <div>
+            <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
+              <section className="font-bold text-gray-600">Agency Type: </section> <span>{capitalize(departmentInstance.agency_type.toLowerCase(), "-")}</span>
             </div>
-            <div>
-              {/* <Link
-                className="inline-block mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 hover:shadow-lg"
-                href={departmentInstance.dept_website}
-              >
-                <FaNewspaper className="mr-2 mb-1 inline-block" />
-                Department Website
-              </Link> */}
+            <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
+              <section className="font-bold text-gray-600">Location: </section> <span>{capitalize(departmentInstance.location_name.toLowerCase(), " ")}</span>
             </div>
-            <p className="mt-4 text-xl font-bold underline">View Incidents in {stateTranslation[departmentInstance.state]}</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <RelatedIncidents incident_id={departmentInstance.incident_id} />
-              {Object.values(DepartmentInstances)
-                .filter(dept => 
-                  dept.agency_name !== departmentInstance.agency_name && 
-                  dept.state === departmentInstance.state
-                )
-                .slice(0, 1)
-                .map(dept => (
-                  <RelatedIncidents key={dept.ori_identifier} incident_id={dept.incident_id} />
-                ))
-              }
+            <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
+              <section className="font-bold text-gray-600">State: </section> <span>{capitalize(departmentInstance.state.toUpperCase(), " ")}</span>
             </div>
-            <p className="mt-4 text-xl font-bold underline">View Legislation from {stateTranslation[departmentInstance.state]}</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <RelatedLegislation bill_id="1891028" />
-              <RelatedLegislation bill_id="1890795" />
+            <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
+              <section className="font-bold text-gray-600">ORI: </section> <span>{departmentInstance.ori_identifier}</span>
             </div>
+            <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
+              <section className="font-bold text-gray-600">Coordinates: </section> <span>{departmentInstance.latitude}, {departmentInstance.longitude}</span>
+            </div>
+            <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
+              <section className="font-bold text-gray-600">Total Population: </section> <span>{departmentInstance.total_population}</span>
+            </div>
+          </div>
+        </div>
 
+        <div className="rounded-lg mx-4 border p-4 my-4 shadow-lg">
+          <header className="border-b border-gray-300 font-bold text-xl">Performance Metric</header>
+          <div className="flex flex-col">
+            <div className="flex border-b pb-2 border-gray-300 justify-between pt-4">
+              <section className="font-bold text-gray-600">Overall Score: </section> <span>{departmentInstance.calc_overall_score}</span>
+            </div>
+            <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
+              <section className="font-bold text-gray-600">Police Funding Score: </section> <span>{departmentInstance.calc_police_funding_score}</span>
+            </div>
+            <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
+              <section className="font-bold text-gray-600">Police Accountability Score: </section> <span>{departmentInstance.calc_police_accountability_score}</span>
+            </div>
+            <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
+              <section className="font-bold text-gray-600">Police Shooting Average: </section> <span>{departmentInstance.police_shootings_2021}</span>
+            </div>
+            <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
+              <section className="font-bold text-gray-600">Use of Force Reported: </section> <span>{departmentInstance.use_of_force_complaints_reported}</span>
+            </div>
           </div>
-          <div className="mt-6 text-center">
-            <Link className="text-blue-500 underline" href="/department">
-              Back to Department List
-            </Link>
+        </div>
+        
+        <div className="rounded-lg mx-4 border p-4 my-4 shadow-lg">
+          <header className="border-b mb-4 border-gray-300 font-bold text-xl">Department Location:</header>
+          <Map latitude={parseFloat(departmentInstance.latitude)} longitude={parseFloat(departmentInstance.longitude)} />
+        </div>
+
+        <div className="text-left border-b-2 border-gray-300 rounded-lg shadow-md p-4 bg-white">
+          <p className="mt-4 text-xl font-bold underline">View Incidents in {stateTranslation[departmentInstance.state]}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <RelatedIncidents incident_id="incident1" />
+            <RelatedIncidents incident_id="incident2" />
           </div>
+          <p className="mt-4 text-xl font-bold underline">View Legislation from {stateTranslation[departmentInstance.state]}</p>
+
+
+        </div>
+        <div className="mt-6 text-center">
+          <Link className="text-blue-500 underline" href="/department">
+            Back to Department List
+          </Link>
         </div>
       </div>
     </div>
   );
 }
+
+{/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <RelatedLegislation bill_id="1891028" />
+  <RelatedLegislation bill_id="1890795" />
+</div> */}

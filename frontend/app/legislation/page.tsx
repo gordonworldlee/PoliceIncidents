@@ -1,48 +1,133 @@
-import Link from "next/link";
+"use client"
+// import Link from "next/link";
+import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
-import { obtainBillList, obtainSingleBill } from "@/lib/fetch_legislative_data";
+// import { Lato } from 'next/font/google';
+import PaginationControls from "@/components/PaginationControls";
+import LegislationCard from "@/components/LegislationCard";
 
-export default async function LegislationModelPage() {
-  // Wait for all bills to be fetched using Promise.all
-  const bill_data = await Promise.all(
-    (await obtainBillList()).map((bill_id) => obtainSingleBill(bill_id))
-  );
+// const lato = Lato({
+//   subsets: ["latin"],
+//   weight: ['400', '700'],
+// });
+
+// Define TypeScript interfaces
+export interface Legislation {
+  id: number;
+  bill_number: string;
+  description: string;
+  last_action: string;
+  session: string;
+  session_year: string;
+  sponsors: string;
+  state: string;
+  subjects: string;
+  title: string;
+  url: string;
+}
+
+
+
+// interface ApiResponse {
+//   current_page: number;
+//   legislation: Legislation[];
+//   total_pages?: number;
+//   total_items?: number;
+// }
+
+// Number of items to display per page
+const ITEMS_PER_PAGE = 9; // 3x3 grid
+
+export default function LegislationModelPage() {
+  const [legislationData, setLegislationData] = useState<Legislation[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+
+  //Fetch data for each page and set state variables correctly.
+  useEffect(() => {
+    const fetchLegislation = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`http://localhost:5001/api/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`);
+        console.log(`http://localhost:5001/api/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`)
+        if (!response.ok) {
+            throw new Error(`Can't fetch legislation :(`);
+        }
+        const data = await response.json();
+        console.log(data)
+        setLegislationData(data.legislation || []);
+
+        if (data.current_page) {
+          setCurrentPage(data.current_page);
+        }
+
+        if (data.total_pages) {
+          setTotalPages(data.total_pages);
+        } else if (data.total_items) {
+          setTotalPages(Math.ceil(data.total_count / ITEMS_PER_PAGE));
+        }
+
+        setTotalCount(data.total_count || (data.total_pages || 1) * ITEMS_PER_PAGE);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching legislation data:", err);
+        setError(err instanceof Error ? err.message : "Failed to load legislation data");
+        setLoading(false);
+      }
+    }
+    fetchLegislation();
+  }, [currentPage])
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo(0, 0); // scroll to top
+  };
 
   return (
-    <div className="min-h-screen bg-white text-black overflow-y-auto">
+    <div> 
       <Navbar />
-      <div className="flex items-center justify-center min-h-screen bg-gray-100 p-8">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold mb-6">Legislation Model Page</h1>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {bill_data.map((bill) => (
-              <div
-              key={bill.bill_id}
-              className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow flex flex-col justify-center items-center text-center space-y-4 min-h-[250px] w-full sm:w-[400px]"
-            >
-              <Link href={`/legislation/${bill.bill_id}`} className="w-full">
-                <h2 className="text-xl font-bold text-blue-600">{bill.title}</h2>
-              </Link>
-              
-              <img
-                src="/texas-state-outline.png"
-                alt="Outline of Texas State"
-                className="w-24 h-24"
-              />
-              
-              <div className="text-gray-700 space-y-1">
-                <p className="text-sm"><strong>State:</strong> {bill.state}</p>
-                <p className="text-sm"><strong>Bill Number:</strong> {bill.bill_number}</p>
-                <p className="text-sm"><strong>Date Filed:</strong> {bill.history[0].date}</p>
-                <p className="text-sm"><strong>First Sponsor:</strong> {bill.sponsors[0].name}</p>
-              </div>
-            </div>
-            
-            
-            ))}
-          </div>
+      <div className="p-4">
+        <h1 className="text-4xl font-bold text-green-500">Legislation</h1>
+        <p className="text-lg text-green-700 font-bold mt-2 mb-4">Various pieces of legislation are being introduced to improve police accountability and prevent excessive use of force. Our platform provides a comprehensive database of these laws, empowering users to stay informed and take action in support of meaningful reform.</p>
+        <div className="mt-2">
+          <p className="text-gray-600">
+            Showing {legislationData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0} - {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)} of {totalCount} Bills
+          </p>
         </div>
+        <div className="my-2">
+          <br />
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#D63C68]"></div>
+            </div>
+          ) : error ? (
+            <div className="text-center text-red-500 p-4">
+              Error: {error}
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {legislationData.map((bill, index) => <LegislationCard key = {index} bill = {bill}/>)}
+              </div>
+              
+              {/* No legislation found message */}
+              {legislationData.length === 0 && !loading && (
+                <div className="text-center p-8">
+                  <p className="text-lg text-gray-600">No legislation found.</p>
+                </div>
+              )}
+              
+            </>
+          )}
+          <br />
+        </div>
+        <PaginationControls currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange} />
       </div>
     </div>
-  );
+  )
+
 }

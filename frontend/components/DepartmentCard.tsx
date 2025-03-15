@@ -1,11 +1,12 @@
 // import Link from "next/link";
-import React from 'react';
+// import React from 'react';
 import {
   MapPin, Building2, Shield,
   BarChart2, Target, AlertTriangle
 } from 'lucide-react';
+import { Department } from '@/public/data/DepartmentData';
 
-const getScoreColor = (score: number) => {
+export const getScoreColor = (score: number) => {
   if (score < 30)
     return {
       bg: "bg-red-100",
@@ -57,34 +58,19 @@ const getPoliceShootingColor = (shootings: number) => {
   };
 };
 
-export const DepartmentCard = (DepartmentInstance: any) => {
-  let deptName = DepartmentInstance.agency_name.toLowerCase();
-  deptName = deptName.split(" ");
-  deptName[0] = deptName[0].charAt(0).toUpperCase() + deptName[0].slice(1);
-  if (deptName.length > 1) {
-    deptName[1] = deptName[1].charAt(0).toUpperCase() + deptName[1].slice(1);
+export function capitalize (word: string, delimeter: string) {
+  const result = word.split(delimeter);
+  for (let i = 0; i < result.length; i++) {
+    result[i] = result[i].charAt(0).toUpperCase() + result[i].slice(1);
   }
-  deptName = deptName.join(" ");
-  // const link = `/department/${deptName}`;
-  let locationName = DepartmentInstance.location_name.toLowerCase();
-  locationName = locationName.split(" ");
-  locationName[0] = locationName[0].charAt(0).toUpperCase() + locationName[0].slice(1);
-  if (locationName.length > 1) {
-    locationName[1] = locationName[1].charAt(0).toUpperCase() + locationName[1].slice(1);
-  }
-  locationName = locationName.join(" ");
+  return result.join(" ")
+}
 
+export const DepartmentCard = (DepartmentInstance: Department) => {
+  const deptName = capitalize(DepartmentInstance.agency_name.toLowerCase(), " ");
+  const locationName = capitalize(DepartmentInstance.location_name.toLowerCase(), " ");
   const state = DepartmentInstance.state.toLowerCase();
-
-  let agencyType = DepartmentInstance.agency_type.split("-");
-  if (agencyType) {
-    agencyType[0] = agencyType[0].charAt(0).toUpperCase() + agencyType[0].slice(1)
-    if (agencyType.length > 1) {
-    agencyType[1] = agencyType[1].charAt(0).toUpperCase() + agencyType[1].slice(1)
-    }
-  }
-  
-  agencyType = agencyType.join(" ")
+  const agencyType = capitalize(DepartmentInstance.agency_type.toLowerCase(), "-");
   const coordinates = `${DepartmentInstance.latitude}, ${DepartmentInstance.longitude}`;
   const violenceScore = parseFloat(DepartmentInstance.calc_police_violence_score);
   const policeShootingAverage = parseFloat(DepartmentInstance.police_shootings_2021);
@@ -95,7 +81,7 @@ export const DepartmentCard = (DepartmentInstance: any) => {
   const overallColor = getScoreColor(overallScore)
   return (
     // Card Container
-    <div className="rounded-lg shadow-lg border-[1px] bg-white border-gray-300 hover:border-black hover:shadow-xl hover:-translate-y-2">
+    <div className="rounded-lg transition-all shadow-lg w-full border-[1px] bg-white border-gray-300 hover:border-black hover:shadow-xl hover:-translate-y-1">
       {/* Header start */}
       <div className="pb-2 bg-[#E7F3FA] pt-4 px-4 flex gap-4">
         <span className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-200">
