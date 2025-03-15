@@ -3,13 +3,14 @@
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { Lato } from 'next/font/google';
+// import { Lato } from 'next/font/google';
 import PaginationControls from "@/components/PaginationControls";
 import LegislationCard from "@/components/LegislationCard";
 
-const lato = Lato({
-  subsets: ["latin"],
-  weight: ['400', '700'],
-});
+// const lato = Lato({
+//   subsets: ["latin"],
+//   weight: ['400', '700'],
+// });
 
 // Define TypeScript interfaces
 export interface Legislation {
@@ -28,7 +29,6 @@ export interface Legislation {
 
 
 
-
 // interface ApiResponse {
 //   current_page: number;
 //   legislation: Legislation[];
@@ -44,12 +44,10 @@ export default function LegislationModelPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
 
-  //Fetch data for each page and set state variables correctly.
   //Fetch data for each page and set state variables correctly.
   useEffect(() => {
     const fetchLegislation = async () => {
@@ -57,28 +55,22 @@ export default function LegislationModelPage() {
         setLoading(true);
         const response = await fetch(`http://localhost:5001/api/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`);
         console.log(`http://localhost:5001/api/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`)
-        console.log(`http://localhost:5001/api/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`)
         if (!response.ok) {
-            throw new Error(`Can't fetch legislation :(`);
             throw new Error(`Can't fetch legislation :(`);
         }
         const data = await response.json();
         console.log(data)
-        console.log(data)
         setLegislationData(data.legislation || []);
-
 
         if (data.current_page) {
           setCurrentPage(data.current_page);
         }
-
 
         if (data.total_pages) {
           setTotalPages(data.total_pages);
         } else if (data.total_items) {
           setTotalPages(Math.ceil(data.total_count / ITEMS_PER_PAGE));
         }
-
 
         setTotalCount(data.total_count || (data.total_pages || 1) * ITEMS_PER_PAGE);
         setLoading(false);
@@ -88,9 +80,7 @@ export default function LegislationModelPage() {
         setLoading(false);
       }
     }
-    }
     fetchLegislation();
-  }, [currentPage])
   }, [currentPage])
 
   const handlePageChange = (pageNumber: number) => {
@@ -100,17 +90,7 @@ export default function LegislationModelPage() {
 
   return (
     <div> 
-    <div> 
       <Navbar />
-      <div className="p-4">
-        <h1 className="text-4xl font-bold text-green-500">Legislation</h1>
-        <p className="text-lg text-green-700 font-bold mt-2 mb-4">Various pieces of legislation are being introduced to improve police accountability and prevent excessive use of force. Our platform provides a comprehensive database of these laws, empowering users to stay informed and take action in support of meaningful reform.</p>
-        <div className="mt-2">
-          <p className="text-gray-600">
-            Showing {legislationData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0} - {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)} of {totalCount} Bills
-          </p>
-        </div>
-        <div className="my-2">
       <div className="p-4">
         <h1 className="text-4xl font-bold text-green-500">Legislation</h1>
         <p className="text-lg text-green-700 font-bold mt-2 mb-4">Various pieces of legislation are being introduced to improve police accountability and prevent excessive use of force. Our platform provides a comprehensive database of these laws, empowering users to stay informed and take action in support of meaningful reform.</p>
@@ -133,7 +113,6 @@ export default function LegislationModelPage() {
             <>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {legislationData.map((bill, index) => <LegislationCard key = {index} bill = {bill}/>)}
-                {legislationData.map((bill, index) => <LegislationCard key = {index} bill = {bill}/>)}
               </div>
               
               {/* No legislation found message */}
@@ -148,11 +127,8 @@ export default function LegislationModelPage() {
           <br />
         </div>
         <PaginationControls currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange} />
-        <PaginationControls currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange} />
       </div>
     </div>
-  )
-
   )
 
 }

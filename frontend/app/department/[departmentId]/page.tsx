@@ -6,6 +6,8 @@ import { Map } from "@/app/components/Map";
 // import { DepartmentInstances} from "@/public/data/DepartmentData";
 import { capitalize } from '@/components/DepartmentCard'
 import { Lato } from 'next/font/google';
+import { Violence } from "@/types/important";
+import IncidentCard from "@/components/ViolenceCard";
 
 const lato = Lato({
   subsets: ["latin"],
@@ -141,8 +143,19 @@ export default async function DepartmentPage({
     // console.log(data);
     return data.departments;
   }
+
+  const getViolenceConnections = async(ori_identifier : string) => {
+    const response = await fetch(`http://localhost:5001/api/violence?ori_identifier=${ori_identifier}`)
+    if (!response.ok) {
+      throw new Error('Failed to fetch departments');
+    }
+    const data = await response.json();
+    return data.incidents;
+  }
+
   let departmentInstance = await getDepartmentData();
   departmentInstance = departmentInstance[0];
+  let related_violence : Violence[] = await getViolenceConnections(departmentInstance.ori_identifier)
 
   const departmentName = capitalize(departmentInstance.agency_name.toLowerCase(), " ");
   if (!departmentInstance) {
@@ -211,9 +224,8 @@ export default async function DepartmentPage({
 
         <div className="text-left border-b-2 border-gray-300 rounded-lg shadow-md p-4 bg-white">
           <p className="mt-4 text-xl font-bold underline">View Incidents in {stateTranslation[departmentInstance.state]}</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <RelatedIncidents incident_id="incident1" />
-            <RelatedIncidents incident_id="incident2" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {related_violence.map((incident, index) => <IncidentCard key = {index} incident = {incident}/>)}
           </div>
           <p className="mt-4 text-xl font-bold underline">View Legislation from {stateTranslation[departmentInstance.state]}</p>
 

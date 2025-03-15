@@ -170,7 +170,7 @@ export default async function ViolenceInstancePage({
       <div className="flex-grow w-full max-w-full p-6 bg-white shadow-md rounded-lg min-h-full">
         <h1 className="text-3xl font-bold text-center mb-4">Violence Instance Details</h1>
         <img
-          src={instance.image_url}
+          src={instance.image_url }
           alt={`${instance.agency_responsible} logo`}
           className="w-32 h-32 mb-6 mx-auto"
         />

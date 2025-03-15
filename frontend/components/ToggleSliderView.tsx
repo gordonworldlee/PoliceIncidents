@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react";
 import { motion } from "framer-motion";
-import ViolenceCardGrid from "./ViolenceCardGrid";
+import ViolenceCardGrid from "./ViolencePaginatedCardGrid";
 import ViolenceMapWrapper from "./ViolenceMapWrapper";
 
 const MapView: React.FC = () => <div className="p-4 bg-blue-100">Map View</div>;

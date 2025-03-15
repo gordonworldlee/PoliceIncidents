@@ -2,8 +2,9 @@
 
 import { useEffect, useState, useCallback } from "react";
 import TotalIncidentMap from "./TotalIncidentMap"; // Assuming you have this component for the map
-import { Violence } from "./ViolenceCardGrid";
+
 import IncidentCard from "./ViolenceCard";
+import { Violence } from "@/types/important";
 
 const ITEMS_TO_LOAD = 500;
 
