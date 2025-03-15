@@ -17,7 +17,8 @@ export default function ViolenceQueryCardGrid({ api_query, violenceData, setViol
         const fetchViolence = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`http://localhost:5001/api/violence?${api_query}`);
+                const response = await fetch(`http://localhost:5001/api/incidents?${api_query}`);
+                console.log(response)
                 if (!response.ok) {
                     throw new Error(`Response is NOT ok. Can't fetch Violence Data :(`);
                 }

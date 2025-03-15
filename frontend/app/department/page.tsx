@@ -26,7 +26,8 @@ export default function DepartmentModelPage() {
     const fetchDepartments = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:5001/api/departments?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`);
+        const response = await fetch(`http://localhost:5001/api/agencies?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`);
+        console.log(response)
         
         if (!response.ok) {
           throw new Error('Failed to fetch departments');

@@ -19,7 +19,7 @@ const ViolenceMapWrapper = () => {
     const fetchViolence = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:5001/api/violence?per_page=${ITEMS_TO_LOAD}`);
+        const response = await fetch(`http://localhost:5001/api/incidents?per_page=${ITEMS_TO_LOAD}`);
         
         if (!response.ok) {
           throw new Error("Can't fetch violence data.");
