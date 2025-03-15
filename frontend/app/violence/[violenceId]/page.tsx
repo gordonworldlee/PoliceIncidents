@@ -5,9 +5,9 @@ import { Map } from "@/app/components/Map";
 
 
 interface ViolencePageProps {
-  params: {
+  params: Promise<{
     violenceId: string;
-  };
+  }>;
 }
 
 // interface ScorecardLinkProps {
@@ -94,7 +94,7 @@ const NewsLink = ({ url }: { url: string }) => (
 // );
 
 async function fetchViolenceById(violenceId : string) {
-  const response = await fetch(`http://localhost:5001/api/violence/${violenceId}`);
+  const response = await fetch(`http://localhost:5001/api/incidents/${violenceId}`);
   const data = await response.json();
   return data;
 }
