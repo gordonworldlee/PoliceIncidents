@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Violence } from './ViolencePaginatedCardGrid';
+import { Violence } from "@/types/important";
 
 
 const IncidentCard: React.FC<{ incident: Violence }> = ({ incident }) => (
