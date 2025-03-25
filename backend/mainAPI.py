@@ -1,0 +1,234 @@
+from flask import Flask, jsonify, request
+from sqlalchemy import create_engine, text
+from flask_cors import CORS
+import math
+
+app = Flask(__name__)
+CORS(app)
+
+
+DB_USER = "postgres"
+DB_PASSWORD = "example567"
+DB_HOST = "justicewatch.me"
+DB_PORT = "5432"
+DB_NAME = "postgres"
+
+DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+engine = create_engine(DATABASE_URL)
+
+def fetch_data(sql_query, params=None):
+    try:
+        with engine.connect() as connection:
+            if params:
+                result = connection.execute(text(sql_query), params)
+            else:
+                result = connection.execute(text(sql_query))
+            rows = result.fetchall()
+            column_names = result.keys()
+            data = [dict(zip(column_names, row)) for row in rows]
+            return data
+    except Exception as e:
+        print(f"Database error: {e}")
+        return None
+
+@app.route("/api/legislation", methods=["GET"])
+def get_legislation():
+    """
+    You can now query legislation using any combination of parameters, for example:
+    /api/legislation?state=CA
+    /api/legislation?bill_number=AB123&session_year=2025
+    /api/legislation?subjects=Education&sponsors=John%20Doe
+    """
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 12, type=int)  # Fixed parameter name
+
+    # Get query parameters
+    params = request.args.to_dict()
+
+    if 'page' in params:
+        del params['page']
+    if 'per_page' in params:
+        del params['per_page']
+
+    where_clauses = []
+    query_params = {}
+    for key, value in params.items():
+        where_clauses.append(f"\"{key}\" = :{key}")
+        query_params[key] = value
+
+    # make SQL query
+    count_query = "SELECT COUNT(*) as count FROM \"legislation\""   #get count of matchings
+    if where_clauses:
+        count_query += " WHERE " + " AND ".join(where_clauses)
+
+
+    count_data = fetch_data(count_query, query_params)
+    total_count = count_data[0]['count'] if count_data else 0
+
+    total_pages = math.ceil(total_count / per_page) if total_count > 0 else 0
+    offset = (page - 1) * per_page
+
+    # construct the main SQL query
+    query = "SELECT * FROM \"legislation\""
+    if where_clauses:
+        query += " WHERE " + " AND ".join(where_clauses)
+
+    #  pagination
+    query += f" LIMIT {per_page} OFFSET {offset}"
+
+    # execute the query
+    data = fetch_data(query, query_params)
+    response = {
+        "legislation": data if data else [],
+        "total_count": total_count,
+        "total_pages": total_pages,
+        "current_page": page,
+        "per_page": per_page
+    }
+    return jsonify(response)
+
+
+@app.route("/api/legislation/<int:legislation_id>", methods=["GET"])
+def get_legislation_by_id(legislation_id):
+    query = "SELECT * FROM \"legislation\" WHERE id = :id"
+    data = fetch_data(query, {"id": legislation_id})
+
+    if data:
+        return jsonify(data[0])
+    else:
+        return jsonify({"error": "Legislation not found."}), 404
+
+
+
+
+@app.route("/api/incidents", methods=["GET"])
+def get_police_incidents():
+    # Get pagination parameters
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 12, type=int)
+
+    # Copy parameters excluding pagination params
+    params = request.args.to_dict()
+    if 'page' in params:
+        del params['page']
+    if 'per_page' in params:
+        del params['per_page']
+
+    where_clauses = []
+    query_params = {}
+    for key, value in params.items():
+        where_clauses.append(f"\"{key}\" = :{key}")
+        query_params[key] = value
+
+    # Get count for pagination
+    count_query = "SELECT COUNT(*) as count FROM \"incidents\""
+    if where_clauses:
+        count_query += " WHERE " + " AND ".join(where_clauses)
+
+    count_data = fetch_data(count_query, query_params)
+    total_count = count_data[0]['count'] if count_data else 0
+
+    # Calculate pagination values
+    total_pages = math.ceil(total_count / per_page) if total_count > 0 else 0
+    offset = (page - 1) * per_page
+
+    # Main query with pagination
+    query = "SELECT * FROM \"incidents\""
+    if where_clauses:
+        query += " WHERE " + " AND ".join(where_clauses)
+
+    query += f" LIMIT {per_page} OFFSET {offset}"
+
+    data = fetch_data(query, query_params)
+
+    response = {
+        "incidents": data if data else [],
+        "total_count": total_count,
+        "total_pages": total_pages,
+        "current_page": page,
+        "per_page": per_page
+    }
+
+    return jsonify(response)
+
+@app.route("/api/incidents/<int:incident_id>", methods=["GET"])
+def get_police_incident_by_id(incident_id):
+    query = "SELECT * FROM \"incidents\" WHERE id = :id"
+    data = fetch_data(query, {"id": incident_id})
+
+    if data:
+        return jsonify(data[0])
+    else:
+        return jsonify({"error": "Police incident not found."}), 404
+
+
+@app.route("/api/agencies", methods=["GET"])
+def get_scorecard():
+    """
+    You can now query police incidents using any combination of parameters, for example:
+    /api/scorecard?state=IL
+    /api/scorecard?agency_name=CHICAGO&agency_type=police-department
+    """
+    # get pagination parameters
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 12, type=int)
+
+    # copy parameters excluding pagination params
+    params = request.args.to_dict()
+    if 'page' in params:
+        del params['page']
+    if 'per_page' in params:
+        del params['per_page']
+
+    where_clauses = []
+    query_params = {}
+    for key, value in params.items():
+        where_clauses.append(f"\"{key}\" = :{key}")
+        query_params[key] = value
+
+    count_query = "SELECT COUNT(*) FROM  \"agencies\""
+    if where_clauses:
+        count_query += " WHERE " + " AND ".join(where_clauses)
+
+    count_data = fetch_data(count_query, query_params)
+    total_count = count_data[0]['count'] if count_data else 0
+
+    #calculate total pages
+    total_pages = math.ceil(total_count / per_page) if total_count > 0 else 0
+
+    # calculate offset for pagination
+    offset = (page - 1) * per_page
+
+    query = "SELECT * FROM \"agencies\""
+    if where_clauses:
+        query += " WHERE " + " AND ".join(where_clauses)
+
+    #added this
+    query += f" LIMIT {per_page} OFFSET {offset}"
+
+    data = fetch_data(query, query_params)
+
+    response = {
+        "departments": data if data else [],
+        "total_count": total_count,
+        "total_pages": total_pages,
+        "current_page": page,
+        "per_page": per_page
+    }
+
+    return jsonify(response)
+
+
+@app.route("/api/agencies/<int:scorecard_id>", methods=["GET"])
+def get_scorecard_by_id(scorecard_id):
+    query = "SELECT * FROM \"agencies\" WHERE id = :id"
+    data = fetch_data(query, {"id": scorecard_id})
+
+    if data:
+        return jsonify(data[0])
+    else:
+        return jsonify({"error": "Scorecard not found."}), 404
+
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5001, debug=True)  # Turn off debug mode in production
