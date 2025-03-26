@@ -29,9 +29,15 @@ test_frontend:
 test_backend_api:
   stage: test
   image: postman/newman:latest
+  before_script:
+    - echo "Checking environment..."
+    - ls ./backend
+    - newman --version
   script:
     - echo "Running Postman API tests..."
+    - cd backend
     - newman run ./backend/Testing.postman_collection.json --reporters cli,json
+
 
 test_backend_unittests:
   stage: test
