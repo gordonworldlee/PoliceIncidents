@@ -26,21 +26,22 @@ test_frontend:
         echo "No tests found. Skipping test stage."
       fi
 
-test_backend:
+test_backend_api:
   stage: test
-  image: node:latest
-  before_script:
-    - apt-get update
-    - apt-get install -y make curl
+  image: postman/newman:latest
   script:
-    - cd frontend
-    - npm install
-    - |
-      if [ -d "test" ] || [ -d "__tests__" ] || grep -q '"test"' package.json; then
-        npm run test
-      else
-        echo "No tests found. Skipping test stage."
-      fi
+    - echo "Running Postman API tests..."
+    - newman run ./backend/Testing.postman_collection.json --reporters cli,json
+
+test_backend_python:
+  stage: test
+  image: python:latest
+  before_script:
+    - echo "Setting up Python environment..."
+    - pip install --no-cache-dir -r backend/requirements.txt
+  script:
+    - echo "Running Python unittests..."
+    - python3 -m unittest discover -s backend/unit-tests -p "*.py"
 
 build_production:
   stage: build
