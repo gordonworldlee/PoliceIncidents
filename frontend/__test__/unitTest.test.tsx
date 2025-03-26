@@ -94,7 +94,7 @@ const mockTeamMember: TeamMember = {
     photoUrl: 'https://via.placeholder.com/150',
     gitlabUrl: 'https://gitlab.com/johndoe',
     stats: mockGitLabStats
-}
+};
 
 describe('DepartmentCard', () => {
     test('renders department card correctly', () => {
@@ -129,5 +129,5 @@ describe('TeamMemberCard', () => {
         render(<TeamMemberCard member={mockTeamMember} />);
         expect(screen.getByText('John Doe is a developer at JusticeWatch')).toBeInTheDocument();
     })
-})
+});
 
