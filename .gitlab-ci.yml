@@ -41,7 +41,7 @@ test_backend_unittests:
     - pip install --no-cache-dir -r backend/requirements.txt
   script:
     - echo "Running Python unittests..."
-    - python3 -m unittest discover -s backend/unit-tests -p "*.py"
+    - python3 -m unit-tests.py
     
 build_production:
   stage: build
