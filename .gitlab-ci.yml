@@ -33,7 +33,7 @@ test_backend_api:
     - echo "Running Postman API tests..."
     - newman run ./backend/Testing.postman_collection.json --reporters cli,json
 
-test_backend_python:
+test_backend_unittests:
   stage: test
   image: python:latest
   before_script:
@@ -42,7 +42,7 @@ test_backend_python:
   script:
     - echo "Running Python unittests..."
     - python3 -m unittest discover -s backend/unit-tests -p "*.py"
-
+    
 build_production:
   stage: build
   script:
