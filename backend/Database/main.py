@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from justicewatchtypes import Legislation, Incident, Agency
+from models import Legislation, Incident, Agency
 from scrape import extractInfo, extractAgency, extractLegislation
 from dotenv import load_dotenv
 import os

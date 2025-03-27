@@ -1,11 +1,15 @@
 from sqlalchemy import Column, Integer, String, ARRAY
 from sqlalchemy.orm import declarative_base
+from dataclasses import dataclass
+
+object
 
 Base = declarative_base()
 
+@dataclass
 class Legislation(Base):
     __tablename__ = 'legislation'
-    id = Column(Integer, primary_key=True)
+    id:int = Column(Integer, primary_key=True)
     state = Column(String)
     bill_number = Column(String)
     title = Column(String)
@@ -18,6 +22,7 @@ class Legislation(Base):
     last_action = Column(String)
     connections_incidents = Column(ARRAY(Integer))
     connections_agencies = Column(ARRAY(Integer))
+
 
     def __repr__(self):
         return f"<Legislation {self.title}, {self.state}>"

@@ -1,4 +1,4 @@
-from justicewatchtypes import Legislation, Incident, Agency
+from models import Legislation, Incident, Agency
 from sqlalchemy.orm import Session
 import re
 
