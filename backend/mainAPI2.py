@@ -25,55 +25,116 @@ api = Blueprint('api_v2', __name__, url_prefix='/api/v2')
 def shutdown_session(exception=None):
     db_session.remove()
 
+def serialize_all(input):
+    return [item.serialize() for item in input]
+
 ##################################################
 ### Legislation
 ##################################################
 @api.route("/legislation", methods=["GET"])
 def get_legislation():
-    stmt = select(Legislation)
-    # print(db_session.scalars(stmt).first().__dict__)
-    # return {"hi": "test"}
-    x = [legislation.__dict__ for legislation in db_session.scalars(stmt)]
-    # print(x)
-    # remove "_sa_instance_state" from all dicts in x
-    for legislation in x:
-        del legislation['_sa_instance_state']
-    return x
+    # Pagination query params
+    if "page" in request.args:
+        page = int(request.args["page"])
+        per_page = int(request.args.get("per_page", 10))
+        stmt = select(Legislation).offset(page * 10).limit(per_page)
+    else:
+        stmt = select(Legislation)
 
+    # Search query params
+    if "id" in request.args:
+        stmt = stmt.where(Legislation.id == request.args["id"])
+    if "bill_number" in request.args:
+        stmt = stmt.where(Legislation.bill_number == request.args["bill_number"])
+    if "state" in request.args:
+        stmt = stmt.where(Legislation.state == request.args["state"])
+    if "title" in request.args:
+        title = request.args["title"]
+        for word in title.split():
+            stmt = stmt.where(Legislation.title.contains(word))
+    if "description" in request.args:
+        description = request.args["description"]
+        for word in description.split():
+            stmt = stmt.where(Legislation.description.contains(word))
+
+    result = serialize_all(db_session.scalars(stmt))
+
+    return result
 
 @api.route("/legislation/<int:legislation_id>", methods=["GET"])
 def get_legislation_by_id(legislation_id):
-    print("not implemented")
-    raise NotImplementedError
+    stmt = select(Legislation).where(Legislation.id == legislation_id)
+    result = db_session.scalars(stmt).one_or_none()
+
+    if result is None:
+        return {"error": "Legislation not found"}, 404
+    else:
+        return result.serialize()
 
 
 ##################################################
 ### Incidents
 ##################################################
 @api.route("/incidents", methods=["GET"])
-def get_police_incidents():
-    print("not implemented")
-    raise NotImplementedError
+def get_incidents():
+    # Pagination query params
+    if "page" in request.args:
+        page = int(request.args["page"])
+        per_page = int(request.args.get("per_page", 10))
+        stmt = select(Incident).offset(page * 10).limit(per_page)
+    else:
+        stmt = select(Incident)
+
+    # Search query params
+    if "id" in request.args:
+        stmt = stmt.where(Incident.id == request.args["id"])
+
+    result = serialize_all(db_session.scalars(stmt))
+
+    return result
 
 
 @api.route("/incidents/<int:incident_id>", methods=["GET"])
-def get_police_incident_by_id(incident_id):
-    print("not implemented")
-    raise NotImplementedError
+def get_incident_by_id(incident_id):
+    stmt = select(Incident).where(Incident.id == incident_id)
+    result = db_session.scalars(stmt).one_or_none()
+
+    if result is None:
+        return {"error": "Incident not found"}, 404
+    else:
+        return result.serialize()
 
 ##################################################
 ### Agencies
 ##################################################
 @api.route("/agencies", methods=["GET"])
-def get_scorecard():
-    print("not implemented")
-    raise NotImplementedError
+def get_agencies():
+    # Pagination query params
+    if "page" in request.args:
+        page = int(request.args["page"])
+        per_page = int(request.args.get("per_page", 10))
+        stmt = select(Agency).offset(page * 10).limit(per_page)
+    else:
+        stmt = select(Agency)
+
+    # Search query params
+    if "id" in request.args:
+        stmt = stmt.where(Agency.id == request.args["id"])
+
+    result = serialize_all(db_session.scalars(stmt))
+
+    return result
 
 
-@api.route("/agencies/<int:scorecard_id>", methods=["GET"])
-def get_scorecard_by_id(scorecard_id):
-    print("not implemented")
-    raise NotImplementedError
+@api.route("/agencies/<int:agency_id>", methods=["GET"])
+def get_agency_by_id(agency_id):
+    stmt = select(Agency).where(Agency.id == agency_id)
+    result = db_session.scalars(stmt).one_or_none()
+
+    if result is None:
+        return {"error": "Agency not found"}, 404
+    else:
+        return result.serialize()
 
 
 if __name__ == "__main__":
