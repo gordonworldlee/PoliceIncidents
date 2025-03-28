@@ -1,234 +1,145 @@
-from flask import Flask, jsonify, request
-from sqlalchemy import create_engine, text
+from ast import Not
+from flask import Flask, jsonify, request, Blueprint
+from sqlalchemy import create_engine, text, select
+from sqlalchemy.orm import sessionmaker, scoped_session
 from flask_cors import CORS
+from dbconnector import connect_to_db
+from models import Legislation, Incident, Agency, Base
+
 import math
 
+engine = connect_to_db()
+db_session = scoped_session(sessionmaker(autocommit=False,
+                                         autoflush=False,
+                                         bind=engine))
+
+Base.query = db_session.query_property()
+
 app = Flask(__name__)
+app.url_map.strict_slashes = False
 CORS(app)
 
+# Make it so that all API requests start with /api/v2
+api = Blueprint('api_v2', __name__, url_prefix='/api/v2')
 
-DB_USER = "postgres"
-DB_PASSWORD = "example567"
-DB_HOST = "justicewatch.me"
-DB_PORT = "5432"
-DB_NAME = "postgres"
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db_session.remove()
 
-DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-engine = create_engine(DATABASE_URL)
+def serialize_all(input):
+    return [item.serialize() for item in input]
 
-def fetch_data(sql_query, params=None):
-    try:
-        with engine.connect() as connection:
-            if params:
-                result = connection.execute(text(sql_query), params)
-            else:
-                result = connection.execute(text(sql_query))
-            rows = result.fetchall()
-            column_names = result.keys()
-            data = [dict(zip(column_names, row)) for row in rows]
-            return data
-    except Exception as e:
-        print(f"Database error: {e}")
-        return None
-
-@app.route("/api/legislation", methods=["GET"])
+##################################################
+### Legislation
+##################################################
+@api.route("/legislation", methods=["GET"])
 def get_legislation():
-    """
-    You can now query legislation using any combination of parameters, for example:
-    /api/legislation?state=CA
-    /api/legislation?bill_number=AB123&session_year=2025
-    /api/legislation?subjects=Education&sponsors=John%20Doe
-    """
-    page = request.args.get('page', 1, type=int)
-    per_page = request.args.get('per_page', 12, type=int)  # Fixed parameter name
+    # Pagination query params
+    if "page" in request.args:
+        page = int(request.args["page"])
+        per_page = int(request.args.get("per_page", 10))
+        stmt = select(Legislation).offset(page * 10).limit(per_page)
+    else:
+        stmt = select(Legislation)
 
-    # Get query parameters
-    params = request.args.to_dict()
+    # Search query params
+    if "id" in request.args:
+        stmt = stmt.where(Legislation.id == request.args["id"])
+    if "bill_number" in request.args:
+        stmt = stmt.where(Legislation.bill_number == request.args["bill_number"])
+    if "state" in request.args:
+        stmt = stmt.where(Legislation.state == request.args["state"])
+    if "title" in request.args:
+        title = request.args["title"]
+        for word in title.split():
+            stmt = stmt.where(Legislation.title.contains(word))
+    if "description" in request.args:
+        description = request.args["description"]
+        for word in description.split():
+            stmt = stmt.where(Legislation.description.contains(word))
 
-    if 'page' in params:
-        del params['page']
-    if 'per_page' in params:
-        del params['per_page']
+    result = serialize_all(db_session.scalars(stmt))
 
-    where_clauses = []
-    query_params = {}
-    for key, value in params.items():
-        where_clauses.append(f"\"{key}\" = :{key}")
-        query_params[key] = value
+    return result
 
-    # make SQL query
-    count_query = "SELECT COUNT(*) as count FROM \"legislation\""   #get count of matchings
-    if where_clauses:
-        count_query += " WHERE " + " AND ".join(where_clauses)
-
-
-    count_data = fetch_data(count_query, query_params)
-    total_count = count_data[0]['count'] if count_data else 0
-
-    total_pages = math.ceil(total_count / per_page) if total_count > 0 else 0
-    offset = (page - 1) * per_page
-
-    # construct the main SQL query
-    query = "SELECT * FROM \"legislation\""
-    if where_clauses:
-        query += " WHERE " + " AND ".join(where_clauses)
-
-    #  pagination
-    query += f" LIMIT {per_page} OFFSET {offset}"
-
-    # execute the query
-    data = fetch_data(query, query_params)
-    response = {
-        "legislation": data if data else [],
-        "total_count": total_count,
-        "total_pages": total_pages,
-        "current_page": page,
-        "per_page": per_page
-    }
-    return jsonify(response)
-
-
-@app.route("/api/legislation/<int:legislation_id>", methods=["GET"])
+@api.route("/legislation/<int:legislation_id>", methods=["GET"])
 def get_legislation_by_id(legislation_id):
-    query = "SELECT * FROM \"legislation\" WHERE id = :id"
-    data = fetch_data(query, {"id": legislation_id})
+    stmt = select(Legislation).where(Legislation.id == legislation_id)
+    result = db_session.scalars(stmt).one_or_none()
 
-    if data:
-        return jsonify(data[0])
+    if result is None:
+        return {"error": "Legislation not found"}, 404
     else:
-        return jsonify({"error": "Legislation not found."}), 404
+        return result.serialize()
 
 
-
-
-@app.route("/api/incidents", methods=["GET"])
-def get_police_incidents():
-    # Get pagination parameters
-    page = request.args.get('page', 1, type=int)
-    per_page = request.args.get('per_page', 12, type=int)
-
-    # Copy parameters excluding pagination params
-    params = request.args.to_dict()
-    if 'page' in params:
-        del params['page']
-    if 'per_page' in params:
-        del params['per_page']
-
-    where_clauses = []
-    query_params = {}
-    for key, value in params.items():
-        where_clauses.append(f"\"{key}\" = :{key}")
-        query_params[key] = value
-
-    # Get count for pagination
-    count_query = "SELECT COUNT(*) as count FROM \"incidents\""
-    if where_clauses:
-        count_query += " WHERE " + " AND ".join(where_clauses)
-
-    count_data = fetch_data(count_query, query_params)
-    total_count = count_data[0]['count'] if count_data else 0
-
-    # Calculate pagination values
-    total_pages = math.ceil(total_count / per_page) if total_count > 0 else 0
-    offset = (page - 1) * per_page
-
-    # Main query with pagination
-    query = "SELECT * FROM \"incidents\""
-    if where_clauses:
-        query += " WHERE " + " AND ".join(where_clauses)
-
-    query += f" LIMIT {per_page} OFFSET {offset}"
-
-    data = fetch_data(query, query_params)
-
-    response = {
-        "incidents": data if data else [],
-        "total_count": total_count,
-        "total_pages": total_pages,
-        "current_page": page,
-        "per_page": per_page
-    }
-
-    return jsonify(response)
-
-@app.route("/api/incidents/<int:incident_id>", methods=["GET"])
-def get_police_incident_by_id(incident_id):
-    query = "SELECT * FROM \"incidents\" WHERE id = :id"
-    data = fetch_data(query, {"id": incident_id})
-
-    if data:
-        return jsonify(data[0])
+##################################################
+### Incidents
+##################################################
+@api.route("/incidents", methods=["GET"])
+def get_incidents():
+    # Pagination query params
+    if "page" in request.args:
+        page = int(request.args["page"])
+        per_page = int(request.args.get("per_page", 10))
+        stmt = select(Incident).offset(page * 10).limit(per_page)
     else:
-        return jsonify({"error": "Police incident not found."}), 404
+        stmt = select(Incident)
+
+    # Search query params
+    if "id" in request.args:
+        stmt = stmt.where(Incident.id == request.args["id"])
+
+    result = serialize_all(db_session.scalars(stmt))
+
+    return result
 
 
-@app.route("/api/agencies", methods=["GET"])
-def get_scorecard():
-    """
-    You can now query police incidents using any combination of parameters, for example:
-    /api/scorecard?state=IL
-    /api/scorecard?agency_name=CHICAGO&agency_type=police-department
-    """
-    # get pagination parameters
-    page = request.args.get('page', 1, type=int)
-    per_page = request.args.get('per_page', 12, type=int)
+@api.route("/incidents/<int:incident_id>", methods=["GET"])
+def get_incident_by_id(incident_id):
+    stmt = select(Incident).where(Incident.id == incident_id)
+    result = db_session.scalars(stmt).one_or_none()
 
-    # copy parameters excluding pagination params
-    params = request.args.to_dict()
-    if 'page' in params:
-        del params['page']
-    if 'per_page' in params:
-        del params['per_page']
-
-    where_clauses = []
-    query_params = {}
-    for key, value in params.items():
-        where_clauses.append(f"\"{key}\" = :{key}")
-        query_params[key] = value
-
-    count_query = "SELECT COUNT(*) FROM  \"agencies\""
-    if where_clauses:
-        count_query += " WHERE " + " AND ".join(where_clauses)
-
-    count_data = fetch_data(count_query, query_params)
-    total_count = count_data[0]['count'] if count_data else 0
-
-    #calculate total pages
-    total_pages = math.ceil(total_count / per_page) if total_count > 0 else 0
-
-    # calculate offset for pagination
-    offset = (page - 1) * per_page
-
-    query = "SELECT * FROM \"agencies\""
-    if where_clauses:
-        query += " WHERE " + " AND ".join(where_clauses)
-
-    #added this
-    query += f" LIMIT {per_page} OFFSET {offset}"
-
-    data = fetch_data(query, query_params)
-
-    response = {
-        "departments": data if data else [],
-        "total_count": total_count,
-        "total_pages": total_pages,
-        "current_page": page,
-        "per_page": per_page
-    }
-
-    return jsonify(response)
-
-
-@app.route("/api/agencies/<int:scorecard_id>", methods=["GET"])
-def get_scorecard_by_id(scorecard_id):
-    query = "SELECT * FROM \"agencies\" WHERE id = :id"
-    data = fetch_data(query, {"id": scorecard_id})
-
-    if data:
-        return jsonify(data[0])
+    if result is None:
+        return {"error": "Incident not found"}, 404
     else:
-        return jsonify({"error": "Scorecard not found."}), 404
+        return result.serialize()
 
+##################################################
+### Agencies
+##################################################
+@api.route("/agencies", methods=["GET"])
+def get_agencies():
+    # Pagination query params
+    if "page" in request.args:
+        page = int(request.args["page"])
+        per_page = int(request.args.get("per_page", 10))
+        stmt = select(Agency).offset(page * 10).limit(per_page)
+    else:
+        stmt = select(Agency)
+
+    # Search query params
+    if "id" in request.args:
+        stmt = stmt.where(Agency.id == request.args["id"])
+
+    result = serialize_all(db_session.scalars(stmt))
+
+    return result
+
+
+@api.route("/agencies/<int:agency_id>", methods=["GET"])
+def get_agency_by_id(agency_id):
+    stmt = select(Agency).where(Agency.id == agency_id)
+    result = db_session.scalars(stmt).one_or_none()
+
+    if result is None:
+        return {"error": "Agency not found"}, 404
+    else:
+        return result.serialize()
+
+app.register_blueprint(api)
 
 if __name__ == "__main__":
+
+    print(app.url_map)
     app.run(host='0.0.0.0', port=5001, debug=True)  # Turn off debug mode in production

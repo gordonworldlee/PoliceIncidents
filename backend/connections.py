@@ -1,6 +1,7 @@
 from models import Legislation, Incident, Agency
 from sqlalchemy.orm import Session
 import re
+import time
 
 # version 2 of createDb file
 
@@ -188,13 +189,14 @@ if __name__ == "__main__":
     if x == "1":
         reset_all_connections(engine)
     elif x == "2":
-        # connect_agencies_to_incidents(engine)
         session = Session(engine)
+        total_start_time = time.time()
         connect_legislation_to_agencies(session)
         connect_legislation_to_incidents(session)
         connect_incidents_to_legislation(session)
         connect_incidents_to_agencies(session)
         connect_agencies_to_legislation(session)
         connect_agencies_to_incidents(session)
-        print("All connections have been created")
+        total_elapsed_time = time.time() - total_start_time
+        print(f"All connections have been created in {total_elapsed_time:.2f} seconds total")
     print("Done")

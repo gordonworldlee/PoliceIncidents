@@ -84,7 +84,7 @@ class Incident(Base, Serializable):
             'lat': self.lat,
             'long': self.long,
             'state': self.state,
-            'connections_misconduct': self.connections_misconduct,
+            'connections_legislation': self.connections_legislation,
             'connections_agencies': self.connections_agencies
         }
 
