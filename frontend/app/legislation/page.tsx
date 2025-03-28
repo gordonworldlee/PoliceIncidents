@@ -2,15 +2,14 @@
 // import Link from "next/link";
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
-// import { Lato } from 'next/font/google';
-// import { Lato } from 'next/font/google';
+import { Lato } from 'next/font/google';
 import PaginationControls from "@/components/PaginationControls";
 import LegislationCard from "@/components/LegislationCard";
 
-// const lato = Lato({
-//   subsets: ["latin"],
-//   weight: ['400', '700'],
-// });
+const lato = Lato({
+  subsets: ["latin"],
+  weight: ['400', '700'],
+});
 
 // Define TypeScript interfaces
 export interface Legislation {
@@ -91,8 +90,8 @@ export default function LegislationModelPage() {
   return (
     <div> 
       <Navbar />
-      <div className="p-4">
-        <h1 className="text-4xl font-bold text-green-500">Legislation</h1>
+      <div className="p-4 pt-20">
+        <h1 className={`${lato.className} text-green-700 text-5xl text-center font-bold mt-8`}>LEGISLATION</h1>
         <p className="text-lg text-green-700 font-bold mt-2 mb-4">Various pieces of legislation are being introduced to improve police accountability and prevent excessive use of force. Our platform provides a comprehensive database of these laws, empowering users to stay informed and take action in support of meaningful reform.</p>
         <div className="mt-2">
           <p className="text-gray-600">

@@ -12,7 +12,7 @@ const lato = Lato({
 });
 
 // amount of card per page
-const ITEMS_PER_PAGE = 12; // changed from 6 to 12
+const ITEMS_PER_PAGE = 9; // changed from 6 to 12
 
 export default function DepartmentModelPage() {
   const [departments, setDepartments] = useState<Department[]>([]);
@@ -141,7 +141,7 @@ export default function DepartmentModelPage() {
   };
 
   return (
-    <div className="min-h-screen text-black overflow-y-auto">
+    <div className="min-h-screen text-black pt-20 overflow-y-auto">
       <Navbar />
       <h1 className={`${lato.className} text-[#D63C68] text-5xl text-center font-bold mt-8`}>DEPARTMENT MODEL</h1>
       

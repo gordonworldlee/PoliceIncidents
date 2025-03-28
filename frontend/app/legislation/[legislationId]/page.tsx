@@ -142,7 +142,7 @@ export default async function LegislationInstancePage({
   return (
     <div>
       <Navbar />
-      <div className="p-8">
+      <div className="p-8 pt-20">
         <div className="flex items-center space-x-4">
           <img src={`/flags/${stateTranslation[billData.state]}.png`} alt={`flag of ${billData.state}`} className="w-16 h-16" />
           <h1 className="text-3xl font-bold">{billData.title}</h1>

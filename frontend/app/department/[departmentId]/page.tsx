@@ -8,7 +8,7 @@ import { capitalize } from '@/components/DepartmentCard'
 import { Lato } from 'next/font/google';
 import { Violence } from "@/types/important";
 import IncidentCard from "@/components/ViolenceCard";
-
+import LegislationCard from "@/components/LegislationCard";
 const lato = Lato({
   subsets: ["latin"],
   weight: ['400', '700'],
@@ -165,7 +165,7 @@ export default async function DepartmentPage({
   return (
     <div>
       <Navbar />
-      <div className="min-h-screen flex flex-col justify-center bg-white">
+      <div className="pt-20 min-h-screen flex flex-col justify-center bg-white">
         <h1 className={`${lato.className} text-[#D63C68] my-8 text-center text-3xl font-bold`}>
           {departmentName} Police Department
         </h1>
@@ -228,8 +228,6 @@ export default async function DepartmentPage({
                 {related_violence.map((incident, index) => <IncidentCard key = {index} incident = {incident}/>)}
           </div>
           <p className="mt-4 text-xl font-bold underline">View Legislation from {stateTranslation[departmentInstance.state]}</p>
-
-
         </div>
         <div className="mt-6 text-center">
           <Link className="text-blue-500 underline" href="/department">
