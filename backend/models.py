@@ -63,7 +63,7 @@ class Incident(Base, Serializable):
     lat = Column(String)
     long = Column(String)
     state = Column(String)
-    connections_misconduct = Column(ARRAY(Integer))
+    connections_legislation = Column(ARRAY(Integer))
     connections_agencies = Column(ARRAY(Integer))
 
     def serialize(self):
@@ -119,6 +119,8 @@ class Agency(Base, Serializable):
     calc_overall_score = Column(String)
     criminal_complaints_reported = Column(String)
     civilian_complaints_reported = Column(String)
+    connections_legislation = Column(ARRAY(Integer))
+    connections_incidents = Column(ARRAY(Integer))
 
     def serialize(self):
         return {
