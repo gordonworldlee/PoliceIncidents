@@ -8,7 +8,7 @@ import { capitalize } from '@/components/DepartmentCard'
 import { Lato } from 'next/font/google';
 import { Violence } from "@/types/important";
 import IncidentCard from "@/components/ViolenceCard";
-import LegislationCard from "@/components/LegislationCard";
+// import LegislationCard from "@/components/LegislationCard";
 const lato = Lato({
   subsets: ["latin"],
   weight: ['400', '700'],
