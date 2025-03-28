@@ -23,27 +23,27 @@ class unitTestcases(unittest.TestCase):
         self.assertIn("error", response.json)
 
     def test_get_police_incidents(self):
-        response = self.app.get("/api/violence?state=TX&city=Dallas&cause_of_death=Gunshot")
+        response = self.app.get("/api/incidents?state=TX&city=Dallas&cause_of_death=Gunshot")
         self.assertEqual(response.status_code, 200)
-        self.assertIsInstance(response.json, list)
+        self.assertIn("incidents", response.json)
 
     def test_get_police_incident_by_id(self):
-        response = self.app.get("/api/violence/1")
+        response = self.app.get("/api/incidents/1")
         self.assertEqual(response.status_code, 200)
         self.assertIn("id", response.json)
 
     def test_get_police_incident_by_id_not_found(self):
-        response = self.app.get("/api/violence/999999")  # Assuming this ID doesn't exist
+        response = self.app.get("/api/incidents/999999")  # Assuming this ID doesn't exist
         self.assertEqual(response.status_code, 404)
         self.assertIn("error", response.json)
 
     def test_get_departments(self):
-        response = self.app.get("/api/departments?page=1&per_page=10&state=IL&agency_name=CHICAGO&agency_type=police-department")
+        response = self.app.get("/api/agencies?page=1&per_page=10&state=IL&agency_name=CHICAGO&agency_type=police-department")
         self.assertEqual(response.status_code, 200)
         self.assertIn("departments", response.json)
 
     def test_get_departments_by_id(self):
-        response = self.app.get("/api/departments/1")
+        response = self.app.get("/api/agencies/1")
         self.assertEqual(response.status_code, 200)
         self.assertIn("id", response.json)
 
@@ -54,7 +54,7 @@ class unitTestcases(unittest.TestCase):
         self.assertEqual(response.json["current_page"], 2)
 
     def test_get_departments_pagination(self):
-        response = self.app.get("/api/departments?page=3&per_page=7")
+        response = self.app.get("/api/agencies?page=3&per_page=7")
         self.assertEqual(response.status_code, 200)
         self.assertIn("departments", response.json)
         self.assertEqual(response.json["current_page"], 3)
