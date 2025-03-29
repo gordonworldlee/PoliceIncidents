@@ -38,6 +38,9 @@ def get_legislation():
     /api/legislation?state=CA
     /api/legislation?bill_number=AB123&session_year=2025
     /api/legislation?subjects=Education&sponsors=John%20Doe
+
+    SORT BY STATE
+    /api/legislation?sort_by=state&order=asc
     """
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 12, type=int)  # Fixed parameter name
@@ -53,8 +56,13 @@ def get_legislation():
     where_clauses = []
     query_params = {}
     for key, value in params.items():
-        where_clauses.append(f"\"{key}\" = :{key}")
-        query_params[key] = value
+        if key not in ['sort_by', 'order']:
+            where_clauses.append(f"\"{key}\" = :{key}")
+            query_params[key] = value
+
+    sort_by = request.args.get('sort_by', 'id', type=str)
+    order = request.args.get('order', 'asc', type=str)
+
 
     # make SQL query
     count_query = "SELECT COUNT(*) as count FROM \"legislation\""   #get count of matchings
@@ -72,6 +80,12 @@ def get_legislation():
     query = "SELECT * FROM \"legislation\""
     if where_clauses:
         query += " WHERE " + " AND ".join(where_clauses)
+
+    if sort_by:
+        if order.lower() == 'desc':
+            query += f" ORDER BY \"{sort_by}\" DESC"
+        else:
+            query += f" ORDER BY \"{sort_by}\" ASC"
 
     #  pagination
     query += f" LIMIT {per_page} OFFSET {offset}"
@@ -98,11 +112,12 @@ def get_legislation_by_id(legislation_id):
     else:
         return jsonify({"error": "Legislation not found."}), 404
 
-
-
-
 @app.route("/api/incidents", methods=["GET"])
 def get_police_incidents():
+    """
+    Sorting
+    /api/incidents?sort_by=state&order=asc
+    """
     # Get pagination parameters
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 12, type=int)
@@ -117,8 +132,11 @@ def get_police_incidents():
     where_clauses = []
     query_params = {}
     for key, value in params.items():
-        where_clauses.append(f"\"{key}\" = :{key}")
-        query_params[key] = value
+        if key not in ['sort_by', 'order']:
+            where_clauses.append(f"\"{key}\" = :{key}")
+            query_params[key] = value
+    sort_by = request.args.get('sort_by', 'id', type=str)
+    order = request.args.get('order', 'asc', type=str)
 
     # Get count for pagination
     count_query = "SELECT COUNT(*) as count FROM \"incidents\""
@@ -132,10 +150,18 @@ def get_police_incidents():
     total_pages = math.ceil(total_count / per_page) if total_count > 0 else 0
     offset = (page - 1) * per_page
 
+
     # Main query with pagination
     query = "SELECT * FROM \"incidents\""
     if where_clauses:
         query += " WHERE " + " AND ".join(where_clauses)
+    
+    # Add sorting
+    if sort_by:
+        if order.lower() == 'desc':
+            query += f" ORDER BY \"{sort_by}\" DESC"
+        else:
+            query += f" ORDER BY \"{sort_by}\" ASC"
 
     query += f" LIMIT {per_page} OFFSET {offset}"
 
@@ -166,8 +192,12 @@ def get_police_incident_by_id(incident_id):
 def get_scorecard():
     """
     You can now query police incidents using any combination of parameters, for example:
-    /api/scorecard?state=IL
-    /api/scorecard?agency_name=CHICAGO&agency_type=police-department
+    /api/agencies?state=IL
+    /api/agencies?agency_name=CHICAGO&agency_type=police-department
+
+
+    Sorting
+    /api/agencies?sort_by=state&order=asc
     """
     # get pagination parameters
     page = request.args.get('page', 1, type=int)
@@ -183,9 +213,12 @@ def get_scorecard():
     where_clauses = []
     query_params = {}
     for key, value in params.items():
-        where_clauses.append(f"\"{key}\" = :{key}")
-        query_params[key] = value
+        if key not in ['sort_by', 'order']:
+            where_clauses.append(f"\"{key}\" = :{key}")
+            query_params[key] = value
 
+    sort_by = request.args.get('sort_by', 'id', type=str)
+    order = request.args.get('order', 'asc', type=str)
     count_query = "SELECT COUNT(*) FROM  \"agencies\""
     if where_clauses:
         count_query += " WHERE " + " AND ".join(where_clauses)
@@ -202,6 +235,13 @@ def get_scorecard():
     query = "SELECT * FROM \"agencies\""
     if where_clauses:
         query += " WHERE " + " AND ".join(where_clauses)
+
+    # Add sorting
+    if sort_by:
+        if order.lower() == 'desc':
+            query += f" ORDER BY \"{sort_by}\" DESC"
+        else:
+            query += f" ORDER BY \"{sort_by}\" ASC"
 
     #added this
     query += f" LIMIT {per_page} OFFSET {offset}"
