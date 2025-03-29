@@ -47,6 +47,7 @@ test_backend_postman:
   before_script:
     - apk update && apk add python3 py3-pip postgresql-dev gcc musl-dev
     - cd backend
+    - python3 -m venv .venv
     - source .venv/bin/activate
     - pip install -r requirements.txt
   script:
