@@ -44,8 +44,16 @@ test_backend_postman:
   image: 
     name: postman/newman:alpine
     entrypoint: [""]
-  script:
+  before_script:
+    - apk update && apk add python3 py3-pip postgresql-dev gcc musl-dev
     - cd backend
+    - source .venv/bin/activate
+    - pip install -r requirements.txt
+  script:
+    - nohup python3 mainAPI.py & # Start the server in the background
+    - sleep 10 # Wait for the server to start
+    - echo "Running Postman Tests"
+    - ls
     - newman run Testing.postman_collection.json
 
 
