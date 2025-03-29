@@ -44,16 +44,8 @@ test_backend_postman:
   image: 
     name: postman/newman:alpine
     entrypoint: [""]
-  before_script:
-    - echo "Setting up Python environment..."
-    - apk update && apk add python3 py3-pip
-    - pip3 install --no-cache-dir -r backend/requirements.txt
   script:
     - cd backend
-    - nohup python3 mainAPI.py & # Start the server in the background
-    - sleep 10 # Wait for the server to start
-    - echo "Running Postman Tests"
-    - ls
     - newman run Testing.postman_collection.json --environment tests/
 
 
