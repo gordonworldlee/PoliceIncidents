@@ -50,6 +50,7 @@ test_backend_postman:
     - nohup python3 mainAPI.py & # Start the server in the background
     - sleep 10 # Wait for the server to start
     - echo "Running Postman Tests"
+    - ls
     - newman run Testing.postman_collection.json --environment tests/
 
 
