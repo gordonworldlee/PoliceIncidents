@@ -46,7 +46,7 @@ test_backend_postman:
     entrypoint: [""]
   script:
     - cd backend
-    - newman run Testing.postman_collection.json --environment tests/
+    - newman run Testing.postman_collection.json
 
 
 build_production:
