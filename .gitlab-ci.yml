@@ -26,15 +26,6 @@ test_frontend:
         echo "No tests found. Skipping test stage."
       fi
 
-test_backend_api:
-  stage: test
-  image: postman/newman:latest
-  script:
-    - echo "Running Postman API tests..."
-    # Use absolute path for the collection file
-    - newman run backend/Testing.postman_collection.json --reporters cli,json
-
-
 test_backend_unittests:
   stage: test
   image: python:latest
@@ -49,6 +40,19 @@ test_backend_unittests:
     - echo "Running Python unit tests..."
     - python3 unit-tests.py
     
+test_backend_postman:
+  image: postman/newman:alpine
+  before_script:
+    - echo "Setting up Python environment..."
+    - pip install --no-cache-dir -r backend/requirements.txt
+  script:
+    - cd backend
+    - nohup python3 mainAPI.py & # Start the server in the background
+    - sleep 10 # Wait for the server to start
+    - echo "Running Postman Tests"
+    - newman run Testing.postman_collection.json --environment tests/
+
+
 build_production:
   stage: build
   script:
