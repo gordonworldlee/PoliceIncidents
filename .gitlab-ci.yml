@@ -46,7 +46,8 @@ test_backend_postman:
     entrypoint: [""]
   before_script:
     - echo "Setting up Python environment..."
-    - pip install --no-cache-dir -r backend/requirements.txt
+    - apk update && apk add python3 py3-pip
+    - pip3 install --no-cache-dir -r backend/requirements.txt
   script:
     - cd backend
     - nohup python3 mainAPI.py & # Start the server in the background
