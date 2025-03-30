@@ -8,7 +8,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="bg-[#FFF4E1] fixed top-0 right-0 left-0 z-20 py-4 px-6">
+    <div id = "navbar" className="bg-[#FFF4E1] fixed top-0 right-0 left-0 z-20 py-4 px-6">
       <div className="flex justify-between items-center">
         <Link className="text-2xl font-bold text-[#D92552]" href="/">
           <Image
