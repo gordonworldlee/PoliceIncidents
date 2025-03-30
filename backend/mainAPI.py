@@ -137,7 +137,9 @@ def get_police_incidents():
             query_params[key] = value
     sort_by = request.args.get('sort_by', 'id', type=str)
     order = request.args.get('order', 'asc', type=str)
+    search_query = request.args.get('search', '', type=str)
 
+    
     # Get count for pagination
     count_query = "SELECT COUNT(*) as count FROM \"incidents\""
     if where_clauses:
@@ -268,6 +270,83 @@ def get_scorecard_by_id(scorecard_id):
         return jsonify(data[0])
     else:
         return jsonify({"error": "Scorecard not found."}), 404
+
+@app.route("/api/search", methods=["GET"])
+def search_all():
+    search_query = request.args.get('q', '', type=str)
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 12, type=int)
+    
+    if not search_query:
+        return jsonify({
+            "legislation": [],
+            "incidents": [],
+            "departments": [],
+            "total_count": 0
+        })
+    
+    # Search in legislation table
+    legislation_query = """
+        SELECT * FROM "legislation" 
+        WHERE bill_number ILIKE :search 
+        OR title ILIKE :search 
+        OR description ILIKE :search
+        OR sponsors ILIKE :search
+        OR subjects ILIKE :search
+        LIMIT :limit OFFSET :offset
+    """
+    
+    # Search in incidents table
+    incidents_query = """
+        SELECT * FROM "incidents" 
+        WHERE city ILIKE :search 
+        OR state ILIKE :search
+        OR description ILIKE :search
+        LIMIT :limit OFFSET :offset
+    """
+    
+    # Search in agencies table
+    agencies_query = """
+        SELECT * FROM "agencies" 
+        WHERE agency_name ILIKE :search 
+        OR state ILIKE :search
+        LIMIT :limit OFFSET :offset
+    """
+    
+    search_param = f"%{search_query}%"
+    offset = (page - 1) * per_page
+    
+    legislation_data = fetch_data(legislation_query, {
+        "search": search_param, 
+        "limit": per_page, 
+        "offset": offset
+    })
+    
+    incidents_data = fetch_data(incidents_query, {
+        "search": search_param, 
+        "limit": per_page, 
+        "offset": offset
+    })
+    
+    agencies_data = fetch_data(agencies_query, {
+        "search": search_param, 
+        "limit": per_page, 
+        "offset": offset
+    })
+    
+    # Count total results
+    total_count = len(legislation_data or []) + len(incidents_data or []) + len(agencies_data or [])
+    
+    response = {
+        "legislation": legislation_data if legislation_data else [],
+        "incidents": incidents_data if incidents_data else [],
+        "departments": agencies_data if agencies_data else [],
+        "total_count": total_count,
+        "current_page": page,
+        "per_page": per_page
+    }
+    
+    return jsonify(response)
 
 
 if __name__ == "__main__":
