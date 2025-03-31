@@ -1,6 +1,13 @@
 // import Link from "next/link";
 import Navbar from "../components/Navbar";
 import ToggleView from "@/components/ToggleSliderView";
+import { Lato } from 'next/font/google';
+
+const lato = Lato({
+  subsets: ["latin"],
+  weight: ['400', '700'],
+});
+
 // import Image from "next/image";
 // import { MapContainer, TileLayer, Marker } from "react-leaflet";
 // import MarkerClusterGroup from "react-leaflet-markercluster";
@@ -21,8 +28,8 @@ export default function ViolenceModelPage() {
   return (
     <div> 
       <Navbar />
-      <div className="p-4">
-        <h1 className="text-4xl font-bold text-red-500">Police Violence</h1>
+      <div className="p-4 pt-20">
+        <h1 className={`${lato.className} text-5xl font-bold text-red-500 text-center mt-8`}>POLICE VIOLENCE</h1>
         <p className="text-lg text-red-700 font-bold mt-2 mb-4">Police violence refers to the excessive or unjustified use of force by law enforcement officers against civilians, often resulting in harm or fatal outcomes. Our platform provides access to numerous documented instances of police violence, promoting transparency and accountability by making this information easily accessible.</p>
         <ToggleView />
       </div>

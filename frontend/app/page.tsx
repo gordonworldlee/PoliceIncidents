@@ -8,7 +8,7 @@ export default function Home() {
       <Navbar />
 
       {/* Main Content */}
-      <div className="max-w-3xl mx-auto mt-16 text-left px-4">
+      <div className="max-w-3xl mx-auto mt-16 text-left px-4 pt-20">
         <h1 className="text-3xl font-bold">
           Uphold police accountability, one{" "}
           <Link className="relative inline-block group" href="/department">
