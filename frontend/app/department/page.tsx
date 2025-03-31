@@ -12,7 +12,7 @@ const lato = Lato({
 });
 
 // amount of card per page
-const ITEMS_PER_PAGE = 12; // changed from 6 to 12
+const ITEMS_PER_PAGE = 9; // changed from 6 to 12
 
 export default function DepartmentModelPage() {
   const [departments, setDepartments] = useState<Department[]>([]);
@@ -21,13 +21,15 @@ export default function DepartmentModelPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:5001/api/agencies?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`);
-        console.log(response)
+        const searchParam = searchQuery ? `&search=${searchQuery}` : '';
+        const response = await fetch(`http://localhost:5002/api/agencies?page=${currentPage}&per_page=${ITEMS_PER_PAGE}${searchParam}`);
+        // console.log(response)
         
         if (!response.ok) {
           throw new Error('Failed to fetch departments');
@@ -46,8 +48,17 @@ export default function DepartmentModelPage() {
       }
     };
 
-    fetchDepartments();
-  }, [currentPage]);
+    const timeoutId = setTimeout(() => {
+      fetchDepartments();
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [currentPage, searchQuery]);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1);
+  };
 
   // handle page change
   const handlePageChange = (pageNumber: number) => {
@@ -141,15 +152,16 @@ export default function DepartmentModelPage() {
   };
 
   return (
-    <div className="min-h-screen text-black overflow-y-auto">
+    <div className="min-h-screen text-black pt-20 overflow-y-auto">
       <Navbar />
       <h1 className={`${lato.className} text-[#D63C68] text-5xl text-center font-bold mt-8`}>DEPARTMENT MODEL</h1>
       
       {/* display the amount of instances showing */}
-      <div className="max-w-7xl px-4 sm:px-6 lg:px-8 mt-4">
+      <div className="flex justify-between px-4 sm:px-6 lg:px-8 mt-4">
         <p className="text-gray-600">
           Showing {departments.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0} - {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)} of {totalCount} departments
         </p>
+        <input type="text" value={searchQuery} onChange={handleSearch} placeholder="Search Department" className="w-1/2 max-w-md border border-gray-300 rounded-md p-2" />
       </div>
       
       <div className="flex items-center justify-center">
