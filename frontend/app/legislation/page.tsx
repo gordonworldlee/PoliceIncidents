@@ -46,13 +46,14 @@ export default function LegislationModelPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
 
   //Fetch data for each page and set state variables correctly.
   useEffect(() => {
     const fetchLegislation = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:5001/api/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`);
+        const response = await fetch(`http://localhost:5002/api/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}&search=${searchQuery}`);
         console.log(`http://localhost:5001/api/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`)
         if (!response.ok) {
             throw new Error(`Can't fetch legislation :(`);
@@ -79,13 +80,21 @@ export default function LegislationModelPage() {
         setLoading(false);
       }
     }
-    fetchLegislation();
-  }, [currentPage])
+    // fetchLegislation();
+    const timeoutId = setTimeout(() => {
+      fetchLegislation();
+    }, 300)
+  }, [currentPage, searchQuery])
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
     window.scrollTo(0, 0); // scroll to top
   };
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1);
+  }
 
   return (
     <div> 
@@ -93,10 +102,11 @@ export default function LegislationModelPage() {
       <div className="p-4 pt-20">
         <h1 className={`${lato.className} text-green-700 text-5xl text-center font-bold mt-8`}>LEGISLATION</h1>
         <p className="text-lg text-green-700 font-bold mt-2 mb-4">Various pieces of legislation are being introduced to improve police accountability and prevent excessive use of force. Our platform provides a comprehensive database of these laws, empowering users to stay informed and take action in support of meaningful reform.</p>
-        <div className="mt-2">
-          <p className="text-gray-600">
+        <div className="mt-2 flex justify-between px-4 sm:px-6 lg:px-8 mt-4">
+          <p className="text-gray-600 ">
             Showing {legislationData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0} - {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)} of {totalCount} Bills
           </p>
+          <input type="text" value={searchQuery} onChange={handleSearch} placeholder="Search Legislation" className="w-1/2 max-w-md border border-gray-300 rounded-md p-2" />
         </div>
         <div className="my-2">
           <br />
