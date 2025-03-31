@@ -30,7 +30,6 @@ def fetch_data(sql_query, params=None):
     except Exception as e:
         print(f"Database error: {e}")
         return None
-
 @app.route("/api/legislation", methods=["GET"])
 def get_legislation():
     """
@@ -39,36 +38,59 @@ def get_legislation():
     /api/legislation?bill_number=AB123&session_year=2025
     /api/legislation?subjects=Education&sponsors=John%20Doe
 
-    SORT BY STATE
+    Sorting:
     /api/legislation?sort_by=state&order=asc
+    
+    Searching:
+    /api/legislation?search=education funding
     """
     page = request.args.get('page', 1, type=int)
-    per_page = request.args.get('per_page', 12, type=int)  # Fixed parameter name
+    per_page = request.args.get('per_page', 12, type=int)
+    search_query = request.args.get('search', '', type=str)
 
     # Get query parameters
     params = request.args.to_dict()
-
-    if 'page' in params:
-        del params['page']
-    if 'per_page' in params:
-        del params['per_page']
+    for param in ['page', 'per_page', 'search', 'sort_by', 'order']:
+        if param in params:
+            del params[param]
 
     where_clauses = []
     query_params = {}
+    
+    # Add exact match parameters
     for key, value in params.items():
-        if key not in ['sort_by', 'order']:
-            where_clauses.append(f"\"{key}\" = :{key}")
-            query_params[key] = value
+        where_clauses.append(f"\"{key}\" = :{key}")
+        query_params[key] = value
+    
+    # Add search parameter if provided
+    if search_query:
+        search_terms = search_query.split()
+        search_conditions = []
+        
+        for i, term in enumerate(search_terms):
+            term_param = f"%{term}%"
+            param_name = f"search_term_{i}"
+            search_conditions.append(f"""(
+                "bill_number" ILIKE :{param_name} OR
+                "title" ILIKE :{param_name} OR
+                "description" ILIKE :{param_name} OR
+                "sponsors" ILIKE :{param_name} OR
+                "subjects" ILIKE :{param_name}
+            )""")
+            query_params[param_name] = term_param
+        
+        # Add all search conditions with AND between terms
+        if search_conditions:
+            where_clauses.append("(" + " AND ".join(search_conditions) + ")")
 
     sort_by = request.args.get('sort_by', 'id', type=str)
     order = request.args.get('order', 'asc', type=str)
-
-
+    
+    # Build the WHERE clause for the query
+    where_clause = " WHERE " + " AND ".join(where_clauses) if where_clauses else ""
+    
     # make SQL query
-    count_query = "SELECT COUNT(*) as count FROM \"legislation\""   #get count of matchings
-    if where_clauses:
-        count_query += " WHERE " + " AND ".join(where_clauses)
-
+    count_query = f"SELECT COUNT(*) as count FROM \"legislation\"{where_clause}"
 
     count_data = fetch_data(count_query, query_params)
     total_count = count_data[0]['count'] if count_data else 0
@@ -77,9 +99,7 @@ def get_legislation():
     offset = (page - 1) * per_page
 
     # construct the main SQL query
-    query = "SELECT * FROM \"legislation\""
-    if where_clauses:
-        query += " WHERE " + " AND ".join(where_clauses)
+    query = f"SELECT * FROM \"legislation\"{where_clause}"
 
     if sort_by:
         if order.lower() == 'desc':
@@ -87,7 +107,7 @@ def get_legislation():
         else:
             query += f" ORDER BY \"{sort_by}\" ASC"
 
-    #  pagination
+    # pagination
     query += f" LIMIT {per_page} OFFSET {offset}"
 
     # execute the query
@@ -115,36 +135,60 @@ def get_legislation_by_id(legislation_id):
 @app.route("/api/incidents", methods=["GET"])
 def get_police_incidents():
     """
+    You can now query police incidents using any combination of parameters, for example:
+    /api/incidents?state=IL
+
     Sorting
     /api/incidents?sort_by=state&order=asc
+
+    Searching
+    /api/incidents?search=Chicago shooting
     """
     # Get pagination parameters
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 12, type=int)
+    search_query = request.args.get('search', '', type=str)
 
-    # Copy parameters excluding pagination params
+    # Copy parameters excluding pagination params and search
     params = request.args.to_dict()
-    if 'page' in params:
-        del params['page']
-    if 'per_page' in params:
-        del params['per_page']
+    for param in ['page', 'per_page', 'search', 'sort_by', 'order']:
+        params.pop(param, None)
 
     where_clauses = []
     query_params = {}
+    
+    # Add exact match parameters
     for key, value in params.items():
-        if key not in ['sort_by', 'order']:
-            where_clauses.append(f"\"{key}\" = :{key}")
-            query_params[key] = value
+        where_clauses.append(f"\"{key}\" = :{key}")
+        query_params[key] = value
+    
+    # Add search parameter if provided
+    if search_query:
+        search_terms = search_query.split()
+        search_conditions = []
+        
+        for i, term in enumerate(search_terms):
+            term_param = f"%{term}%"
+            param_name = f"search_term_{i}"
+            search_conditions.append(f"""(
+                "city" ILIKE :{param_name} OR
+                "state" ILIKE :{param_name} OR
+                "description" ILIKE :{param_name}
+            )""")
+            query_params[param_name] = term_param
+        
+        # Add all search conditions with AND between terms
+        if search_conditions:
+            where_clauses.append("(" + " AND ".join(search_conditions) + ")")
+
     sort_by = request.args.get('sort_by', 'id', type=str)
     order = request.args.get('order', 'asc', type=str)
-    search_query = request.args.get('search', '', type=str)
-
+    
+    # Build the WHERE clause for the query
+    where_clause = " WHERE " + " AND ".join(where_clauses) if where_clauses else ""
     
     # Get count for pagination
-    count_query = "SELECT COUNT(*) as count FROM \"incidents\""
-    if where_clauses:
-        count_query += " WHERE " + " AND ".join(where_clauses)
-
+    count_query = f"SELECT COUNT(*) as count FROM \"incidents\"{where_clause}"
     count_data = fetch_data(count_query, query_params)
     total_count = count_data[0]['count'] if count_data else 0
 
@@ -152,18 +196,12 @@ def get_police_incidents():
     total_pages = math.ceil(total_count / per_page) if total_count > 0 else 0
     offset = (page - 1) * per_page
 
-
     # Main query with pagination
-    query = "SELECT * FROM \"incidents\""
-    if where_clauses:
-        query += " WHERE " + " AND ".join(where_clauses)
+    query = f"SELECT * FROM \"incidents\"{where_clause}"
     
     # Add sorting
     if sort_by:
-        if order.lower() == 'desc':
-            query += f" ORDER BY \"{sort_by}\" DESC"
-        else:
-            query += f" ORDER BY \"{sort_by}\" ASC"
+        query += f" ORDER BY \"{sort_by}\" {'DESC' if order.lower() == 'desc' else 'ASC'}"
 
     query += f" LIMIT {per_page} OFFSET {offset}"
 
