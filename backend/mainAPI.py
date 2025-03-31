@@ -30,6 +30,7 @@ def fetch_data(sql_query, params=None):
     except Exception as e:
         print(f"Database error: {e}")
         return None
+    
 @app.route("/api/legislation", methods=["GET"])
 def get_legislation():
     """
@@ -417,4 +418,4 @@ def search_all():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5001, debug=True)  # Turn off debug mode in production
+    app.run(host='0.0.0.0', port=5002, debug=True)  # Turn off debug mode in production
