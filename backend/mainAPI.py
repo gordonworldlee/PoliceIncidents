@@ -196,7 +196,7 @@ def get_scorecard():
     You can now query police incidents using any combination of parameters, for example:
     /api/agencies?state=IL
     /api/agencies?agency_name=CHICAGO&agency_type=police-department
-
+    /api/agencies?search=Chicago Police (searches across multiple fields)
 
     Sorting
     /api/agencies?sort_by=state&order=asc
@@ -204,27 +204,55 @@ def get_scorecard():
     # get pagination parameters
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 12, type=int)
+    search_query = request.args.get('search', '', type=str)
 
-    # copy parameters excluding pagination params
+    # copy parameters excluding pagination params and search
     params = request.args.to_dict()
     if 'page' in params:
         del params['page']
     if 'per_page' in params:
         del params['per_page']
+    if 'search' in params:
+        del params['search']
+    if 'sort_by' in params:
+        del params['sort_by']
+    if 'order' in params:
+        del params['order']
 
     where_clauses = []
     query_params = {}
+    
+    # Add exact match parameters
     for key, value in params.items():
-        if key not in ['sort_by', 'order']:
-            where_clauses.append(f"\"{key}\" = :{key}")
-            query_params[key] = value
+        where_clauses.append(f"\"{key}\" = :{key}")
+        query_params[key] = value
+    
+    # Add search parameter if provided
+    if search_query:
+        search_terms = search_query.split()
+        search_conditions = []
+        
+        for i, term in enumerate(search_terms):
+            term_param = f"%{term}%"
+            param_name = f"search_term_{i}"
+            search_conditions.append(f"""(
+                "agency_name" ILIKE :{param_name} OR
+                "state" ILIKE :{param_name} OR
+                "agency_type" ILIKE :{param_name}
+            )""")
+            query_params[param_name] = term_param
+        
+        # Add all search conditions with AND between terms
+        if search_conditions:
+            where_clauses.append("(" + " AND ".join(search_conditions) + ")")
 
     sort_by = request.args.get('sort_by', 'id', type=str)
     order = request.args.get('order', 'asc', type=str)
-    count_query = "SELECT COUNT(*) FROM  \"agencies\""
-    if where_clauses:
-        count_query += " WHERE " + " AND ".join(where_clauses)
-
+    
+    # Build the WHERE clause for the query
+    where_clause = " WHERE " + " AND ".join(where_clauses) if where_clauses else ""
+    
+    count_query = f"SELECT COUNT(*) as count FROM \"agencies\"{where_clause}"
     count_data = fetch_data(count_query, query_params)
     total_count = count_data[0]['count'] if count_data else 0
 
@@ -234,9 +262,7 @@ def get_scorecard():
     # calculate offset for pagination
     offset = (page - 1) * per_page
 
-    query = "SELECT * FROM \"agencies\""
-    if where_clauses:
-        query += " WHERE " + " AND ".join(where_clauses)
+    query = f"SELECT * FROM \"agencies\"{where_clause}"
 
     # Add sorting
     if sort_by:
@@ -273,6 +299,9 @@ def get_scorecard_by_id(scorecard_id):
 
 @app.route("/api/search", methods=["GET"])
 def search_all():
+    """
+    http://127.0.0.1:5001/api/search?q=TX
+    """
     search_query = request.args.get('q', '', type=str)
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 12, type=int)
