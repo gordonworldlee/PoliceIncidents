@@ -84,6 +84,8 @@ export default function LegislationModelPage() {
     const timeoutId = setTimeout(() => {
       fetchLegislation();
     }, 300)
+
+    return () => clearTimeout(timeoutId);
   }, [currentPage, searchQuery])
 
   const handlePageChange = (pageNumber: number) => {
