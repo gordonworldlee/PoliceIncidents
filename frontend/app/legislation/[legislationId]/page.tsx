@@ -127,7 +127,7 @@ export default async function LegislationInstancePage({
 }: LegislationInstancePageProps) {
   const { legislationId } = await params;
   const fetchBillData = async () => {
-    const getBill = await fetch(`http://localhost:5001/api/legislation?id=${legislationId}`);
+    const getBill = await fetch(`http://localhost:5002/api/legislation?id=${legislationId}`);
     if (!getBill.ok) {
       throw new Error("Can't fetch bill :(");
     }

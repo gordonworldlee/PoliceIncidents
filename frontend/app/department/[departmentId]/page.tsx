@@ -135,7 +135,7 @@ export default async function DepartmentPage({
   const { departmentId } = await params;
 
   const getDepartmentData = async () => {
-    const response = await fetch(`http://localhost:5001/api/agencies?agency_name=${departmentId}`)
+    const response = await fetch(`http://localhost:5002/api/agencies?agency_name=${departmentId}`)
     if (!response.ok) {
       throw new Error('Failed to fetch departments');
     }
@@ -145,7 +145,7 @@ export default async function DepartmentPage({
   }
 
   const getViolenceConnections = async(ori_identifier : string) => {
-    const response = await fetch(`http://localhost:5001/api/incidents?ori_identifier=${ori_identifier}`)
+    const response = await fetch(`http://localhost:5002/api/incidents?ori_identifier=${ori_identifier}`)
     if (!response.ok) {
       throw new Error('Failed to fetch departments');
     }
