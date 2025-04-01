@@ -16,18 +16,6 @@ services:
       - int
       - ext
       
-  backend:
-    build:
-      context: ./oldBack # Directory where your backend code and Dockerfile are located
-    image: justicewatch-backend:latest
-    container_name: justicewatch-backend-prod
-    env_file:
-      - .env.prod # Environment variables for the backend
-    ports:
-      - "5002:5002" # Expose port 5000 for the backend API
-    networks:
-      - int
-
   nginx-proxy:
     image: nginxproxy/nginx-proxy
     container_name: nginx-proxy
