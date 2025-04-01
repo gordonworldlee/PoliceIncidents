@@ -62,7 +62,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:5001/api/incidents",
+					"raw": "http://127.0.0.1:5002/api/incidents",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -70,7 +70,7 @@
 						"0",
 						"1"
 					],
-					"port": "5001",
+					"port": "5002",
 					"path": [
 						"api",
 						"incidents"
