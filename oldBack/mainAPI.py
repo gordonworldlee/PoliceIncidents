@@ -37,7 +37,7 @@ def fetch_data(sql_query, params=None):
     except Exception as e:
         print(f"Database error: {e}")
         return None
-    
+
 @app.route("/api/legislation", methods=["GET"])
 def get_legislation():
     """
@@ -48,7 +48,7 @@ def get_legislation():
 
     Sorting:
     /api/legislation?sort_by=state&order=asc
-    
+
     Searching:
     /api/legislation?search=education funding
     """
@@ -64,17 +64,17 @@ def get_legislation():
 
     where_clauses = []
     query_params = {}
-    
+
     # Add exact match parameters
     for key, value in params.items():
         where_clauses.append(f"\"{key}\" = :{key}")
         query_params[key] = value
-    
+
     # Add search parameter if provided
     if search_query:
         search_terms = search_query.split()
         search_conditions = []
-        
+
         for i, term in enumerate(search_terms):
             term_param = f"%{term}%"
             param_name = f"search_term_{i}"
@@ -86,17 +86,17 @@ def get_legislation():
                 "subjects" ILIKE :{param_name}
             )""")
             query_params[param_name] = term_param
-        
+
         # Add all search conditions with AND between terms
         if search_conditions:
             where_clauses.append("(" + " AND ".join(search_conditions) + ")")
 
     sort_by = request.args.get('sort_by', 'id', type=str)
     order = request.args.get('order', 'asc', type=str)
-    
+
     # Build the WHERE clause for the query
     where_clause = " WHERE " + " AND ".join(where_clauses) if where_clauses else ""
-    
+
     # make SQL query
     count_query = f"SELECT COUNT(*) as count FROM \"legislation\"{where_clause}"
 
@@ -164,17 +164,17 @@ def get_police_incidents():
 
     where_clauses = []
     query_params = {}
-    
+
     # Add exact match parameters
     for key, value in params.items():
         where_clauses.append(f"\"{key}\" = :{key}")
         query_params[key] = value
-    
+
     # Add search parameter if provided
     if search_query:
         search_terms = search_query.split()
         search_conditions = []
-        
+
         for i, term in enumerate(search_terms):
             term_param = f"%{term}%"
             param_name = f"search_term_{i}"
@@ -184,17 +184,17 @@ def get_police_incidents():
                 "description" ILIKE :{param_name}
             )""")
             query_params[param_name] = term_param
-        
+
         # Add all search conditions with AND between terms
         if search_conditions:
             where_clauses.append("(" + " AND ".join(search_conditions) + ")")
 
     sort_by = request.args.get('sort_by', 'id', type=str)
     order = request.args.get('order', 'asc', type=str)
-    
+
     # Build the WHERE clause for the query
     where_clause = " WHERE " + " AND ".join(where_clauses) if where_clauses else ""
-    
+
     # Get count for pagination
     count_query = f"SELECT COUNT(*) as count FROM \"incidents\"{where_clause}"
     count_data = fetch_data(count_query, query_params)
@@ -206,7 +206,7 @@ def get_police_incidents():
 
     # Main query with pagination
     query = f"SELECT * FROM \"incidents\"{where_clause}"
-    
+
     # Add sorting
     if sort_by:
         query += f" ORDER BY \"{sort_by}\" {'DESC' if order.lower() == 'desc' else 'ASC'}"
@@ -267,17 +267,17 @@ def get_scorecard():
 
     where_clauses = []
     query_params = {}
-    
+
     # Add exact match parameters
     for key, value in params.items():
         where_clauses.append(f"\"{key}\" = :{key}")
         query_params[key] = value
-    
+
     # Add search parameter if provided
     if search_query:
         search_terms = search_query.split()
         search_conditions = []
-        
+
         for i, term in enumerate(search_terms):
             term_param = f"%{term}%"
             param_name = f"search_term_{i}"
@@ -287,17 +287,17 @@ def get_scorecard():
                 "agency_type" ILIKE :{param_name}
             )""")
             query_params[param_name] = term_param
-        
+
         # Add all search conditions with AND between terms
         if search_conditions:
             where_clauses.append("(" + " AND ".join(search_conditions) + ")")
 
     sort_by = request.args.get('sort_by', 'id', type=str)
     order = request.args.get('order', 'asc', type=str)
-    
+
     # Build the WHERE clause for the query
     where_clause = " WHERE " + " AND ".join(where_clauses) if where_clauses else ""
-    
+
     count_query = f"SELECT COUNT(*) as count FROM \"agencies\"{where_clause}"
     count_data = fetch_data(count_query, query_params)
     total_count = count_data[0]['count'] if count_data else 0
@@ -351,7 +351,7 @@ def search_all():
     search_query = request.args.get('q', '', type=str)
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 12, type=int)
-    
+
     if not search_query:
         return jsonify({
             "legislation": [],
@@ -359,59 +359,59 @@ def search_all():
             "departments": [],
             "total_count": 0
         })
-    
+
     # Search in legislation table
     legislation_query = """
-        SELECT * FROM "legislation" 
-        WHERE bill_number ILIKE :search 
-        OR title ILIKE :search 
+        SELECT * FROM "legislation"
+        WHERE bill_number ILIKE :search
+        OR title ILIKE :search
         OR description ILIKE :search
         OR sponsors ILIKE :search
         OR subjects ILIKE :search
         LIMIT :limit OFFSET :offset
     """
-    
+
     # Search in incidents table
     incidents_query = """
-        SELECT * FROM "incidents" 
-        WHERE city ILIKE :search 
+        SELECT * FROM "incidents"
+        WHERE city ILIKE :search
         OR state ILIKE :search
         OR description ILIKE :search
         LIMIT :limit OFFSET :offset
     """
-    
+
     # Search in agencies table
     agencies_query = """
-        SELECT * FROM "agencies" 
-        WHERE agency_name ILIKE :search 
+        SELECT * FROM "agencies"
+        WHERE agency_name ILIKE :search
         OR state ILIKE :search
         LIMIT :limit OFFSET :offset
     """
-    
+
     search_param = f"%{search_query}%"
     offset = (page - 1) * per_page
-    
+
     legislation_data = fetch_data(legislation_query, {
-        "search": search_param, 
-        "limit": per_page, 
+        "search": search_param,
+        "limit": per_page,
         "offset": offset
     })
-    
+
     incidents_data = fetch_data(incidents_query, {
-        "search": search_param, 
-        "limit": per_page, 
+        "search": search_param,
+        "limit": per_page,
         "offset": offset
     })
-    
+
     agencies_data = fetch_data(agencies_query, {
-        "search": search_param, 
-        "limit": per_page, 
+        "search": search_param,
+        "limit": per_page,
         "offset": offset
     })
-    
+
     # Count total results
     total_count = len(legislation_data or []) + len(incidents_data or []) + len(agencies_data or [])
-    
+
     response = {
         "legislation": legislation_data if legislation_data else [],
         "incidents": incidents_data if incidents_data else [],
@@ -420,9 +420,15 @@ def search_all():
         "current_page": page,
         "per_page": per_page
     }
-    
+
     return jsonify(response)
 
+@app.route("/api", methods=["GET"])
+def get_api_info(scorecard_id):
+    return jsonify({
+        "message": "JusticeWatch API",
+        "version": "1.0.0 (old API)"
+    })
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5002, debug=True)  # Turn off debug mode in production
