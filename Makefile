@@ -25,11 +25,11 @@ stop-base: ## Stop the staging docker container.
 
 .PHONY: build-production
 build-production: ## Build the production docker image.
-	docker-compose -p justicewatch -f compose-base.yml -f compose-prod.yml build
+	docker-compose -p justicewatch -f compose-prod.yml build
 
 .PHONY: start-production
 start-production: ## Start the production docker container.
-	docker-compose -p justicewatch -f compose-base.yml -f compose-prod.yml up -d
+	docker-compose -p justicewatch -f compose-prod.yml up -d
 
 .PHONY: stop-production
 stop-production: ## Stop the production docker container.
