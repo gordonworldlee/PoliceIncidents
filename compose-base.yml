@@ -3,13 +3,17 @@ services:
     build:
       args:
         - NEXT_PUBLIC_BASE_URL=http://localhost:3000
-        - NODE_ENV=development
+        - NODE_ENV=production
       context: frontend/
       dockerfile: Dockerfile
     volumes:
       - .env.local:/app/.env
     container_name: justicewatch-frontend
     image: justicewatch-frontend:latest
+    env_file:
+      - .env.local
+    environment:
+      - NEXT_PUBLIC_BASE_URL=http://localhost:3000
     ports:
       - "80:3000"
     networks:
@@ -26,9 +30,6 @@ services:
     networks:
       - ext
       - int
-
-volumes:
-  db-default:
 
 networks:
   ext:

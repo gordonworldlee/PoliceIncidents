@@ -20,7 +20,8 @@ const ViolenceMapWrapper = () => {
       try {
         setLoading(true);
         const response = await fetch(
-          `https://justicewatch.me/api/incidents?per_page=${ITEMS_TO_LOAD}`,
+          process.env.NEXT_PUBLIC_API_URL +
+            `/api/incidents?per_page=${ITEMS_TO_LOAD}`,
         );
 
         if (!response.ok) {

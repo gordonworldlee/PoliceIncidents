@@ -29,7 +29,8 @@ export default function DepartmentModelPage() {
         setLoading(true);
         const searchParam = searchQuery ? `&search=${searchQuery}` : "";
         const response = await fetch(
-          `https://justicewatch.me/api/agencies?page=${currentPage}&per_page=${ITEMS_PER_PAGE}${searchParam}`,
+          process.env.NEXT_PUBLIC_API_URL +
+            `/api/agencies?page=${currentPage}&per_page=${ITEMS_PER_PAGE}${searchParam}`,
         );
         // console.log(response)
 

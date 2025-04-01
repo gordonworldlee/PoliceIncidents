@@ -136,7 +136,8 @@ export default async function DepartmentPage({
 
   const getDepartmentData = async () => {
     const response = await fetch(
-      `https://justicewatch.me/api/agencies?agency_name=${departmentId}`,
+      process.env.NEXT_PUBLIC_API_URL +
+        `/api/agencies?agency_name=${departmentId}`,
     );
     if (!response.ok) {
       throw new Error("Failed to fetch departments");
@@ -148,7 +149,8 @@ export default async function DepartmentPage({
 
   const getViolenceConnections = async (ori_identifier: string) => {
     const response = await fetch(
-      `https://justicewatch.me/api/incidents?ori_identifier=${ori_identifier}`,
+      process.env.NEXT_PUBLIC_API_URL +
+        `/api/incidents?ori_identifier=${ori_identifier}`,
     );
     if (!response.ok) {
       throw new Error("Failed to fetch departments");
