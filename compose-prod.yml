@@ -14,6 +14,11 @@ services:
     container_name: justicewatch-frontend
     env_file:
       - .env.prod
+    environment:
+      - VIRTUAL_HOST=justicewatch.me,www.justicewatch.me
+      - LETSENCRYPT_HOST=justicewatch.me,www.justicewatch.me
+      - VIRTUAL_PORT=3000
+      - NEXT_PUBLIC_BASE_URL=http://localhost:3000
     networks:
       - int
       - ext
@@ -36,6 +41,7 @@ services:
       - ext
     depends_on:
       - frontend
+      - api
 
   acme-companion:
     image: nginxproxy/acme-companion
@@ -62,6 +68,9 @@ services:
       - "5432:5432"
     volumes:
       - justicewatch_db-prod:/var/lib/postgresql/data
+    networks:
+      - int
+      - ext
 
   watchtower:
     image: containrrr/watchtower
@@ -84,10 +93,13 @@ services:
       dockerfile: Dockerfile
     container_name: justicewatch-api
     image: justicewatch-api:latest
-    ports:
-      - "5002:5002"
+    env_file:
+      - .env.prod
+    environment:
+      - VIRTUAL_HOST=api.justicewatch.me
+      - LETSENCRYPT_HOST=api.justicewatch.me
+      - VIRTUAL_PORT=5002
     networks:
-      - ext
       - int
 
 volumes:
