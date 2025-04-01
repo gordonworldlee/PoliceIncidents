@@ -105,3 +105,10 @@ volumes:
   certs:
   html:
   acme:
+
+networks:
+  ext:
+    driver: bridge
+  int:
+    driver: bridge
+    internal: true
