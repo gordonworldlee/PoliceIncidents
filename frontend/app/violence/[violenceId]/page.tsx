@@ -3,7 +3,6 @@ import { FaNewspaper } from "react-icons/fa";
 import Navbar from "../../components/Navbar";
 import { Map } from "@/app/components/Map";
 
-
 interface ViolencePageProps {
   params: Promise<{
     violenceId: string;
@@ -21,7 +20,6 @@ interface ViolencePageProps {
 //   police_shooting_avg: number;
 //   calc_overall_score: number;
 // }
-
 
 const NewsLink = ({ url }: { url: string }) => (
   <Link href={url} target="_blank" rel="noopener noreferrer">
@@ -44,7 +42,7 @@ const NewsLink = ({ url }: { url: string }) => (
 //   calc_overall_score,
 // }: ScorecardLinkProps) => {
 //   const link = `/department/${agency_name}`;
-  
+
 //   return (
 //     <Link href={link}>
 //       <div className="h-full p-6 bg-white border-2 transition-all text-center duration-300 hover:shadow-xl hover:translate-y-[-2px] rounded-lg shadow-lg flex flex-col items-center justify-center mt-2 max-w-xs mx-auto">
@@ -93,8 +91,10 @@ const NewsLink = ({ url }: { url: string }) => (
 //   </div>
 // );
 
-async function fetchViolenceById(violenceId : string) {
-  const response = await fetch(`http://127.0.0.1:5002/api/incidents/${violenceId}`);
+async function fetchViolenceById(violenceId: string) {
+  const response = await fetch(
+    `http://justicewatch.me:5002/api/incidents/${violenceId}`,
+  );
   const data = await response.json();
   return data;
 }
@@ -103,7 +103,7 @@ export default async function ViolenceInstancePage({
   params,
 }: ViolencePageProps) {
   const { violenceId } = await params;
-  
+
   const instance = await fetchViolenceById(violenceId);
 
   // Fetching legislation data for all violence instances
@@ -154,33 +154,54 @@ export default async function ViolenceInstancePage({
     <div className="flex flex-col min-h-screen bg-gray-100 m-0 overflow-x-hidden">
       <Navbar />
       <div className="flex-grow w-full max-w-full p-6 bg-white shadow-md rounded-lg min-h-full">
-        <h1 className="text-3xl font-bold text-center mb-4">Violence Instance Details</h1>
+        <h1 className="text-3xl font-bold text-center mb-4">
+          Violence Instance Details
+        </h1>
         <img
-          src={instance.image_url }
+          src={instance.image_url}
           alt={`${instance.agency_responsible} logo`}
           className="w-32 h-32 mb-6 mx-auto"
         />
         <div className="mt-4 text-left space-y-2">
           <div className="flex flex-row">
             <div className="w-1/2">
-              <p><strong>City:</strong> {instance.city}</p>
-              <p><strong>State:</strong> {instance.state}</p>
-              <p><strong>Address:</strong> {instance.address}</p>
-              <p><strong>ID:</strong> {instance.ori}</p>
-              <p><strong>Encounter Type:</strong> {instance.encounter_type}</p>
-              <p><strong>Agency Responsible:</strong> {instance.agency_responsible}</p>
-              <p><strong>Cause of Death:</strong> {instance.cause}</p>
-              <p><strong>Date:</strong> {instance.date}</p>
+              <p>
+                <strong>City:</strong> {instance.city}
+              </p>
+              <p>
+                <strong>State:</strong> {instance.state}
+              </p>
+              <p>
+                <strong>Address:</strong> {instance.address}
+              </p>
+              <p>
+                <strong>ID:</strong> {instance.ori}
+              </p>
+              <p>
+                <strong>Encounter Type:</strong> {instance.encounter_type}
+              </p>
+              <p>
+                <strong>Agency Responsible:</strong>{" "}
+                {instance.agency_responsible}
+              </p>
+              <p>
+                <strong>Cause of Death:</strong> {instance.cause}
+              </p>
+              <p>
+                <strong>Date:</strong> {instance.date}
+              </p>
             </div>
             <div className="w-1/2">
-              <Map latitude={30.26993} longitude={-97.74315}/>
+              <Map latitude={30.26993} longitude={-97.74315} />
             </div>
           </div>
-          <p><strong>Description:</strong> {instance.description}</p>
+          <p>
+            <strong>Description:</strong> {instance.description}
+          </p>
           <NewsLink url={instance.news_link} />
           {/* <div className="mt-6">
-            <ScorecardLink 
-              agency_name={departmentInfo.agency_name} 
+            <ScorecardLink
+              agency_name={departmentInfo.agency_name}
               department_image={departmentInfo.department_image}
               location_name={departmentInfo.location_name}
               state={departmentInfo.state}

@@ -19,8 +19,10 @@ const ViolenceMapWrapper = () => {
     const fetchViolence = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://127.0.0.1:5002/api/incidents?per_page=${ITEMS_TO_LOAD}`);
-        
+        const response = await fetch(
+          `http://justicewatch.me:5002/api/incidents?per_page=${ITEMS_TO_LOAD}`,
+        );
+
         if (!response.ok) {
           throw new Error("Can't fetch violence data.");
         }
@@ -29,7 +31,9 @@ const ViolenceMapWrapper = () => {
         setLoading(false);
       } catch (err) {
         console.error("Error fetching violence data:", err);
-        setError(err instanceof Error ? err.message : "Failed to load violence data");
+        setError(
+          err instanceof Error ? err.message : "Failed to load violence data",
+        );
         setLoading(false);
       }
     };
@@ -48,13 +52,16 @@ const ViolenceMapWrapper = () => {
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#D63C68]"></div>
         </div>
       ) : error ? (
-        <div className="text-center text-red-500 p-4">
-          Error: {error}
-        </div>
+        <div className="text-center text-red-500 p-4">Error: {error}</div>
       ) : (
         <>
           <div className="text-gray-600 mb-4">
-            <p>Displaying {violenceData.length} incidents on the map - <span className="font-bold">Click on a circle to learn more!</span></p>
+            <p>
+              Displaying {violenceData.length} incidents on the map -{" "}
+              <span className="font-bold">
+                Click on a circle to learn more!
+              </span>
+            </p>
           </div>
 
           {/* Render the map and pass the latitudes and longitudes of all incidents */}
@@ -64,7 +71,7 @@ const ViolenceMapWrapper = () => {
                 locations={violenceData.map((incident) => ({
                   lat: parseFloat(incident.lat),
                   lng: parseFloat(incident.long),
-                  incident: incident
+                  incident: incident,
                 }))}
                 onMarkerClick={handleMarkerClick} // Passing memoized callback
               />

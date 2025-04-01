@@ -4,14 +4,14 @@ import Navbar from "../../components/Navbar";
 // import { obtainSingleBill } from "@/lib/fetch_legislative_data";
 import { Map } from "@/app/components/Map";
 // import { DepartmentInstances} from "@/public/data/DepartmentData";
-import { capitalize } from '@/components/DepartmentCard'
-import { Lato } from 'next/font/google';
+import { capitalize } from "@/components/DepartmentCard";
+import { Lato } from "next/font/google";
 import { Violence } from "@/types/important";
 import IncidentCard from "@/components/ViolenceCard";
 // import LegislationCard from "@/components/LegislationCard";
 const lato = Lato({
   subsets: ["latin"],
-  weight: ['400', '700'],
+  weight: ["400", "700"],
 });
 
 // interface ViolenceInstance {
@@ -110,7 +110,7 @@ type DepartmentPageProps = {
 
 //   return (
 //     <Link href={`/legislation/${bill_id}`}>
-//       <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow flex flex-col justify-center space-y-4">        
+//       <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow flex flex-col justify-center space-y-4">
 //         <img src="/texas-state-outline.png" alt="Outline of Texas State" className="w-24 h-24"/>
 //         <div className="text-gray-700 space-y-1">
 //           <p className="text-sm"><strong>State:</strong> {billData.state}</p>
@@ -124,40 +124,49 @@ type DepartmentPageProps = {
 // }
 
 const stateTranslation: { [key: string]: string } = {
-  "TEXAS": "TX"
-}
+  TEXAS: "TX",
+};
 
 export default async function DepartmentPage({
-  params
+  params,
   // ,
   // searchParams,
 }: DepartmentPageProps) {
   const { departmentId } = await params;
 
   const getDepartmentData = async () => {
-    const response = await fetch(`http://127.0.0.1:5002/api/agencies?agency_name=${departmentId}`)
+    const response = await fetch(
+      `http://justicewatch.me:5002/api/agencies?agency_name=${departmentId}`,
+    );
     if (!response.ok) {
-      throw new Error('Failed to fetch departments');
+      throw new Error("Failed to fetch departments");
     }
     const data = await response.json();
     // console.log(data);
     return data.departments;
-  }
+  };
 
-  const getViolenceConnections = async(ori_identifier : string) => {
-    const response = await fetch(`http://127.0.0.1:5002/api/incidents?ori_identifier=${ori_identifier}`)
+  const getViolenceConnections = async (ori_identifier: string) => {
+    const response = await fetch(
+      `http://justicewatch.me:5002/api/incidents?ori_identifier=${ori_identifier}`,
+    );
     if (!response.ok) {
-      throw new Error('Failed to fetch departments');
+      throw new Error("Failed to fetch departments");
     }
     const data = await response.json();
     return data.incidents;
-  }
+  };
 
   let departmentInstance = await getDepartmentData();
   departmentInstance = departmentInstance[0];
-  const related_violence : Violence[] = await getViolenceConnections(departmentInstance.ori_identifier)
+  const related_violence: Violence[] = await getViolenceConnections(
+    departmentInstance.ori_identifier,
+  );
 
-  const departmentName = capitalize(departmentInstance.agency_name.toLowerCase(), " ");
+  const departmentName = capitalize(
+    departmentInstance.agency_name.toLowerCase(),
+    " ",
+  );
   if (!departmentInstance) {
     return <div>Department not found</div>;
   }
@@ -166,68 +175,128 @@ export default async function DepartmentPage({
     <div>
       <Navbar />
       <div className="pt-20 min-h-screen flex flex-col justify-center bg-white">
-        <h1 className={`${lato.className} text-[#D63C68] my-8 text-center text-3xl font-bold`}>
+        <h1
+          className={`${lato.className} text-[#D63C68] my-8 text-center text-3xl font-bold`}
+        >
           {departmentName} Police Department
         </h1>
         <div className="rounded-lg mx-4 border p-4 my-4 shadow-lg">
-          <header className="border-b border-gray-300 font-bold text-xl">Department Information</header>
+          <header className="border-b border-gray-300 font-bold text-xl">
+            Department Information
+          </header>
           <div className="flex flex-col">
             <div className="flex border-b pb-2 border-gray-300 justify-between pt-4">
-              <section className="font-bold text-gray-600">Agency Name: </section> <span>{capitalize(departmentInstance.agency_name.toLowerCase(), " ")}</span>
+              <section className="font-bold text-gray-600">
+                Agency Name:{" "}
+              </section>{" "}
+              <span>
+                {capitalize(departmentInstance.agency_name.toLowerCase(), " ")}
+              </span>
             </div>
             <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
-              <section className="font-bold text-gray-600">Agency Type: </section> <span>{capitalize(departmentInstance.agency_type.toLowerCase(), "-")}</span>
+              <section className="font-bold text-gray-600">
+                Agency Type:{" "}
+              </section>{" "}
+              <span>
+                {capitalize(departmentInstance.agency_type.toLowerCase(), "-")}
+              </span>
             </div>
             <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
-              <section className="font-bold text-gray-600">Location: </section> <span>{capitalize(departmentInstance.location_name.toLowerCase(), " ")}</span>
+              <section className="font-bold text-gray-600">Location: </section>{" "}
+              <span>
+                {capitalize(
+                  departmentInstance.location_name.toLowerCase(),
+                  " ",
+                )}
+              </span>
             </div>
             <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
-              <section className="font-bold text-gray-600">State: </section> <span>{capitalize(departmentInstance.state.toUpperCase(), " ")}</span>
+              <section className="font-bold text-gray-600">State: </section>{" "}
+              <span>
+                {capitalize(departmentInstance.state.toUpperCase(), " ")}
+              </span>
             </div>
             <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
-              <section className="font-bold text-gray-600">ORI: </section> <span>{departmentInstance.ori_identifier}</span>
+              <section className="font-bold text-gray-600">ORI: </section>{" "}
+              <span>{departmentInstance.ori_identifier}</span>
             </div>
             <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
-              <section className="font-bold text-gray-600">Coordinates: </section> <span>{departmentInstance.latitude}, {departmentInstance.longitude}</span>
+              <section className="font-bold text-gray-600">
+                Coordinates:{" "}
+              </section>{" "}
+              <span>
+                {departmentInstance.latitude}, {departmentInstance.longitude}
+              </span>
             </div>
             <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
-              <section className="font-bold text-gray-600">Total Population: </section> <span>{departmentInstance.total_population}</span>
+              <section className="font-bold text-gray-600">
+                Total Population:{" "}
+              </section>{" "}
+              <span>{departmentInstance.total_population}</span>
             </div>
           </div>
         </div>
 
         <div className="rounded-lg mx-4 border p-4 my-4 shadow-lg">
-          <header className="border-b border-gray-300 font-bold text-xl">Performance Metric</header>
+          <header className="border-b border-gray-300 font-bold text-xl">
+            Performance Metric
+          </header>
           <div className="flex flex-col">
             <div className="flex border-b pb-2 border-gray-300 justify-between pt-4">
-              <section className="font-bold text-gray-600">Overall Score: </section> <span>{departmentInstance.calc_overall_score}</span>
+              <section className="font-bold text-gray-600">
+                Overall Score:{" "}
+              </section>{" "}
+              <span>{departmentInstance.calc_overall_score}</span>
             </div>
             <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
-              <section className="font-bold text-gray-600">Police Funding Score: </section> <span>{departmentInstance.calc_police_funding_score}</span>
+              <section className="font-bold text-gray-600">
+                Police Funding Score:{" "}
+              </section>{" "}
+              <span>{departmentInstance.calc_police_funding_score}</span>
             </div>
             <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
-              <section className="font-bold text-gray-600">Police Accountability Score: </section> <span>{departmentInstance.calc_police_accountability_score}</span>
+              <section className="font-bold text-gray-600">
+                Police Accountability Score:{" "}
+              </section>{" "}
+              <span>{departmentInstance.calc_police_accountability_score}</span>
             </div>
             <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
-              <section className="font-bold text-gray-600">Police Shooting Average: </section> <span>{departmentInstance.police_shootings_2021}</span>
+              <section className="font-bold text-gray-600">
+                Police Shooting Average:{" "}
+              </section>{" "}
+              <span>{departmentInstance.police_shootings_2021}</span>
             </div>
             <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
-              <section className="font-bold text-gray-600">Use of Force Reported: </section> <span>{departmentInstance.use_of_force_complaints_reported}</span>
+              <section className="font-bold text-gray-600">
+                Use of Force Reported:{" "}
+              </section>{" "}
+              <span>{departmentInstance.use_of_force_complaints_reported}</span>
             </div>
           </div>
         </div>
-        
+
         <div className="rounded-lg mx-4 border p-4 my-4 shadow-lg">
-          <header className="border-b mb-4 border-gray-300 font-bold text-xl">Department Location:</header>
-          <Map latitude={parseFloat(departmentInstance.latitude)} longitude={parseFloat(departmentInstance.longitude)} />
+          <header className="border-b mb-4 border-gray-300 font-bold text-xl">
+            Department Location:
+          </header>
+          <Map
+            latitude={parseFloat(departmentInstance.latitude)}
+            longitude={parseFloat(departmentInstance.longitude)}
+          />
         </div>
 
         <div className="text-left border-b-2 border-gray-300 rounded-lg shadow-md p-4 bg-white">
-          <p className="mt-4 text-xl font-bold underline">View Incidents in {stateTranslation[departmentInstance.state]}</p>
+          <p className="mt-4 text-xl font-bold underline">
+            View Incidents in {stateTranslation[departmentInstance.state]}
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {related_violence.map((incident, index) => <IncidentCard key = {index} incident = {incident}/>)}
+            {related_violence.map((incident, index) => (
+              <IncidentCard key={index} incident={incident} />
+            ))}
           </div>
-          <p className="mt-4 text-xl font-bold underline">View Legislation from {stateTranslation[departmentInstance.state]}</p>
+          <p className="mt-4 text-xl font-bold underline">
+            View Legislation from {stateTranslation[departmentInstance.state]}
+          </p>
         </div>
         <div className="mt-6 text-center">
           <Link className="text-blue-500 underline" href="/department">
@@ -239,7 +308,9 @@ export default async function DepartmentPage({
   );
 }
 
-{/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+{
+  /* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
   <RelatedLegislation bill_id="1891028" />
   <RelatedLegislation bill_id="1890795" />
-</div> */}
+</div> */
+}

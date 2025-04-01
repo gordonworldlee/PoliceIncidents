@@ -4,7 +4,7 @@ import Navbar from "../../components/Navbar";
 import { DepartmentInstances } from "@/public/data/DepartmentData";
 import { DepartmentCard } from "@/components/DepartmentCard";
 
-const stateTranslation: {[key: string]: string} = {
+const stateTranslation: { [key: string]: string } = {
   AL: "alabama",
   AK: "alaska",
   AR: "arkansas",
@@ -54,8 +54,8 @@ const stateTranslation: {[key: string]: string} = {
   WI: "wisconsin",
   WY: "wyoming",
   WV: "westvirginia",
-  VT: "vermont"
-}
+  VT: "vermont",
+};
 
 interface LegislationInstancePageProps {
   params: Promise<{
@@ -127,77 +127,93 @@ export default async function LegislationInstancePage({
 }: LegislationInstancePageProps) {
   const { legislationId } = await params;
   const fetchBillData = async () => {
-    const getBill = await fetch(`http://127.0.0.1:5002/api/legislation?id=${legislationId}`);
+    const getBill = await fetch(
+      `http://justicewatch.me:5002/api/legislation?id=${legislationId}`,
+    );
     if (!getBill.ok) {
       throw new Error("Can't fetch bill :(");
     }
 
     const billData = await getBill.json();
     return billData.legislation;
-  }
+  };
   // const billData = await obtainSingleBill(parseInt(legislationId));
   const getBill = await fetchBillData();
   const billData = getBill[0];
-  
+
   return (
     <div>
       <Navbar />
       <div className="p-8 pt-20">
         <div className="flex items-center space-x-4">
-          <img src={`/flags/${stateTranslation[billData.state]}.png`} alt={`flag of ${billData.state}`} className="w-16 h-16" />
+          <img
+            src={`/flags/${stateTranslation[billData.state]}.png`}
+            alt={`flag of ${billData.state}`}
+            className="w-16 h-16"
+          />
           <h1 className="text-3xl font-bold">{billData.title}</h1>
         </div>
         <br />
         <p className="text-xl font-bold">
           <span className="text-red-500">{billData.state}</span> |{" "}
-          <span className="text-green-500">
-            {billData.session}{" "}
-          </span>{" "}
-          | <span className="text-blue-500">{billData.bill_number}</span>
+          <span className="text-green-500">{billData.session} </span> |{" "}
+          <span className="text-blue-500">{billData.bill_number}</span>
         </p>
         <br />
-        
+
         <div className="mb-6">
           <h2 className="text-xl font-bold underline mb-2">Description</h2>
           <p className="text-gray-700">{billData.description}</p>
         </div>
-        
+
         <div className="mb-6">
           <h2 className="text-xl font-bold underline mb-2">Bill Status</h2>
           <p className="text-gray-700">
-            <span className="font-semibold">Last Action:</span> {billData.last_action}
+            <span className="font-semibold">Last Action:</span>{" "}
+            {billData.last_action}
           </p>
         </div>
-        
+
         <div className="mb-6">
           <h2 className="text-xl font-bold underline mb-2">Sponsor(s)</h2>
           <p className="text-gray-700">{billData.sponsors}</p>
         </div>
-        
+
         <div className="mb-6">
           <h2 className="text-xl font-bold underline mb-2">Subject Areas</h2>
           <p className="text-gray-700">{billData.subjects}</p>
         </div>
-        
+
         <div className="mb-6">
-          <h2 className="text-xl font-bold underline mb-2">Session Information</h2>
+          <h2 className="text-xl font-bold underline mb-2">
+            Session Information
+          </h2>
           <p className="text-gray-700">
-            <span className="font-semibold">Session:</span> {billData.session}<br />
-            <span className="font-semibold">Session Year:</span> {billData.session_year}
+            <span className="font-semibold">Session:</span> {billData.session}
+            <br />
+            <span className="font-semibold">Session Year:</span>{" "}
+            {billData.session_year}
           </p>
         </div>
-        
+
         <div className="mb-6">
           <h2 className="text-xl font-bold underline mb-2">Relevant Links</h2>
           <p>
-            <a href={billData.url} className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">
+            <a
+              href={billData.url}
+              className="text-blue-500 underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               View on LegiScan
             </a>
           </p>
         </div>
 
         <div className="mb-6">
-          <h2 className="text-xl font-bold underline mb-2">Relevant Instances of Violence</h2>
+          <h2 className="text-xl font-bold underline mb-2">
+            Relevant Instances of Violence
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
             {incidents.map((incident) => (
               <Link
@@ -237,10 +253,16 @@ export default async function LegislationInstancePage({
         </div>
 
         <div>
-          <h2 className="text-xl font-bold underline mb-2">Relevant Departments</h2>
+          <h2 className="text-xl font-bold underline mb-2">
+            Relevant Departments
+          </h2>
           <div className="flex flex-col md:flex-row items-center gap-4 mt-2 h-full">
             {Object.values(DepartmentInstances).map((department) => (
-              <Link className="w-full" key={department.agency_name} href={`/department/${department.agency_name}`}>
+              <Link
+                className="w-full"
+                key={department.agency_name}
+                href={`/department/${department.agency_name}`}
+              >
                 <DepartmentCard {...department} />
               </Link>
             ))}
