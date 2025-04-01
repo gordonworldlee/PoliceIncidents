@@ -94,7 +94,7 @@ const NewsLink = ({ url }: { url: string }) => (
 // );
 
 async function fetchViolenceById(violenceId : string) {
-  const response = await fetch(`http://localhost:5002/api/incidents/${violenceId}`);
+  const response = await fetch(`http://127.0.0.1:5002/api/incidents/${violenceId}`);
   const data = await response.json();
   return data;
 }

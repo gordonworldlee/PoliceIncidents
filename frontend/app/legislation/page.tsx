@@ -53,8 +53,8 @@ export default function LegislationModelPage() {
     const fetchLegislation = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:5002/api/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}&search=${searchQuery}`);
-        console.log(`http://localhost:5001/api/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`)
+        const response = await fetch(`http://127.0.0.1:5002/api/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}&search=${searchQuery}`);
+        console.log(`http://127.0.0.1:5002/api/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`)
         if (!response.ok) {
             throw new Error(`Can't fetch legislation :(`);
         }

@@ -28,7 +28,7 @@ export default function DepartmentModelPage() {
       try {
         setLoading(true);
         const searchParam = searchQuery ? `&search=${searchQuery}` : '';
-        const response = await fetch(`http://localhost:5002/api/agencies?page=${currentPage}&per_page=${ITEMS_PER_PAGE}${searchParam}`);
+        const response = await fetch(`http://127.0.0.1:5002/api/agencies?page=${currentPage}&per_page=${ITEMS_PER_PAGE}${searchParam}`);
         // console.log(response)
         
         if (!response.ok) {

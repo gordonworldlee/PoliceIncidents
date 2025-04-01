@@ -39,7 +39,7 @@ export default function ViolenceCardGrid() {
         const fetchViolence = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`http://localhost:5001/api/violence?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`);
+                const response = await fetch(`http://127.0.0.1:5002/api/violence?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`);
                 
                 console.log(response)
                 if (!response.ok) {
