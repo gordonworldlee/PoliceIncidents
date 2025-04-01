@@ -7,12 +7,19 @@ app = Flask(__name__)
 CORS(app)
 
 
+DB_USER="postgres"
+DB_PASSWORD="example567"
+DB_NAME="prod_db"
+DB_HOST="justicewatch.me"
+DB_PORT=5432
+
+"""
 DB_USER = "postgres"
 DB_PASSWORD = "example567"
 DB_HOST = "justicewatch.me"
 DB_PORT = "5432"
-DB_NAME = "postgres"
-
+DB_NAME = "old_prod_db"
+"""
 DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 engine = create_engine(DATABASE_URL)
 
