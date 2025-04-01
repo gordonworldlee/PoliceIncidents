@@ -22,7 +22,7 @@ export default function ViolenceQueryCardGrid({
       try {
         setLoading(true);
         const response = await fetch(
-          `http://justicewatch.me:5002/api/incidents?${api_query}`,
+          `https://justicewatch.me/api/incidents?${api_query}`,
         );
         console.log(response);
         if (!response.ok) {

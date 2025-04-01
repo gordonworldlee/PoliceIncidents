@@ -128,7 +128,7 @@ export default async function LegislationInstancePage({
   const { legislationId } = await params;
   const fetchBillData = async () => {
     const getBill = await fetch(
-      `http://justicewatch.me:5002/api/legislation?id=${legislationId}`,
+      `https://justicewatch.me/api/legislation?id=${legislationId}`,
     );
     if (!getBill.ok) {
       throw new Error("Can't fetch bill :(");

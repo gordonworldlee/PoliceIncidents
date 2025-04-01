@@ -93,7 +93,7 @@ const NewsLink = ({ url }: { url: string }) => (
 
 async function fetchViolenceById(violenceId: string) {
   const response = await fetch(
-    `http://justicewatch.me:5002/api/incidents/${violenceId}`,
+    `https://justicewatch.me/api/incidents/${violenceId}`,
   );
   const data = await response.json();
   return data;

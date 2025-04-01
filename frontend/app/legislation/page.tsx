@@ -52,10 +52,10 @@ export default function LegislationModelPage() {
       try {
         setLoading(true);
         const response = await fetch(
-          `http://justicewatch.me:5002/api/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}&search=${searchQuery}`,
+          `https://justicewatch.me/api/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}&search=${searchQuery}`,
         );
         console.log(
-          `http://justicewatch.me:5002/api/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`,
+          `https://justicewatch.me/api/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`,
         );
         if (!response.ok) {
           throw new Error(`Can't fetch legislation :(`);

@@ -40,7 +40,7 @@ export default function ViolenceCardGrid() {
       try {
         setLoading(true);
         const response = await fetch(
-          `http://justicewatch.me:5002/api/violence?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`,
+          `https://justicewatch.me/api/violence?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`,
         );
 
         console.log(response);
