@@ -85,6 +85,17 @@ services:
     networks:
       - int
       - ext
+  api:
+    build:
+      context: backend/
+      dockerfile: Dockerfile
+    container_name: justicewatch-api
+    image: justicewatch-api:latest
+    ports:
+      - "5002:5002"
+    networks:
+      - ext
+      - int
 
 volumes:
   justicewatch_db-prod:

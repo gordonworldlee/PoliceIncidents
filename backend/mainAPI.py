@@ -19,8 +19,8 @@ app = Flask(__name__)
 app.url_map.strict_slashes = False
 CORS(app)
 
-# Make it so that all API requests start with /api/v2
-api = Blueprint('api_v2', __name__, url_prefix='/api/v2')
+# Make it so that all API requests start with /api
+api = Blueprint('api', __name__, url_prefix='/api')
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
@@ -142,4 +142,4 @@ app.register_blueprint(api)
 if __name__ == "__main__":
 
     print(app.url_map)
-    app.run(host='0.0.0.0', port=5001, debug=True)  # Turn off debug mode in production
+    app.run(host='0.0.0.0', port=5002, debug=True)  # Turn off debug mode in production

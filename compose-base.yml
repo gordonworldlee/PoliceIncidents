@@ -7,14 +7,22 @@ services:
       - .env.local:/app/.env
     container_name: justicewatch-frontend
     image: justicewatch-frontend:latest
-  db:
-    container_name: justicewatch-db
-    image: postgres:17.4
-    # Need env variables, imported from another compose file
     ports:
-      - "5432:5432"
-    volumes:
-      - db-default:/var/lib/postgresql/data
+      - "80:3000"
+    networks:
+      - ext
+      - int
+  api:
+    build:
+      context: backend/
+      dockerfile: Dockerfile
+    container_name: justicewatch-api
+    image: justicewatch-api:latest
+    ports:
+      - "5002:5002"
+    networks:
+      - ext
+      - int
 
 volumes:
   db-default:

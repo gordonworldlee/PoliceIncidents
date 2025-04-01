@@ -11,17 +11,17 @@
 # start-development: ## Runs npm development server
 #     npm run dev
 
-.PHONY: build-staging
-build-staging: ## Build the staging docker image.
-	docker-compose -p justicewatch -f compose-base.yml -f compose-staging.yml build
+.PHONY: build-base
+build-base: ## Build the staging docker image.
+	docker-compose -p justicewatch -f compose-base.yml build
 
-.PHONY: start-staging
-start-staging: ## Start the staging docker container.
-	docker-compose -p justicewatch -f compose-base.yml -f compose-staging.yml up -d
+.PHONY: start-base
+start-base: ## Start the staging docker container.
+	docker-compose -p justicewatch -f compose-base.yml up -d
 
-.PHONY: stop-staging
-stop-staging: ## Stop the staging docker container.
-	docker-compose -p justicewatch -f compose-base.yml -f compose-staging.yml down
+.PHONY: stop-base
+stop-base: ## Stop the staging docker container.
+	docker-compose -p justicewatch -f compose-base.yml down
 
 .PHONY: build-production
 build-production: ## Build the production docker image.
