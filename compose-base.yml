@@ -14,10 +14,10 @@ services:
       - int
   api:
     build:
-      context: backend/
+      context: oldBack/
       dockerfile: Dockerfile
     container_name: justicewatch-api
-    image: justicewatch-api:latest
+    image: justicewatch-api:old
     ports:
       - "5002:5002"
     networks:
