@@ -19,7 +19,7 @@ COPY . .
 
 # Expose port if your API listens on a specific port (common for web APIs)
 # Change this to match your application's port if needed
-EXPOSE 5001
+EXPOSE 5002
 
 # Command to run the application
 CMD ["python", "mainAPI.py"]
