@@ -1,8 +1,8 @@
 import { cache } from "react";
 import { env } from "next-runtime-env";
 
-const GITLAB_API_BASE = env("GITLAB_BASE_URL") as string;
-const PROJECT_ID = env("GITLAB_PROJECT_ID") as string;
+const GITLAB_API_BASE = "https://gitlab.com/api/v4";
+const PROJECT_ID = 67072062
 const GITLAB_TOKEN = env("GITLAB_ACCESS_TOKEN") as string;
 
 export interface GitLabStats {
