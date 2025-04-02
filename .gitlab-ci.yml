@@ -43,7 +43,6 @@ test_frontend:
     # Run Selenium tests in headless mode (ensure your test runner passes headless flags to Selenium)
     - npm run test
 
-  
 test_backend_unittests:
   stage: test
   image: python:latest
@@ -57,24 +56,23 @@ test_backend_unittests:
     - sleep 10 # Wait for the server to start
     - echo "Running Python unit tests..."
     - python3 unit-tests.py
-    
+
 test_backend_postman:
-  image: 
+  image:
     name: postman/newman:alpine
-    #entrypoint: [""]
-  before_script:
-    - apk update && apk add python3 py3-pip postgresql-dev gcc musl-dev
-    - cd backend
-    - python3 -m venv .venv
-    - source .venv/bin/activate
-    - pip install -r requirements.txt
+    entrypoint: [""]
+  # before_script:
+  #   - apk update && apk add python3 py3-pip postgresql-dev gcc musl-dev
+  #   - cd backend
+  #   - python3 -m venv .venv
+  #   - source .venv/bin/activate
+  #   - pip install -r requirements.txt
   script:
-    - nohup python3 mainAPI.py & # Start the server in the background
-    - sleep 10 # Wait for the server to start
+    # - nohup python3 mainAPI.py & # Start the server in the background
+    # - sleep 10 # Wait for the server to start
     - echo "Running Postman Tests"
     - ls
     - newman run Testing.postman_collection.json
-
 
 build_production:
   stage: build
