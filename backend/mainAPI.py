@@ -139,7 +139,7 @@ def get_agency_by_id(agency_id):
 
 app.register_blueprint(api)
 
-@api.route("", methods=["GET"])
+@app.route("/", methods=["GET"])
 def get_api_info():
     return {
         "message": "JusticeWatch API",
