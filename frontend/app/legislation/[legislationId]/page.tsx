@@ -138,9 +138,7 @@ export default async function LegislationInstancePage({
   };
 
   const fetchDepartmentConnections = async (state: string) => {
-    const response = await fetch(
-      process.env.NEXT_PUBLIC_API_URL + `/api/agencies?state=${state}`,
-    );
+    const response = await fetchApi(`/agencies?state=${state}`);
     if (!response.ok) {
       throw new Error("Can't fetch departments :(");
     }
@@ -150,9 +148,7 @@ export default async function LegislationInstancePage({
   };
 
   const getViolenceConnections = async (state: string) => {
-    const response = await fetch(
-      process.env.NEXT_PUBLIC_API_URL + `/api/incidents?state=${state}`,
-    );
+    const response = await fetchApi(`/incidents?state=${state}`);
     if (!response.ok) {
       throw new Error("Failed to fetch departments");
     }

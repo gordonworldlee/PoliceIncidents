@@ -52,9 +52,7 @@ export default async function DepartmentPage({
   };
 
   const getLegislationConnections = async (state: string) => {
-    const response = await fetch(
-      process.env.NEXT_PUBLIC_API_URL + `/api/legislation?state=${state}`,
-    );
+    const response = await fetchApi(`/legislation?state=${state}`);
     if (!response.ok) {
       throw new Error("Failed to fetch departments");
     }

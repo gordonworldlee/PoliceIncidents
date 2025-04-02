@@ -4,6 +4,7 @@ from flask_cors import CORS
 import math
 
 app = Flask(__name__)
+app.url_map.strict_slashes = False
 CORS(app)
 
 
@@ -431,4 +432,5 @@ def get_api_info(scorecard_id):
     })
 
 if __name__ == "__main__":
+    print(app.url_map)
     app.run(host='0.0.0.0', port=5002, debug=True)  # Turn off debug mode in production

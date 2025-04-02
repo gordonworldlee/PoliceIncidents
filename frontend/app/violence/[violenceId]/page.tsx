@@ -104,10 +104,7 @@ async function fetchViolenceById(violenceId: string) {
 
 // Add new fetch functions for connections
 async function getDepartmentConnections(ori_identifier: string) {
-  const response = await fetch(
-    process.env.NEXT_PUBLIC_API_URL +
-      `/api/agencies?ori_identifier=${ori_identifier}`,
-  );
+  const response = await fetchApi(`/agencies?ori_identifier=${ori_identifier}`);
   if (!response.ok) {
     throw new Error("Failed to fetch departments");
   }
@@ -116,9 +113,7 @@ async function getDepartmentConnections(ori_identifier: string) {
 }
 
 async function getLegislationConnections(state: string) {
-  const response = await fetch(
-    process.env.NEXT_PUBLIC_API_URL + `/api/legislation?state=${state}`,
-  );
+  const response = await fetchApi(`/legislation?state=${state}`);
   if (!response.ok) {
     throw new Error("Failed to fetch legislation");
   }

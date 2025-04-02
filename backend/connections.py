@@ -200,3 +200,9 @@ if __name__ == "__main__":
         total_elapsed_time = time.time() - total_start_time
         print(f"All connections have been created in {total_elapsed_time:.2f} seconds total")
     print("Done")
+
+def rerun_connect_incidents_to_agencies():
+    from dbconnector import connect_to_db
+    engine = connect_to_db()
+    session = Session(engine)
+    connect_incidents_to_agencies(session)

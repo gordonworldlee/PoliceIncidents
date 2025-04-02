@@ -15,9 +15,10 @@ export function fetchApi(
 
   if (!apiUrl) {
     console.warn("NEXT_PUBLIC_API_URL is not defined in environment variables");
-    apiUrl = "https://justicewatch.me/api";
+    apiUrl = "http://localhost:5002/api";
   }
 
-  const url = `${apiUrl || ""}${path}`;
+  const url = apiUrl + path;
+  console.log("FETCHING " + url);
   return fetch(url, options);
 }
