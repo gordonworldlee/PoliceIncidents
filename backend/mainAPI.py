@@ -1,6 +1,6 @@
 from ast import Not
 from flask import Flask, jsonify, request, Blueprint
-from sqlalchemy import create_engine, text, select, func
+from sqlalchemy import create_engine, text, select, func, desc
 from sqlalchemy.orm import sessionmaker, scoped_session
 from flask_cors import CORS
 from dbconnector import connect_to_db
@@ -116,6 +116,27 @@ def get_legislation():
         for word in description.split():
             stmt = stmt.where(Legislation.description.contains(word))
 
+    if "search" in request.args:
+        search_term = request.args["search"]
+        for word in search_term.split():
+            stmt = stmt.where(
+                Legislation.title.contains(word) |
+                Legislation.description.contains(word) |
+                Legislation.bill_number.contains(word) |
+                Legislation.state.contains(word)
+            )
+    # Sorting query params
+    sort_by = request.args.get("sort_by", None)  # Column to sort by
+    sort_order = request.args.get("sort_order", "asc")  # Sort order: 'asc' or 'desc'
+
+    if sort_by:
+        column = getattr(Legislation, sort_by, None)
+        if column:  # Ensure the column exists on the model
+            if sort_order == "desc":
+                stmt = stmt.order_by(desc(column))
+            else:
+                stmt = stmt.order_by(column)
+
     pagination_metadata = get_pagination_metadata(stmt, per_page)
 
     stmt = paginate_request(stmt, page, per_page)
@@ -149,7 +170,35 @@ def get_incidents():
     # Search query params
     if "id" in request.args:
         stmt = stmt.where(Incident.id == request.args["id"])
+    if "state" in request.args:
+        stmt = stmt.where(Incident.state == request.args["state"])
+    if "encounter_type" in request.args:
+        stmt = stmt.where(Incident.encounter_type == request.args["encounter_type"])
+    if "city" in request.args:
+        stmt = stmt.where(Incident.city == request.args["city"])
 
+    # General search across multiple fields (optional)
+    if "search" in request.args:
+        search_term = request.args["search"]
+        for word in search_term.split():
+            stmt = stmt.where(
+                Incident.state.contains(word) |
+                Incident.encounter_type.contains(word) |
+                Incident.county.contains(word) |
+                Incident.city.contains(word)
+            )
+
+    # Sorting query params
+    sort_by = request.args.get("sort_by", None)  # Column to sort by
+    sort_order = request.args.get("sort_order", "asc")  # Sort order: 'asc' or 'desc'
+
+    if sort_by:
+        column = getattr(Incident, sort_by, None)
+        if column:  # Ensure the column exists on the model
+            if sort_order == "desc":
+                stmt = stmt.order_by(desc(column))
+            else:
+                stmt = stmt.order_by(column)
     pagination_metadata = get_pagination_metadata(stmt, per_page)
 
     stmt = paginate_request(stmt, page, per_page)
@@ -186,6 +235,29 @@ def get_agencies():
         stmt = stmt.where(Agency.id == request.args["id"])
     elif "ori_identifier" in request.args:
         stmt = stmt.where(Agency.ori_identifier == request.args["ori_identifier"])
+    if "state" in request.args:
+        stmt = stmt.where(Agency.state == request.args["state"])
+    
+    if "search" in request.args:
+        search_term = request.args["search"]
+        for word in search_term.split():
+            stmt = stmt.where(
+                Agency.agency_name.contains(word) |  # Assuming Agency has a 'name' field
+                Agency.state.contains(word) |
+                Agency.ori_identifier.contains(word)
+            )
+
+    # Sorting query params
+    sort_by = request.args.get("sort_by", None)  # Column to sort by
+    sort_order = request.args.get("sort_order", "asc")  # Sort order: 'asc' or 'desc'
+
+    if sort_by:
+        column = getattr(Agency, sort_by, None)
+        if column:  # Ensure the column exists on the model
+            if sort_order == "desc":
+                stmt = stmt.order_by(desc(column))
+            else:
+                stmt = stmt.order_by(column)
 
     pagination_metadata = get_pagination_metadata(stmt, per_page)
 
