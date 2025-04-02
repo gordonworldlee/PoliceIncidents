@@ -1,9 +1,11 @@
 // import { obtainSingleBill } from "@/lib/fetch_legislative_data";
 import Link from "next/link";
 import Navbar from "../../components/Navbar";
-import { DepartmentInstances } from "@/public/data/DepartmentData";
+import { Department, DepartmentInstances } from "@/public/data/DepartmentData";
 import { DepartmentCard } from "@/components/DepartmentCard";
 import { fetchApi } from "@/app/utils/apifetch";
+import IncidentCard from "@/components/ViolenceCard";
+import { Violence } from "@/types/important";
 
 const stateTranslation: { [key: string]: string } = {
   AL: "alabama",
@@ -59,9 +61,7 @@ const stateTranslation: { [key: string]: string } = {
 };
 
 interface LegislationInstancePageProps {
-  params: Promise<{
-    legislationId: string;
-  }>;
+  params: Promise<{ legislationId: string }>;
 }
 
 // const chamber_translation = {
@@ -136,10 +136,40 @@ export default async function LegislationInstancePage({
     const billData = await getBill.json();
     return billData.legislation;
   };
+
+  const fetchDepartmentConnections = async (state: string) => {
+    const response = await fetch(
+      process.env.NEXT_PUBLIC_API_URL + `/api/agencies?state=${state}`,
+    );
+    if (!response.ok) {
+      throw new Error("Can't fetch departments :(");
+    }
+
+    const departments = await response.json();
+    return departments.departments.slice(0, 3);
+  };
+
+  const getViolenceConnections = async (state: string) => {
+    const response = await fetch(
+      process.env.NEXT_PUBLIC_API_URL + `/api/incidents?state=${state}`,
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch departments");
+    }
+    const data = await response.json();
+    return data.incidents.slice(0, 3);
+  };
   // const billData = await obtainSingleBill(parseInt(legislationId));
   const getBill = await fetchBillData();
   const billData = getBill[0];
-
+  let departments_connections: Department[] = await fetchDepartmentConnections(
+    billData.state,
+  );
+  if (departments_connections.length === 0) {
+    console.log(DepartmentInstances);
+    departments_connections = DepartmentInstances;
+  }
+  const violence_connections = await getViolenceConnections(billData.state);
   return (
     <div>
       <Navbar />
@@ -214,39 +244,8 @@ export default async function LegislationInstancePage({
             Relevant Instances of Violence
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
-            {incidents.map((incident) => (
-              <Link
-                key={incident.id}
-                href={`/violence/${incident.id}`}
-                className="block"
-              >
-                <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                  <div className="flex items-center mb-4">
-                    <img
-                      width={64}
-                      height={64}
-                      src={incident.image}
-                      alt={`${incident.agency} logo`}
-                      className="w-16 h-16 mr-4"
-                    />
-                    <h2 className="text-lg font-semibold text-blue-600">
-                      {incident.city}, {incident.state}
-                    </h2>
-                  </div>
-                  <p className="text-sm text-gray-600">
-                    <strong>Agency:</strong> {incident.agency}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    <strong>Type:</strong> {incident.encounter_type}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    <strong>Cause:</strong> {incident.cause}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    <strong>Date:</strong> {incident.date}
-                  </p>
-                </div>
-              </Link>
+            {violence_connections.map((incident: Violence, index: number) => (
+              <IncidentCard key={index} incident={incident} />
             ))}
           </div>
         </div>
@@ -255,16 +254,18 @@ export default async function LegislationInstancePage({
           <h2 className="text-xl font-bold underline mb-2">
             Relevant Departments
           </h2>
-          <div className="flex flex-col md:flex-row items-center gap-4 mt-2 h-full">
-            {Object.values(DepartmentInstances).map((department) => (
-              <Link
-                className="w-full"
-                key={department.agency_name}
-                href={`/department/${department.agency_name}`}
-              >
-                <DepartmentCard {...department} />
-              </Link>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {departments_connections.map(
+              (department: Department, index: number) => (
+                <Link
+                  className="w-full"
+                  key={index}
+                  href={`/department/${department.agency_name}`}
+                >
+                  <DepartmentCard {...department} />
+                </Link>
+              ),
+            )}
           </div>
         </div>
       </div>
