@@ -1,6 +1,6 @@
 from ast import Not
 from flask import Flask, jsonify, request, Blueprint
-from sqlalchemy import create_engine, text, select, func, desc
+from sqlalchemy import create_engine, text, select, func, desc, or_, String
 from sqlalchemy.orm import sessionmaker, scoped_session
 from flask_cors import CORS
 from dbconnector import connect_to_db
@@ -118,13 +118,14 @@ def get_legislation():
 
     if "search" in request.args:
         search_term = request.args["search"]
-        for word in search_term.split():
-            stmt = stmt.where(
-                Legislation.title.contains(word) |
-                Legislation.description.contains(word) |
-                Legislation.bill_number.contains(word) |
-                Legislation.state.contains(word)
-            )
+        search_conditions = []
+        for column in Legislation.__table__.columns:
+            # Only apply ILIKE to text-compatible columns
+            if isinstance(column.type, String):
+                search_conditions.append(column.ilike(f"%{search_term}%"))
+        stmt = stmt.where(or_(*search_conditions))  # Combine conditions with OR
+
+
     # Sorting query params
     sort_by = request.args.get("sort_by", None)  # Column to sort by
     sort_order = request.args.get("sort_order", "asc")  # Sort order: 'asc' or 'desc'
@@ -136,6 +137,7 @@ def get_legislation():
                 stmt = stmt.order_by(desc(column))
             else:
                 stmt = stmt.order_by(column)
+
 
     pagination_metadata = get_pagination_metadata(stmt, per_page)
 
@@ -177,16 +179,14 @@ def get_incidents():
     if "city" in request.args:
         stmt = stmt.where(Incident.city == request.args["city"])
 
-    # General search across multiple fields (optional)
     if "search" in request.args:
         search_term = request.args["search"]
-        for word in search_term.split():
-            stmt = stmt.where(
-                Incident.state.contains(word) |
-                Incident.encounter_type.contains(word) |
-                Incident.county.contains(word) |
-                Incident.city.contains(word)
-            )
+        search_conditions = []
+        for column in Incident.__table__.columns:
+            # Only apply ILIKE to text-compatible columns
+            if isinstance(column.type, String):
+                search_conditions.append(column.ilike(f"%{search_term}%"))
+        stmt = stmt.where(or_(*search_conditions))  # Combine conditions with OR
 
     # Sorting query params
     sort_by = request.args.get("sort_by", None)  # Column to sort by
@@ -240,12 +240,13 @@ def get_agencies():
     
     if "search" in request.args:
         search_term = request.args["search"]
-        for word in search_term.split():
-            stmt = stmt.where(
-                Agency.agency_name.contains(word) |  # Assuming Agency has a 'name' field
-                Agency.state.contains(word) |
-                Agency.ori_identifier.contains(word)
-            )
+        search_conditions = []
+        for column in Agency.__table__.columns:
+            # Only apply ILIKE to text-compatible columns
+            if isinstance(column.type, String):
+                search_conditions.append(column.ilike(f"%{search_term}%"))
+        stmt = stmt.where(or_(*search_conditions))  # Combine conditions with OR
+
 
     # Sorting query params
     sort_by = request.args.get("sort_by", None)  # Column to sort by
