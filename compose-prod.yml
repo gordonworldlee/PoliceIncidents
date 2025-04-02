@@ -90,7 +90,7 @@ services:
       - ext
   api:
     build:
-      context: ./oldBack/
+      context: ./backend/
       dockerfile: Dockerfile
     container_name: justicewatch-api
     image: justicewatch-api:latest
@@ -101,6 +101,8 @@ services:
       - LETSENCRYPT_HOST=justicewatch.me,www.justicewatch.me
       - VIRTUAL_PORT=5002
       - VIRTUAL_PATH=/api
+    depends_on:
+      - db
     networks:
       - int
 
