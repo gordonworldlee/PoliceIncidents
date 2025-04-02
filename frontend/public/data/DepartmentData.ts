@@ -24,11 +24,10 @@ export interface Department {
   state: string;
   total_population: string;
   use_of_force_complaints_reported: string;
-  incident_id : string;
 }
 
-export const DepartmentInstances: Record<string, Department> = {
-    DALLAS: {
+export const DepartmentInstances: Department[] = [
+    {
       "agency_name": "DALLAS",
       "agency_type": "police-department",
       "calc_overall_score": "46%",
@@ -54,9 +53,8 @@ export const DepartmentInstances: Record<string, Department> = {
       "state": "TX",
       "total_population": "1278608",
       "use_of_force_complaints_reported": "268.0",
-      "incident_id" : "incident2"
     },
-    HOUSTON: {
+    {
       "agency_name": "HOUSTON",
       "agency_type": "police-department",
       "calc_overall_score": "47%",
@@ -82,9 +80,8 @@ export const DepartmentInstances: Record<string, Department> = {
       "state": "TX",
       "total_population": "2297580",
       "use_of_force_complaints_reported": "229.0", 
-      "incident_id" : "incident1"
     },
-    AUSTIN: {
+    {
       "agency_name": "AUSTIN",
       "agency_type": "police-department",
       "calc_overall_score": "32%",
@@ -110,6 +107,5 @@ export const DepartmentInstances: Record<string, Department> = {
       "state": "TX",
       "total_population": "943059",
       "use_of_force_complaints_reported": "301.0",
-      "incident_id" : "incident3"
     },
-};
+  ];

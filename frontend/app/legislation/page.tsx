@@ -13,9 +13,11 @@ const lato = Lato({
 
 // Define TypeScript interfaces
 export interface Legislation {
-  id: number;
   bill_number: string;
+  connections_agencies: string[];
+  connections_incidents: number[];
   description: string;
+  id: number;
   last_action: string;
   session: string;
   session_year: string;

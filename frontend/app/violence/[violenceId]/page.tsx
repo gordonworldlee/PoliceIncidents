@@ -2,6 +2,10 @@ import Link from "next/link";
 import { FaNewspaper } from "react-icons/fa";
 import Navbar from "../../components/Navbar";
 import { Map } from "@/app/components/Map";
+import { DepartmentCard } from "@/components/DepartmentCard";
+import LegislationCard from "@/components/LegislationCard";
+import { Department, DepartmentInstances } from "@/public/data/DepartmentData";
+import { Legislation } from "@/app/legislation/page";
 
 interface ViolencePageProps {
   params: Promise<{
@@ -99,61 +103,50 @@ async function fetchViolenceById(violenceId: string) {
   return data;
 }
 
+// Add new fetch functions for connections
+async function getDepartmentConnections(ori_identifier: string) {
+  const response = await fetch(
+    process.env.NEXT_PUBLIC_API_URL + `/api/agencies?ori_identifier=${ori_identifier}`,
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch departments");
+  }
+  const data = await response.json();
+  return data.departments;
+}
+
+async function getLegislationConnections(state: string) {
+  const response = await fetch(
+    process.env.NEXT_PUBLIC_API_URL + `/api/legislation?state=${state}`,
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch legislation");
+  }
+  const data = await response.json();
+  return data.legislation.slice(0, 3); // Get first 3 related bills
+}
+
 export default async function ViolenceInstancePage({
   params,
 }: ViolencePageProps) {
   const { violenceId } = await params;
-
   const instance = await fetchViolenceById(violenceId);
-
-  // Fetching legislation data for all violence instances
 
   if (!instance) {
     return <div>Instance not found</div>;
   }
 
-  // const departmentDetails: Record<string, ScorecardLinkProps> = {
-  //   "Houston Police Department": {
-  //     agency_name: "HOUSTON",
-  //     location_name: "Houston",
-  //     state: "Texas",
-  //     latitude: 29.7604,
-  //     longitude: -95.3698,
-  //     calc_police_violence_score: 42,
-  //     police_shooting_avg: 3.8,
-  //     calc_overall_score: 47,
-  //     department_image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png",
-  //   },
-  //   "Austin Police Department": {
-  //     agency_name: "AUSTIN",
-  //     location_name: "Austin",
-  //     state: "Texas",
-  //     latitude: 30.26993,
-  //     longitude: -97.74315,
-  //     calc_police_violence_score: 40,
-  //     police_shooting_avg: 3.5,
-  //     calc_overall_score: 32,
-  //     department_image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png",
-  //   },
-  //   "Dallas Police Department": {
-  //     agency_name: "DALLAS",
-  //     location_name: "Dallas",
-  //     state: "Texas",
-  //     latitude: 32.76778,
-  //     longitude: -96.79468,
-  //     calc_police_violence_score: 48,
-  //     police_shooting_avg: 4.3,
-  //     calc_overall_score: 46,
-  //     department_image: "https://dallaspolice.net/PublishingImages/badge-dpd.png",
-  //   },
-  // };
-
-  // const departmentInfo = departmentDetails[instance.agency_responsible];
+  // Fetch related data
+  let related_departments = await getDepartmentConnections(instance.ori);
+  if (related_departments.length === 0) {
+    related_departments = DepartmentInstances;
+  }
+  const related_legislation = await getLegislationConnections(instance.state);
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100 m-0 overflow-x-hidden">
       <Navbar />
-      <div className="flex-grow w-full max-w-full p-6 bg-white shadow-md rounded-lg min-h-full">
+      <div className="flex-grow w-full max-w-full p-6 bg-white shadow-md rounded-lg min-h-full pt-20">
         <h1 className="text-3xl font-bold text-center mb-4">
           Violence Instance Details
         </h1>
@@ -212,6 +205,31 @@ export default async function ViolenceInstancePage({
               calc_overall_score={departmentInfo.calc_overall_score}
             />
           </div> */}
+        </div>
+
+        {/* Add connections sections */}
+        <div className="mt-8">
+          <h2 className="text-xl font-bold underline mb-4">Related Departments</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {related_departments.map((department: Department, index: number) => (
+              <Link
+                className="w-full"
+                key={index}
+                href={`/department/${department.agency_name}`}
+              >
+                <DepartmentCard {...department} />
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-8">
+          <h2 className="text-xl font-bold underline mb-4">Related Legislation</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {related_legislation.map((legislation: Legislation, index: number) => (
+              <LegislationCard key={index} bill={legislation} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
