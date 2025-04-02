@@ -22,12 +22,13 @@ export default function Home() {
           </Link>
           <span>, and </span>
           <Link href="/incident" className="relative inline-block group">
-            <span className="relative z-10 text-[#D92552] transition-transform duration-300 ease-out group-hover:-translate-y-1.5"> incident </span>
+            <span className="relative z-10 text-[#D92552] transition-transform duration-300 ease-out group-hover:-translate-y-1.5">
+              {" "}
+              incident{" "}
+            </span>
             <span className="absolute left-1/2 bottom-0 h-[2px] w-0 bg-[#D92552] transition-all duration-300 ease-out group-hover:w-full transform -translate-x-1/2"></span>
           </Link>
           <span> at a time.</span>
-
-
         </h1>
         <p className="mt-4 text-center mt-14">
           Search across thousands of U.S. records, or visit your city&apos;s

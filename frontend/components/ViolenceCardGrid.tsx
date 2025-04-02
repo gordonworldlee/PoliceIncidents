@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import IncidentCard from "./ViolenceCard";
 import PaginationControls from "./PaginationControls";
 import TipsBox from "@/components/TipsBox";
+import { fetchApi } from "@/app/utils/apifetch";
 export interface Violence {
   id: number;
   name: string;
@@ -39,9 +40,8 @@ export default function ViolenceCardGrid() {
     const fetchViolence = async () => {
       try {
         setLoading(true);
-        const response = await fetch(
-          process.env.NEXT_PUBLIC_API_URL +
-            `/api/violence?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`,
+        const response = await fetchApi(
+          `/violence?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`,
         );
 
         console.log(response);

@@ -8,6 +8,7 @@ import { capitalize } from "@/components/DepartmentCard";
 import { Lato } from "next/font/google";
 import { Violence } from "@/types/important";
 import IncidentCard from "@/components/ViolenceCard";
+import { fetchApi } from "@/app/utils/apifetch";
 // import LegislationCard from "@/components/LegislationCard";
 const lato = Lato({
   subsets: ["latin"],
@@ -135,10 +136,7 @@ export default async function DepartmentPage({
   const { departmentId } = await params;
 
   const getDepartmentData = async () => {
-    const response = await fetch(
-      process.env.NEXT_PUBLIC_API_URL +
-        `/api/agencies?agency_name=${departmentId}`,
-    );
+    const response = await fetchApi(`/agencies?agency_name=${departmentId}`);
     if (!response.ok) {
       throw new Error("Failed to fetch departments");
     }
@@ -148,9 +146,8 @@ export default async function DepartmentPage({
   };
 
   const getViolenceConnections = async (ori_identifier: string) => {
-    const response = await fetch(
-      process.env.NEXT_PUBLIC_API_URL +
-        `/api/incidents?ori_identifier=${ori_identifier}`,
+    const response = await fetchApi(
+      `/incidents?ori_identifier=${ori_identifier}`,
     );
     if (!response.ok) {
       throw new Error("Failed to fetch departments");

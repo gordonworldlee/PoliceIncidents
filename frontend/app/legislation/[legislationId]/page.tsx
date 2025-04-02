@@ -3,6 +3,7 @@ import Link from "next/link";
 import Navbar from "../../components/Navbar";
 import { DepartmentInstances } from "@/public/data/DepartmentData";
 import { DepartmentCard } from "@/components/DepartmentCard";
+import { fetchApi } from "@/app/utils/apifetch";
 
 const stateTranslation: { [key: string]: string } = {
   AL: "alabama",
@@ -127,9 +128,7 @@ export default async function LegislationInstancePage({
 }: LegislationInstancePageProps) {
   const { legislationId } = await params;
   const fetchBillData = async () => {
-    const getBill = await fetch(
-      process.env.NEXT_PUBLIC_API_URL + `/api/legislation?id=${legislationId}`,
-    );
+    const getBill = await fetchApi(`/legislation?id=${legislationId}`);
     if (!getBill.ok) {
       throw new Error("Can't fetch bill :(");
     }

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { FaNewspaper } from "react-icons/fa";
 import Navbar from "../../components/Navbar";
 import { Map } from "@/app/components/Map";
+import { fetchApi } from "@/app/utils/apifetch";
 
 interface ViolencePageProps {
   params: Promise<{
@@ -92,9 +93,7 @@ const NewsLink = ({ url }: { url: string }) => (
 // );
 
 async function fetchViolenceById(violenceId: string) {
-  const response = await fetch(
-    process.env.NEXT_PUBLIC_API_URL + `/api/incidents/${violenceId}`,
-  );
+  const response = await fetchApi(`/incidents/${violenceId}`);
   const data = await response.json();
   return data;
 }

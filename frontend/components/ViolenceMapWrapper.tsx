@@ -5,6 +5,7 @@ import TotalIncidentMap from "./TotalIncidentMap"; // Assuming you have this com
 
 import IncidentCard from "./ViolenceCard";
 import { Violence } from "@/types/important";
+import { fetchApi } from "@/app/utils/apifetch";
 
 const ITEMS_TO_LOAD = 500;
 
@@ -19,10 +20,7 @@ const ViolenceMapWrapper = () => {
     const fetchViolence = async () => {
       try {
         setLoading(true);
-        const response = await fetch(
-          process.env.NEXT_PUBLIC_API_URL +
-            `/api/incidents?per_page=${ITEMS_TO_LOAD}`,
-        );
+        const response = await fetchApi(`/incidents?per_page=${ITEMS_TO_LOAD}`);
 
         if (!response.ok) {
           throw new Error("Can't fetch violence data.");

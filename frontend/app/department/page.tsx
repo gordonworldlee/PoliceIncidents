@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar";
 import { DepartmentCard } from "@/components/DepartmentCard";
 import { Lato } from "next/font/google";
 import { Department } from "@/public/data/DepartmentData";
+import { fetchApi } from "@/app/utils/apifetch";
 
 const lato = Lato({
   subsets: ["latin"],
@@ -28,9 +29,8 @@ export default function DepartmentModelPage() {
       try {
         setLoading(true);
         const searchParam = searchQuery ? `&search=${searchQuery}` : "";
-        const response = await fetch(
-          process.env.NEXT_PUBLIC_API_URL +
-            `/api/agencies?page=${currentPage}&per_page=${ITEMS_PER_PAGE}${searchParam}`,
+        const response = await fetchApi(
+          `/agencies?page=${currentPage}&per_page=${ITEMS_PER_PAGE}${searchParam}`,
         );
         // console.log(response)
 

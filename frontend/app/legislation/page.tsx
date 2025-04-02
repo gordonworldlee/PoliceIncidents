@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar";
 import { Lato } from "next/font/google";
 import PaginationControls from "@/components/PaginationControls";
 import LegislationCard from "@/components/LegislationCard";
+import { fetchApi } from "@/app/utils/apifetch";
 
 const lato = Lato({
   subsets: ["latin"],
@@ -51,13 +52,11 @@ export default function LegislationModelPage() {
     const fetchLegislation = async () => {
       try {
         setLoading(true);
-        const response = await fetch(
-          process.env.NEXT_PUBLIC_API_URL +
-            `/api/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}&search=${searchQuery}`,
+        const response = await fetchApi(
+          `/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}&search=${searchQuery}`,
         );
         console.log(
-          process.env.NEXT_PUBLIC_API_URL +
-            `/api/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`,
+          `/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`,
         );
         if (!response.ok) {
           throw new Error(`Can't fetch legislation :(`);

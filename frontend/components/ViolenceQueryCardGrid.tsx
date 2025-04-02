@@ -2,6 +2,7 @@
 import { ViolenceAPIResponse } from "@/types/important";
 import { useEffect, useState, Dispatch, SetStateAction } from "react";
 import IncidentCard from "./ViolenceCard";
+import { fetchApi } from "@/app/utils/apifetch";
 
 interface ViolenceQueryCardGridProps {
   api_query: string;
@@ -21,9 +22,7 @@ export default function ViolenceQueryCardGrid({
     const fetchViolence = async () => {
       try {
         setLoading(true);
-        const response = await fetch(
-          process.env.NEXT_PUBLIC_API_URL + `/api/incidents?${api_query}`,
-        );
+        const response = await fetchApi(`/incidents?${api_query}`);
         console.log(response);
         if (!response.ok) {
           throw new Error(`Response is NOT ok. Can't fetch Violence Data :(`);
