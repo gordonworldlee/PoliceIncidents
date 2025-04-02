@@ -13,10 +13,16 @@ before_script:
 test_frontend:
   stage: test
   image: alekzonder/puppeteer
+  services:
+    - docker:dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+  before_script:
+    - apt-get update
+    - apt-get install -y make curl
   script:
     - cd frontend
     - npm install
-    # Verify Chrome installation
     - google-chrome --version
     # Start the dev server in the background
     - npm run dev &
@@ -29,7 +35,7 @@ test_frontend:
       else
         echo "No tests found. Skipping test stage."
       fi
-      
+
 test_backend_unittests:
   stage: test
   image: python:latest
