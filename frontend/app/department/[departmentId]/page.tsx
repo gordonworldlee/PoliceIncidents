@@ -14,7 +14,6 @@ const lato = Lato({
   weight: ["400", "700"],
 });
 
-
 type DepartmentPageProps = {
   params: Promise<{ departmentId: string }>;
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -32,15 +31,7 @@ export default async function DepartmentPage({
   const { departmentId } = await params;
 
   const getDepartmentData = async () => {
-<<<<<<< HEAD
     const response = await fetchApi(`/agencies?agency_name=${departmentId}`);
-=======
-    const response = await fetch(
-      process.env.NEXT_PUBLIC_API_URL +
-        `/api/agencies?agency_name=${departmentId}`,
-    );
-
->>>>>>> 86c2cdfd48b07ee62f3a624408f5bd0122eba023
     if (!response.ok) {
       throw new Error("Failed to fetch departments");
     }
@@ -62,8 +53,7 @@ export default async function DepartmentPage({
 
   const getLegislationConnections = async (state: string) => {
     const response = await fetch(
-      process.env.NEXT_PUBLIC_API_URL +
-        `/api/legislation?state=${state}`,
+      process.env.NEXT_PUBLIC_API_URL + `/api/legislation?state=${state}`,
     );
     if (!response.ok) {
       throw new Error("Failed to fetch departments");
@@ -75,7 +65,9 @@ export default async function DepartmentPage({
   let departmentInstance = await getDepartmentData();
   departmentInstance = departmentInstance[0];
 
-  const related_legislation = await getLegislationConnections(departmentInstance.state);
+  const related_legislation = await getLegislationConnections(
+    departmentInstance.state,
+  );
 
   const related_violence: Violence[] = await getViolenceConnections(
     departmentInstance.ori_identifier,
@@ -216,9 +208,11 @@ export default async function DepartmentPage({
             View Legislation from {stateTranslation[departmentInstance.state]}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {related_legislation.map((legislation: Legislation, index: number) => (
-              <LegislationCard key={index} bill={legislation} />
-            ))}
+            {related_legislation.map(
+              (legislation: Legislation, index: number) => (
+                <LegislationCard key={index} bill={legislation} />
+              ),
+            )}
           </div>
         </div>
         <div className="mt-6 text-center">

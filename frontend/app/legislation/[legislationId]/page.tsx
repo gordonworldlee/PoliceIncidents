@@ -78,50 +78,50 @@ interface LegislationInstancePageProps {
 //   N: "Nonpartisan",
 // };
 
-interface ViolenceInstance {
-  id: string;
-  city: string;
-  state: string;
-  encounter_type: string;
-  cause: string;
-  date: string;
-  agency: string;
-  image: string;
-}
+// interface ViolenceInstance {
+//   id: string;
+//   city: string;
+//   state: string;
+//   encounter_type: string;
+//   cause: string;
+//   date: string;
+//   agency: string;
+//   image: string;
+// }
 
 // This is a mock data structure. In a real application, you'd fetch this data from an API or database
-const incidents: ViolenceInstance[] = [
-  {
-    id: "incident1",
-    city: "Houston",
-    state: "TX",
-    encounter_type: "Domestic Disturbance",
-    cause: "Gun",
-    date: "1/31/25",
-    agency: "Farmington Police Department",
-    image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png",
-  },
-  {
-    id: "incident2",
-    city: "Austin",
-    state: "TX",
-    encounter_type: "Mental Health/Welfare Check",
-    cause: "Taser",
-    date: "2/15/25",
-    agency: "Volusia County Sheriff's Office",
-    image: "https://dallaspolice.net/PublishingImages/badge-dpd.png",
-  },
-  {
-    id: "incident3",
-    city: "Dallas",
-    state: "TX",
-    encounter_type: "Violent Crime",
-    cause: "Aphyxsiation",
-    date: "3/1/25",
-    agency: "Douglas County Sheriff's Office",
-    image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png",
-  },
-];
+// const incidents: ViolenceInstance[] = [
+//   {
+//     id: "incident1",
+//     city: "Houston",
+//     state: "TX",
+//     encounter_type: "Domestic Disturbance",
+//     cause: "Gun",
+//     date: "1/31/25",
+//     agency: "Farmington Police Department",
+//     image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png",
+//   },
+//   {
+//     id: "incident2",
+//     city: "Austin",
+//     state: "TX",
+//     encounter_type: "Mental Health/Welfare Check",
+//     cause: "Taser",
+//     date: "2/15/25",
+//     agency: "Volusia County Sheriff's Office",
+//     image: "https://dallaspolice.net/PublishingImages/badge-dpd.png",
+//   },
+//   {
+//     id: "incident3",
+//     city: "Dallas",
+//     state: "TX",
+//     encounter_type: "Violent Crime",
+//     cause: "Aphyxsiation",
+//     date: "3/1/25",
+//     agency: "Douglas County Sheriff's Office",
+//     image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png",
+//   },
+// ];
 
 export default async function LegislationInstancePage({
   params,
