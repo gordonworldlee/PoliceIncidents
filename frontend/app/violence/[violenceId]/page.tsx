@@ -132,7 +132,10 @@ export default async function ViolenceInstancePage({
   }
 
   // Fetch related data
-  let related_departments = await getDepartmentConnections(instance.ori);
+  console.log(instance);
+  let related_departments = await getDepartmentConnections(
+    instance.ori_identifier,
+  );
   if (related_departments.length === 0) {
     related_departments = DepartmentInstances;
   }
