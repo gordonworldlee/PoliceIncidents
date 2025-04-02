@@ -237,7 +237,9 @@ def get_agencies():
         stmt = stmt.where(Agency.ori_identifier == request.args["ori_identifier"])
     if "state" in request.args:
         stmt = stmt.where(Agency.state == request.args["state"])
-    
+    if "agency_name" in request.args:
+        stmt = stmt.where(Agency.agency_name == request.args["agency_name"])
+
     if "search" in request.args:
         search_term = request.args["search"]
         search_conditions = []
