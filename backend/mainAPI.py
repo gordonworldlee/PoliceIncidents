@@ -79,7 +79,8 @@ def paginate(name_of_items, items, total_count, total_pages, current_page, per_p
         "per_page": per_page
     }
 
-
+def return_error(error_message, status_code=400):
+    return {"error": error_message}, status_code
 
 ####################
 @app.teardown_appcontext
@@ -137,6 +138,8 @@ def get_legislation():
                 stmt = stmt.order_by(desc(column))
             else:
                 stmt = stmt.order_by(column)
+        else:
+            return return_error("Invalid sort_by parameter")
 
 
     pagination_metadata = get_pagination_metadata(stmt, per_page)
@@ -199,6 +202,8 @@ def get_incidents():
                 stmt = stmt.order_by(desc(column))
             else:
                 stmt = stmt.order_by(column)
+        else:
+            return return_error("Invalid sort_by parameter")
     pagination_metadata = get_pagination_metadata(stmt, per_page)
 
     stmt = paginate_request(stmt, page, per_page)
@@ -261,6 +266,8 @@ def get_agencies():
                 stmt = stmt.order_by(desc(column))
             else:
                 stmt = stmt.order_by(column)
+        else:
+            return return_error("Invalid sort_by parameter")
 
     pagination_metadata = get_pagination_metadata(stmt, per_page)
 
