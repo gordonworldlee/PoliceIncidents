@@ -12,20 +12,24 @@ before_script:
 
 test_frontend:
   stage: test
-  image: node:latest
-  before_script:
-    - apt-get update
-    - apt-get install -y make curl
+  image: alekzonder/puppeteer
   script:
     - cd frontend
     - npm install
+    # Verify Chrome installation
+    - google-chrome --version
+    # Start the dev server in the background
+    - npm run dev &
+    # Wait for the server to be ready
+    - sleep 15
+    # Run tests if test directory exists
     - |
       if [ -d "test" ] || [ -d "__tests__" ] || grep -q '"test"' package.json; then
         npm run test
       else
         echo "No tests found. Skipping test stage."
       fi
-
+      
 test_backend_unittests:
   stage: test
   image: python:latest
