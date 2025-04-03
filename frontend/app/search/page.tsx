@@ -20,7 +20,6 @@ export default function SearchPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
   const [departments, setDepartments] = useState([]);
   const [incidents, setIncidents] = useState([]);
   const [legislation, setLegislation] = useState([]);
@@ -205,7 +204,7 @@ export default function SearchPage() {
              incidents.length === 0 && 
              legislation.length === 0 && (
               <div className="text-center py-8">
-                <p className="text-gray-600">No results found for "{searchQuery}"</p>
+                <p className="text-gray-600">No results found for</p>
               </div>
             )}
           </div>
