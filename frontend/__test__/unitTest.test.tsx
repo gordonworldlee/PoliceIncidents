@@ -83,7 +83,6 @@ const mockDepartment: Department = {
     "state": "TX",
     "total_population": "1278608",
     "use_of_force_complaints_reported": "268.0",
-    "incident_id" : "incident2"
 };
 
 const mockTeamMember: TeamMember = {
@@ -98,7 +97,7 @@ const mockTeamMember: TeamMember = {
 
 describe('DepartmentCard', () => {
     test('renders department card correctly', () => {
-        render(<DepartmentCard {...mockDepartment} />);
+        render(<DepartmentCard DepartmentInstance={mockDepartment} />);
         expect(screen.getByText('Dallas Police Department')).toBeInTheDocument();
         expect(screen.getByText('Dallas, TX')).toBeInTheDocument();
         expect(screen.getByText('46')).toBeInTheDocument();
@@ -106,13 +105,13 @@ describe('DepartmentCard', () => {
     })
 
     test('check boxes in card', () => {
-        render(<DepartmentCard {...mockDepartment} />);
+        render(<DepartmentCard DepartmentInstance={mockDepartment} />);
         const policeViolenceBox = screen.getByText('Police Shooting').closest('div');
         expect(policeViolenceBox).toHaveClass('bg-green-100');
     })
 
     test('check boxes in card', () => {
-        render(<DepartmentCard {...mockDepartment} />);
+        render(<DepartmentCard DepartmentInstance={mockDepartment} />);
         const policeViolenceBox = screen.getByText('Police Violence').closest('div');
         expect(policeViolenceBox).toHaveClass('bg-orange-100');
     })

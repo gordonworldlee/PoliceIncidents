@@ -14,11 +14,13 @@ export function fetchApi(
   let apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   if (!apiUrl) {
-    console.warn("NEXT_PUBLIC_API_URL is not defined in environment variables");
+    console.warn(
+      "NEXT_PUBLIC_API_URL is not defined in environment variables, setting default value to https://justicewatch.me/api",
+    );
     apiUrl = "https://justicewatch.me/api";
   }
 
   const url = apiUrl + path;
-  console.log("FETCHING " + url);
+  console.log("Fetching: " + url);
   return fetch(url, options);
 }

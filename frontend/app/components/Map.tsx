@@ -10,18 +10,25 @@ export function Map({
   longitude: number | string;
 }) {
   const [error, setError] = useState<string | null>(null);
-  const mapsApiKey = process.env.NEXT_PUBLIC_MAPS_API_KEY as string;
+  //eslint-disable-next-line prefer-const
+  let mapsApiKey = process.env.NEXT_PUBLIC_MAPS_API_KEY as string;
   const mapRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // coordinates are now string so need to parse them into float
-    const lat = typeof latitude === 'string' ? parseFloat(latitude) : latitude;
-    const lng = typeof longitude === 'string' ? parseFloat(longitude) : longitude;
-    
+    const lat = typeof latitude === "string" ? parseFloat(latitude) : latitude;
+    const lng =
+      typeof longitude === "string" ? parseFloat(longitude) : longitude;
+
     // make sure coordinates are valid
     if (isNaN(lat) || !isFinite(lat) || isNaN(lng) || !isFinite(lng)) {
       setError("Invalid coordinates provided");
-      console.error("Invalid map coordinates:", { latitude, longitude, parsedLat: lat, parsedLng: lng });
+      console.error("Invalid map coordinates:", {
+        latitude,
+        longitude,
+        parsedLat: lat,
+        parsedLng: lng,
+      });
       return;
     }
 
@@ -75,7 +82,9 @@ export function Map({
         };
       } catch (err) {
         console.error("Error initializing map:", err);
-        setError(`Failed to initialize map: ${err instanceof Error ? err.message : 'Unknown error'}`);
+        setError(
+          `Failed to initialize map: ${err instanceof Error ? err.message : "Unknown error"}`,
+        );
       }
     };
 
@@ -90,7 +99,5 @@ export function Map({
     );
   }
 
-  return (
-    <div className="h-[500px] w-full" ref={mapRef} />
-  );
+  return <div className="h-[500px] w-full" ref={mapRef} />;
 }

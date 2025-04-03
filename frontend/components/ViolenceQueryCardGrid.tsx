@@ -8,12 +8,14 @@ interface ViolenceQueryCardGridProps {
   api_query: string;
   violenceData: ViolenceAPIResponse | undefined;
   setViolenceData: Dispatch<SetStateAction<ViolenceAPIResponse | undefined>>;
+  searchQuery?: string;
 }
 
 export default function ViolenceQueryCardGrid({
   api_query,
   violenceData,
   setViolenceData,
+  searchQuery,
 }: ViolenceQueryCardGridProps) {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -39,7 +41,7 @@ export default function ViolenceQueryCardGrid({
       }
     };
     fetchViolence();
-  }, [api_query]);
+  }, [api_query, setViolenceData]);
 
   return (
     <div className="my-2">
@@ -54,7 +56,7 @@ export default function ViolenceQueryCardGrid({
           {violenceData && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {violenceData.incidents.map((incident, index) => (
-                <IncidentCard key={index} incident={incident} />
+                <IncidentCard key={index} incident={incident} searchQuery={searchQuery || ""} />
               ))}
             </div>
           )}
