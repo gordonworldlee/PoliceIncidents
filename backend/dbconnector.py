@@ -11,7 +11,7 @@ def connect_to_db():
         POSTGRES_DB = os.getenv("POSTGRES_DB")
         DB_ADDRESS = os.getenv("DB_ADDRESS")
         DB_PORT = os.getenv("DB_PORT")
-        DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{DB_ADDRESS}:{DB_PORT}/{POSTGRES_DB}"
+        DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{DB_ADDRESS}:
         print(f"Connecting to DB with string: {DATABASE_URL}")
         engine = create_engine(DATABASE_URL)
         return engine

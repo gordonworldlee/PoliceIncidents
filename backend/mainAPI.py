@@ -1,6 +1,6 @@
 from ast import Not
 from flask import Flask, jsonify, request, Blueprint
-from sqlalchemy import create_engine, text, select, func
+from sqlalchemy import create_engine, text, select, func, desc, or_, String
 from sqlalchemy.orm import sessionmaker, scoped_session
 from flask_cors import CORS
 from dbconnector import connect_to_db
@@ -79,7 +79,8 @@ def paginate(name_of_items, items, total_count, total_pages, current_page, per_p
         "per_page": per_page
     }
 
-
+def return_error(error_message, status_code=400):
+    return {"error": error_message}, status_code
 
 ####################
 @app.teardown_appcontext
@@ -116,6 +117,31 @@ def get_legislation():
         for word in description.split():
             stmt = stmt.where(Legislation.description.contains(word))
 
+    if "search" in request.args:
+        search_term = request.args["search"]
+        search_conditions = []
+        for column in Legislation.__table__.columns:
+            # Only apply ILIKE to text-compatible columns
+            if isinstance(column.type, String):
+                search_conditions.append(column.ilike(f"%{search_term}%"))
+        stmt = stmt.where(or_(*search_conditions))  # Combine conditions with OR
+
+
+    # Sorting query params
+    sort_by = request.args.get("sort_by", None)  # Column to sort by
+    sort_order = request.args.get("sort_order", "asc")  # Sort order: 'asc' or 'desc'
+
+    if sort_by:
+        column = getattr(Legislation, sort_by, None)
+        if column:  # Ensure the column exists on the model
+            if sort_order == "desc":
+                stmt = stmt.order_by(desc(column))
+            else:
+                stmt = stmt.order_by(column)
+        else:
+            return return_error("Invalid sort_by parameter")
+
+
     pagination_metadata = get_pagination_metadata(stmt, per_page)
 
     stmt = paginate_request(stmt, page, per_page)
@@ -149,7 +175,35 @@ def get_incidents():
     # Search query params
     if "id" in request.args:
         stmt = stmt.where(Incident.id == request.args["id"])
+    if "state" in request.args:
+        stmt = stmt.where(Incident.state == request.args["state"])
+    if "encounter_type" in request.args:
+        stmt = stmt.where(Incident.encounter_type == request.args["encounter_type"])
+    if "city" in request.args:
+        stmt = stmt.where(Incident.city == request.args["city"])
 
+    if "search" in request.args:
+        search_term = request.args["search"]
+        search_conditions = []
+        for column in Incident.__table__.columns:
+            # Only apply ILIKE to text-compatible columns
+            if isinstance(column.type, String):
+                search_conditions.append(column.ilike(f"%{search_term}%"))
+        stmt = stmt.where(or_(*search_conditions))  # Combine conditions with OR
+
+    # Sorting query params
+    sort_by = request.args.get("sort_by", None)  # Column to sort by
+    sort_order = request.args.get("sort_order", "asc")  # Sort order: 'asc' or 'desc'
+
+    if sort_by:
+        column = getattr(Incident, sort_by, None)
+        if column:  # Ensure the column exists on the model
+            if sort_order == "desc":
+                stmt = stmt.order_by(desc(column))
+            else:
+                stmt = stmt.order_by(column)
+        else:
+            return return_error("Invalid sort_by parameter")
     pagination_metadata = get_pagination_metadata(stmt, per_page)
 
     stmt = paginate_request(stmt, page, per_page)
@@ -186,6 +240,34 @@ def get_agencies():
         stmt = stmt.where(Agency.id == request.args["id"])
     elif "ori_identifier" in request.args:
         stmt = stmt.where(Agency.ori_identifier == request.args["ori_identifier"])
+    if "state" in request.args:
+        stmt = stmt.where(Agency.state == request.args["state"])
+    if "agency_name" in request.args:
+        stmt = stmt.where(Agency.agency_name == request.args["agency_name"])
+
+    if "search" in request.args:
+        search_term = request.args["search"]
+        search_conditions = []
+        for column in Agency.__table__.columns:
+            # Only apply ILIKE to text-compatible columns
+            if isinstance(column.type, String):
+                search_conditions.append(column.ilike(f"%{search_term}%"))
+        stmt = stmt.where(or_(*search_conditions))  # Combine conditions with OR
+
+
+    # Sorting query params
+    sort_by = request.args.get("sort_by", None)  # Column to sort by
+    sort_order = request.args.get("sort_order", "asc")  # Sort order: 'asc' or 'desc'
+
+    if sort_by:
+        column = getattr(Agency, sort_by, None)
+        if column:  # Ensure the column exists on the model
+            if sort_order == "desc":
+                stmt = stmt.order_by(desc(column))
+            else:
+                stmt = stmt.order_by(column)
+        else:
+            return return_error("Invalid sort_by parameter")
 
     pagination_metadata = get_pagination_metadata(stmt, per_page)
 
