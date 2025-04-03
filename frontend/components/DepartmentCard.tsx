@@ -6,7 +6,6 @@ import {
 } from 'lucide-react';
 import { Department } from '@/public/data/DepartmentData';
 import { HighlightText } from './HighlightText';
-import { i } from 'framer-motion/client';
 
 export const getScoreColor = (score: number) => {
   if (score < 30)
