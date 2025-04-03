@@ -32,6 +32,7 @@ export default async function DepartmentPage({
 
   const getDepartmentData = async () => {
     const response = await fetchApi(`/agencies?agency_name=${departmentId}`);
+    console.log(departmentId);
     if (!response.ok) {
       throw new Error("Failed to fetch departments");
     }

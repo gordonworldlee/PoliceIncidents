@@ -29,7 +29,11 @@ export default function ViolenceCardGrid() {
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             const searchParam = searchQuery ? `&search=${searchQuery}` : '';
-            setApiQuery(`page=${currentPage}&per_page=${ITEMS_PER_PAGE}${searchParam}`);
+            if (searchParam) {
+                setApiQuery(`${searchParam}`);
+            } else {
+                setApiQuery(`page=${currentPage}&per_page=${ITEMS_PER_PAGE}`);
+            }
         }, 300);
     
         return () => clearTimeout(timeoutId);
@@ -53,7 +57,7 @@ export default function ViolenceCardGrid() {
             <div className="flex justify-between">
             {violenceData && 
                 <p className="text-gray-600">
-                    Showing {violenceData.incidents.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0} - {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)} of {totalCount} incidents
+                    Showing {violenceData.incidents.length > 0 ? 1 : 0} - {violenceData.incidents.length} of {totalCount} incidents
                 </p>
             }
             <input type="text" value={searchQuery} onChange={handleSearch} placeholder="Search Incident" className="w-1/2 max-w-md border border-gray-300 rounded-md p-2" />

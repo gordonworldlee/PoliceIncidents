@@ -1,7 +1,20 @@
+"use client";
 import Link from "next/link";
 import Navbar from "./components/Navbar";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white text-black overflow-y-auto">
       {/* Header */}
@@ -36,14 +49,21 @@ export default function Home() {
         </p>
 
         {/* Search Bar */}
-        <div className="mt-6 flex items-center justify-center">
+        <form onSubmit={handleSearch} className="mt-6 flex items-center justify-center">
           <input
             type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="City, state, incident, bill name..."
             className="w-3/4 p-3 border border-gray-400 focus:outline-none"
           />
-          <button className="bg-[#D92552] text-white px-8 py-3">&gt;</button>
-        </div>
+          <button 
+            type="submit"
+            className="bg-[#D92552] text-white px-8 py-3 hover:bg-[#C01441] transition-colors"
+          >
+            &gt;
+          </button>
+        </form>
       </div>
 
       {/* History Section */}

@@ -1,5 +1,5 @@
 // apifetch.ts
-import { env } from "next-runtime-env";
+// import { env } from "next-runtime-env";
 
 /**
  * A fetch wrapper that automatically prepends the API URL from environment variables
@@ -11,7 +11,7 @@ export function fetchApi(
   path: string,
   options?: RequestInit,
 ): Promise<Response> {
-  let apiUrl = env("NEXT_PUBLIC_API_URL");
+  let apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   if (!apiUrl) {
     console.warn("NEXT_PUBLIC_API_URL is not defined in environment variables");

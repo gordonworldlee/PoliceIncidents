@@ -52,11 +52,18 @@ export default function LegislationModelPage() {
   //Fetch data for each page and set state variables correctly.
   useEffect(() => {
     const fetchLegislation = async () => {
+      let response = null;
       try {
         setLoading(true);
-        const response = await fetchApi(
-          `/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}&search=${searchQuery}`,
-        );
+        if (searchQuery) {
+          response = await fetchApi(
+            `/legislation?search=${searchQuery}`,
+          );
+        } else {
+          response = await fetchApi(
+            `/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`,
+          )
+        }
         console.log(
           `/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`,
         );

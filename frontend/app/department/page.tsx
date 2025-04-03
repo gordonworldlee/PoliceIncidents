@@ -26,12 +26,21 @@ export default function DepartmentModelPage() {
 
   useEffect(() => {
     const fetchDepartments = async () => {
+      let response = null;
+
       try {
         setLoading(true);
         const searchParam = searchQuery ? `&search=${searchQuery}` : "";
-        const response = await fetchApi(
-          `/agencies?page=${currentPage}&per_page=${ITEMS_PER_PAGE}${searchParam}`,
-        );
+        if (searchParam) {
+           response = await fetchApi(
+            `/agencies?${searchParam}`,
+          );
+        } else {
+          response = await fetchApi(
+            `/agencies?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`,
+          );
+        }
+
         // console.log(response)
 
         if (!response.ok) {
@@ -43,6 +52,8 @@ export default function DepartmentModelPage() {
         setTotalPages(data.total_pages || 0);
         setTotalCount(data.total_count || 0);
         setLoading(false);
+        console.log(data.departments);
+
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message);
