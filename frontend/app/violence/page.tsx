@@ -2,7 +2,6 @@
 import Navbar from "../components/Navbar";
 import ToggleView from "@/components/ToggleSliderView";
 import { Lato } from 'next/font/google';
-import SortButton from '@/components/SortButton';
 
 const lato = Lato({
   subsets: ["latin"],

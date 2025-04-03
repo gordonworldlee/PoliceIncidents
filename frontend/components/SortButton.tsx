@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FiChevronDown, FiChevronUp, FiArrowUp, FiArrowDown } from 'react-icons/fi';
+import { FiChevronDown, FiArrowUp, FiArrowDown } from 'react-icons/fi';
 
 interface SortOption {
   id: string;
