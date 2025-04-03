@@ -62,7 +62,7 @@ export default function ViolenceCardGrid() {
             }
             <input type="text" value={searchQuery} onChange={handleSearch} placeholder="Search Incident" className="w-1/2 max-w-md border border-gray-300 rounded-md p-2" />
             </div>
-            <ViolenceQueryCardGrid api_query={apiQuery} violenceData={violenceData} setViolenceData={setViolenceData} />
+            <ViolenceQueryCardGrid api_query={apiQuery} violenceData={violenceData} setViolenceData={setViolenceData} searchQuery={searchQuery}/>
             <PaginationControls currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange} />
         </div>
     )

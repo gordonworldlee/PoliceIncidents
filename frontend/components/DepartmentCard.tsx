@@ -5,6 +5,8 @@ import {
   BarChart2, Target, AlertTriangle
 } from 'lucide-react';
 import { Department } from '@/public/data/DepartmentData';
+import { HighlightText } from './HighlightText';
+import { i } from 'framer-motion/client';
 
 export const getScoreColor = (score: number) => {
   if (score < 30)
@@ -66,7 +68,12 @@ export function capitalize (word: string, delimeter: string) {
   return result.join(" ")
 }
 
-export const DepartmentCard = (DepartmentInstance: Department) => {
+interface DepartmentCardProps {
+  DepartmentInstance: Department;
+  searchQuery?: string;
+}
+
+export const DepartmentCard = ({ DepartmentInstance, searchQuery }: DepartmentCardProps) => {
   const deptName = capitalize(DepartmentInstance.agency_name.toLowerCase(), " ");
   const locationName = capitalize(DepartmentInstance.location_name.toLowerCase(), " ");
   const state = DepartmentInstance.state.toLowerCase();
@@ -88,8 +95,15 @@ export const DepartmentCard = (DepartmentInstance: Department) => {
           <Building2 color="blue" size={32} />
         </span>
         <header className="inline-block flex flex-col">
-          <div className="font-bold text-lg">{deptName} Police Department</div>
-          <div className="text-gray-600">{agencyType}</div>
+          <div className="font-bold text-lg">
+            {/* {deptName} */}
+            <HighlightText text={deptName + " Police Department"} searchTerm={searchQuery || ""} />
+            {/* Police Department */}
+          </div>
+          <div className="text-gray-600">
+            <HighlightText text={agencyType} searchTerm={searchQuery || ""} />
+            {/* {agencyType} */}
+          </div>
         </header>
       </div>
       {/* Header end */}
@@ -101,7 +115,10 @@ export const DepartmentCard = (DepartmentInstance: Department) => {
           </span>
           <div className="min-w-0">
             <header className="font-bold whitespace-nowrap">Location</header>
-            <div className="text-[0.85rem] lg:text-sm ">{locationName}, {state.toUpperCase()}</div>
+            <div className="text-[0.85rem] lg:text-sm ">
+              <HighlightText text={locationName + ", " + state.toUpperCase()} searchTerm={searchQuery || ""} />
+              {/* {locationName}, {state.toUpperCase()} */}
+              </div>
           </div>
         </div>
         <div className="flex items-start gap-x-1">
@@ -110,7 +127,10 @@ export const DepartmentCard = (DepartmentInstance: Department) => {
           </span>
           <div className="min-w-0">
             <header className="font-bold whitespace-nowrap">Coordinates</header>
-            <div className="text-[0.85rem] lg:text-sm ">{coordinates}</div>
+            <div className="text-[0.85rem] lg:text-sm ">
+              <HighlightText text={coordinates} searchTerm={searchQuery || ""} />
+              {/* {coordinates} */}
+            </div>
           </div>
         </div>
       </div>
