@@ -5,13 +5,13 @@ import os
 
 def connect_to_db():
     try:
-        #load_dotenv()
-        POSTGRES_USER="postgres"
-        POSTGRES_PASSWORD="example567"
-        POSTGRES_DB="prod_db"
-        DB_ADDRESS="justicewatch.me"
-        DB_PORT=5432
-        DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{DB_ADDRESS}:{DB_PORT}/{POSTGRES_DB}"
+        load_dotenv()
+        POSTGRES_USER = os.getenv("POSTGRES_USER")
+        POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+        POSTGRES_DB = os.getenv("POSTGRES_DB")
+        DB_ADDRESS = os.getenv("DB_ADDRESS")
+        DB_PORT = os.getenv("DB_PORT")
+        DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{DB_ADDRESS}:
         print(f"Connecting to DB with string: {DATABASE_URL}")
         engine = create_engine(DATABASE_URL)
         return engine
