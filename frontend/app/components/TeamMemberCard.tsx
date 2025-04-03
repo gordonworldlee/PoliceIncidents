@@ -5,6 +5,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 export interface TeamMember {
   name: string;
+  gitLabName?: string;
   username: string;
   role: string;
   bio: string;

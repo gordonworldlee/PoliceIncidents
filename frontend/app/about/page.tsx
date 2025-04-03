@@ -8,6 +8,7 @@ import { fetchUserStats } from "../utils/gitlab";
 const teamMembers: Omit<TeamMember, "stats">[] = [
   {
     name: "Gordon Lee",
+    gitLabName: "Gordon",
     username: "gordonworldlee",
     role: "Backend Systems Architecture",
     bio: "Gordon Lee's favorite movies are Black Swan, Virgin Suicides, and Pride and Prejudice",
@@ -53,7 +54,10 @@ async function TeamMemberWithStats({
 }: {
   member: Omit<TeamMember, "stats">;
 }) {
-  const stats = await fetchUserStats(member.username, member.name);
+  const stats = await fetchUserStats(
+    member.username,
+    member.gitLabName ?? member.name,
+  );
   const updatedMember: TeamMember = {
     ...member,
     stats: stats,
