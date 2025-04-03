@@ -49,7 +49,7 @@ export default function DepartmentModelPage() {
         setLoading(true);
         
         // Build the query string
-        let queryParams = [];
+        const queryParams = [];
         
         // Add pagination parameters
         queryParams.push(`page=${currentPage}`);

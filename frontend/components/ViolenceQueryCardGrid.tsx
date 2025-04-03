@@ -41,7 +41,7 @@ export default function ViolenceQueryCardGrid({
       }
     };
     fetchViolence();
-  }, [api_query]);
+  }, [api_query, setViolenceData]);
 
   return (
     <div className="my-2">

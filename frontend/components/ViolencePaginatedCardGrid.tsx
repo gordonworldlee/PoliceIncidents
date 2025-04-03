@@ -41,12 +41,12 @@ export default function ViolenceCardGrid() {
             setTotalPages(violenceData.total_pages);
             setTotalCount(violenceData.total_count);
         }
-    }, [violenceData])
+    }, [violenceData, setViolenceData])
     
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             // Build the query parameters
-            let queryParams = [];
+            const queryParams = [];
             
             // Add pagination parameters
             queryParams.push(`page=${currentPage}`);
