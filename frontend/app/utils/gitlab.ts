@@ -1,8 +1,7 @@
-import { cache } from "react";
 import { env } from "next-runtime-env";
 
 const GITLAB_API_BASE = "https://gitlab.com/api/v4";
-const PROJECT_ID = 67072062
+const PROJECT_ID = 67072062;
 const GITLAB_TOKEN = env("GITLAB_ACCESS_TOKEN") as string;
 
 export interface GitLabStats {
@@ -12,35 +11,20 @@ export interface GitLabStats {
   error?: string;
 }
 
-interface GitLabApiResponse<T> {
-  data: T | null;
-  error?: string;
-}
-
-interface GitLabCommit {
-  id: string;
-  short_id: string;
-  title: string;
-  author_name: string;
-  created_at: string;
-}
-
-interface GitLabIssue {
-  id: number;
-  iid: number;
-  title: string;
-  state: string;
-  created_at: string;
-}
-
-// Helper function to make API calls with error handling
-async function fetchGitLabApi<T>(url: string): Promise<GitLabApiResponse<T>> {
+export const fetchUserStats = async (
+  username: string,
+  name: string,
+): Promise<GitLabStats> => {
   if (!GITLAB_TOKEN) {
     return {
-      data: null,
+      commits: 0,
+      openIssues: 0,
+      closedIssues: 0,
       error: "GitLab access token not configured",
     };
   }
+
+  // await new Promise((resolve) => setTimeout(resolve, 2000)); // 2 second delay
 
   try {
     const headers = {
@@ -48,80 +32,94 @@ async function fetchGitLabApi<T>(url: string): Promise<GitLabApiResponse<T>> {
       Accept: "application/json",
     };
 
-    const response = await fetch(url, {
+    const requestOptions = {
       headers,
       next: {
         revalidate: 900, // Cache for 15 minutes
-        tags: ["gitlab-stats"], // Add cache tag for manual revalidation if needed
+        tags: ["gitlab-stats"],
       },
-    });
-
-    if (!response.ok) {
-      throw new Error(`GitLab API responded with status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return { data };
-  } catch (error) {
-    console.error("GitLab API Error:", error);
-    return {
-      data: null,
-      error: error instanceof Error ? error.message : "Unknown error occurred",
     };
-  }
-}
 
-export const fetchUserStats = cache(
-  async (username: string, name: string): Promise<GitLabStats> => {
-    // await new Promise((resolve) => setTimeout(resolve, 20000)); // 2 second delay
-    const [commitsResponse, openIssuesResponse, closedIssuesResponse] =
-      await Promise.all([
-        fetchGitLabApi<GitLabCommit[]>(
-          `${GITLAB_API_BASE}/projects/${PROJECT_ID}/repository/commits?author=${name}`,
-        ),
-        fetchGitLabApi<GitLabIssue[]>(
-          `${GITLAB_API_BASE}/projects/${PROJECT_ID}/issues?author_username=${username}&state=opened`,
-        ),
-        fetchGitLabApi<GitLabIssue[]>(
-          `${GITLAB_API_BASE}/projects/${PROJECT_ID}/issues?author_username=${username}&state=closed`,
-        ),
-      ]);
+    /*
+    fetch(
+      `${GITLAB_API_BASE}/projects/${PROJECT_ID}/repository/commits?author=${name}`,
+      requestOptions,
+    ), */
+    // Make all three requests in parallel
+    const [openIssuesResponse, closedIssuesResponse] = await Promise.all([
+      fetch(
+        `${GITLAB_API_BASE}/projects/${PROJECT_ID}/issues?author_username=${username}&state=opened`,
+        requestOptions,
+      ),
+      fetch(
+        `${GITLAB_API_BASE}/projects/${PROJECT_ID}/issues?author_username=${username}&state=closed`,
+        requestOptions,
+      ),
+    ]);
 
-    // If any request failed, return error with the specific error message
-    if (
-      commitsResponse.error ||
-      openIssuesResponse.error ||
-      closedIssuesResponse.error
-    ) {
+    // Check if any requests failed
+    if (!openIssuesResponse.ok || !closedIssuesResponse.ok) {
       return {
         commits: 0,
         openIssues: 0,
         closedIssues: 0,
         error:
-          commitsResponse.error ||
-          openIssuesResponse.error ||
-          closedIssuesResponse.error,
+          `One or more GitLab API requests failed: ` +
+          `openIssues(${openIssuesResponse.status}), closedIssues(${closedIssuesResponse.status})`,
       };
     }
 
-    // If any of the data is null (which shouldn't happen if no error), return zeroes
-    if (
-      !commitsResponse.data ||
-      !openIssuesResponse.data ||
-      !closedIssuesResponse.data
-    ) {
-      return {
-        commits: 0,
-        openIssues: 0,
-        closedIssues: 0,
-        error: "Failed to fetch complete GitLab statistics",
-      };
+    // For commits, use pagination to count
+    let totalCommits = 0;
+    let currentPage = 1;
+    const perPage = 100;
+    let hasMoreCommits = true;
+
+    // Paginate through commits
+    while (hasMoreCommits) {
+      const commitsResponse = await fetch(
+        `${GITLAB_API_BASE}/projects/${PROJECT_ID}/repository/commits?author=${name}&page=${currentPage}&per_page=${perPage}`,
+        requestOptions,
+      );
+
+      if (!commitsResponse.ok) {
+        return {
+          commits: 0,
+          openIssues: 0,
+          closedIssues: 0,
+          error: `GitLab commits API request failed: commits(${commitsResponse.status})`,
+        };
+      }
+
+      // Parse the response to get the commits array
+      const commits = await commitsResponse.json();
+
+      // Add the number of commits on this page
+      totalCommits += commits.length;
+
+      // Check if we've reached the last page
+      if (commits.length < perPage) {
+        hasMoreCommits = false;
+      } else {
+        currentPage++;
+      }
     }
 
+    // Extract the counts directly from the headers
     return {
-      commits: commitsResponse.data.length,
-      openIssues: openIssuesResponse.data.length,
-      closedIssues: closedIssuesResponse.data.length,
+      commits: totalCommits,
+      openIssues: parseInt(openIssuesResponse.headers.get("x-total") || "0"),
+      closedIssues: parseInt(
+        closedIssuesResponse.headers.get("x-total") || "0",
+      ),
     };
-  },
-);
+  } catch (error) {
+    console.error("GitLab API Error:", error);
+    return {
+      commits: 0,
+      openIssues: 0,
+      closedIssues: 0,
+      error: error instanceof Error ? error.message : "Unknown error occurred",
+    };
+  }
+};
