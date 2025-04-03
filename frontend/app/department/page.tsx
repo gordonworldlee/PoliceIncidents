@@ -29,6 +29,7 @@ export default function DepartmentModelPage() {
 
   // Mapping from UI friendly names to actual API parameter names
   const sortOptions = [
+    { id: 'agency_name', label: 'Department Name' },
     { id: 'calc_police_violence_score', label: 'Violence' },
     { id: 'calc_police_funding_score', label: 'Funding' },
     { id: 'calc_overall_score', label: 'Overall' },
