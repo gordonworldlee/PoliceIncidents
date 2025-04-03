@@ -173,7 +173,7 @@ export default function LegislationModelPage() {
             <>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {legislationData.map((bill, index) => (
-                  <LegislationCard key={index} bill={bill} />
+                  <LegislationCard key={index} bill={bill} searchQuery={searchQuery} />
                 ))}
               </div>
 

@@ -218,7 +218,7 @@ export default async function ViolenceInstancePage({
                   key={index}
                   href={`/department/${department.agency_name}`}
                 >
-                  <DepartmentCard {...department} />
+                  <DepartmentCard DepartmentInstance={department} />
                 </Link>
               ),
             )}

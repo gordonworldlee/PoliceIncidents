@@ -41,7 +41,7 @@ export default function SearchPage() {
     setError(null);
 
     try {
-      // Make parallel requests for better performance
+        // make 3 requests to api
       const [deptResponse, incidentResponse, legResponse] = await Promise.all([
         fetchApi(`/agencies?search=${query}`),
         fetchApi(`/incidents?search=${query}`),
@@ -63,7 +63,6 @@ export default function SearchPage() {
     }
   };
 
-  // Debounced search
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (searchQuery) {
@@ -136,7 +135,7 @@ export default function SearchPage() {
                       {departments.map((department: Department) => (
                         <div key={department.id || department.agency_name} className="w-80 flex-shrink-0">
                           <Link href={`/department/${department.agency_name}`}>
-                            <DepartmentCard {...department} />
+                            <DepartmentCard DepartmentInstance={department} searchQuery={searchQuery} />
                           </Link>
                         </div>
                       ))}
@@ -163,7 +162,7 @@ export default function SearchPage() {
                     <div className="flex space-x-4 min-w-min">
                       {incidents.map((incident: Violence) => (
                         <div key={incident.id} className="w-80 flex-shrink-0">
-                          <IncidentCard incident={incident} />
+                          <IncidentCard incident={incident} searchQuery={searchQuery || ""}/>
                         </div>
                       ))}
                     </div>
@@ -189,7 +188,7 @@ export default function SearchPage() {
                     <div className="flex space-x-4 min-w-min">
                       {legislation.map((bill: Legislation) => (
                         <div key={bill.id} className="w-80 flex-shrink-0">
-                          <LegislationCard bill={bill} />
+                          <LegislationCard bill={bill} searchQuery={searchQuery || ""} />
                         </div>
                       ))}
                     </div>

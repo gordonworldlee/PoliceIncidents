@@ -218,7 +218,7 @@ export default function DepartmentModelPage() {
                     key={department.id || department.agency_name}
                     href={`/department/${department.agency_name}`}
                   >
-                    <DepartmentCard {...department} />
+                    <DepartmentCard DepartmentInstance={department} searchQuery={searchQuery} />
                   </Link>
                 ))}
               </div>
