@@ -1,3 +1,4 @@
+//eslint-disable prefer-const
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -8,10 +9,14 @@ interface TotalIncidentMapProps {
   onMarkerClick: (incident: any) => void;
 }
 
-const TotalIncidentMap: React.FC<TotalIncidentMapProps> = ({ locations, onMarkerClick }) => {
+const TotalIncidentMap: React.FC<TotalIncidentMapProps> = ({
+  locations,
+  onMarkerClick,
+}) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
-  const mapsApiKey = process.env.NEXT_PUBLIC_MAPS_API_KEY as string;
+  //eslint-disable-next-line prefer-const
+  let mapsApiKey = process.env.NEXT_PUBLIC_MAPS_API_KEY as string;
   const mapInstanceRef = useRef<google.maps.Map | null>(null); // Ref to store map instance
 
   useEffect(() => {
@@ -31,7 +36,9 @@ const TotalIncidentMap: React.FC<TotalIncidentMapProps> = ({ locations, onMarker
         });
 
         const { Map } = await loader.importLibrary("maps");
-        const { Marker } = (await loader.importLibrary("marker")) as google.maps.MarkerLibrary;
+        const { Marker } = (await loader.importLibrary(
+          "marker",
+        )) as google.maps.MarkerLibrary;
 
         if (!mapRef.current) {
           setError("Map container not found.");
@@ -39,7 +46,8 @@ const TotalIncidentMap: React.FC<TotalIncidentMapProps> = ({ locations, onMarker
         }
 
         // Initialize the map
-        const initialPosition = locations.length > 0 ? locations[0] : { lat: 0, lng: 0 };
+        const initialPosition =
+          locations.length > 0 ? locations[0] : { lat: 0, lng: 0 };
         const mapOptions: google.maps.MapOptions = {
           center: initialPosition,
           zoom: 10,
