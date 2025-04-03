@@ -6,6 +6,7 @@ import { Lato } from "next/font/google";
 import PaginationControls from "@/components/PaginationControls";
 import LegislationCard from "@/components/LegislationCard";
 import { fetchApi } from "@/app/utils/apifetch";
+import FilterButton from '@/components/FilterButton';
 
 const lato = Lato({
   subsets: ["latin"],
@@ -48,6 +49,13 @@ export default function LegislationModelPage() {
   const [totalPages, setTotalPages] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const states = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'];
+  
+  const handleFilterChange = (selectedStates: string[]) => {
+    console.log('Selected states:', selectedStates);
+    // Apply your filtering logic here
+  };
 
   //Fetch data for each page and set state variables correctly.
   useEffect(() => {
@@ -140,6 +148,11 @@ export default function LegislationModelPage() {
             - {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)} of{" "}
             {totalCount} Bills
           </p>
+          <FilterButton 
+            label="State" 
+            options={states} 
+            onFilterChange={handleFilterChange} 
+          />
           <input
             type="text"
             value={searchQuery}
