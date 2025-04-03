@@ -6,6 +6,7 @@ import { DepartmentCard } from "@/components/DepartmentCard";
 import { Lato } from "next/font/google";
 import { Department } from "@/public/data/DepartmentData";
 import { fetchApi } from "@/app/utils/apifetch";
+import SortButton from '@/components/SortButton';
 
 const lato = Lato({
   subsets: ["latin"],
@@ -13,7 +14,7 @@ const lato = Lato({
 });
 
 // amount of card per page
-const ITEMS_PER_PAGE = 9; // changed from 6 to 12
+const ITEMS_PER_PAGE = 9;
 
 export default function DepartmentModelPage() {
   const [departments, setDepartments] = useState<Department[]>([]);
@@ -23,25 +24,51 @@ export default function DepartmentModelPage() {
   const [totalPages, setTotalPages] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortField, setSortField] = useState<string | null>(null);
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(null);
+
+  // Mapping from UI friendly names to actual API parameter names
+  const sortOptions = [
+    { id: 'calc_police_violence_score', label: 'Violence' },
+    { id: 'calc_police_funding_score', label: 'Funding' },
+    { id: 'calc_overall_score', label: 'Overall' },
+    { id: 'total_population', label: 'Population' }
+  ];
+  
+  const handleSortChange = (option: string | null, direction: 'asc' | 'desc' | null) => {
+    console.log('Sort by:', option, 'Direction:', direction);
+    setSortField(option);
+    setSortDirection(direction);
+    setCurrentPage(1); // Reset to first page when sort changes
+  };
 
   useEffect(() => {
     const fetchDepartments = async () => {
-      let response = null;
-
       try {
         setLoading(true);
-        const searchParam = searchQuery ? `&search=${searchQuery}` : "";
-        if (searchParam) {
-           response = await fetchApi(
-            `/agencies?${searchParam}`,
-          );
-        } else {
-          response = await fetchApi(
-            `/agencies?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`,
-          );
+        
+        // Build the query string
+        let queryParams = [];
+        
+        // Add pagination parameters
+        queryParams.push(`page=${currentPage}`);
+        queryParams.push(`per_page=${ITEMS_PER_PAGE}`);
+        
+        // Add search parameter if present
+        if (searchQuery) {
+          queryParams.push(`search=${encodeURIComponent(searchQuery)}`);
         }
-
-        // console.log(response)
+        
+        // Add sort parameters if present
+        if (sortField && sortDirection) {
+          queryParams.push(`sort_by=${sortField}`);
+          queryParams.push(`sort_order=${sortDirection}`);
+        }
+        
+        // Join all parameters with &
+        const queryString = queryParams.join('&');
+        
+        const response = await fetchApi(`/agencies?${queryString}`);
 
         if (!response.ok) {
           throw new Error("Failed to fetch departments");
@@ -67,7 +94,7 @@ export default function DepartmentModelPage() {
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [currentPage, searchQuery]);
+  }, [currentPage, searchQuery, sortField, sortDirection]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -185,20 +212,26 @@ export default function DepartmentModelPage() {
       </h1>
 
       {/* display the amount of instances showing */}
-      <div className="flex justify-between px-4 sm:px-6 lg:px-8 mt-4">
+      <div className="flex flex-col md:flex-row md:justify-between px-4 sm:px-6 lg:px-8 mt-4 gap-4">
         <p className="text-gray-600">
           Showing{" "}
           {departments.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}{" "}
           - {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)} of {totalCount}{" "}
           departments
         </p>
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={handleSearch}
-          placeholder="Search Department"
-          className="w-1/2 max-w-md border border-gray-300 rounded-md p-2"
-        />
+        <div className="flex flex-col md:flex-row gap-2">
+          <SortButton 
+            options={sortOptions} 
+            onSortChange={handleSortChange} 
+          />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={handleSearch}
+            placeholder="Search Department"
+            className="border border-gray-300 rounded-md p-2 w-full md:w-64"
+          />
+        </div>
       </div>
 
       <div className="flex items-center justify-center">

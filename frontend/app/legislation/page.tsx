@@ -7,6 +7,7 @@ import PaginationControls from "@/components/PaginationControls";
 import LegislationCard from "@/components/LegislationCard";
 import { fetchApi } from "@/app/utils/apifetch";
 import FilterButton from '@/components/FilterButton';
+import SortButton from '@/components/SortButton';
 
 const lato = Lato({
   subsets: ["latin"],
@@ -30,13 +31,6 @@ export interface Legislation {
   url: string;
 }
 
-// interface ApiResponse {
-//   current_page: number;
-//   legislation: Legislation[];
-//   total_pages?: number;
-//   total_items?: number;
-// }
-
 // Number of items to display per page
 const ITEMS_PER_PAGE = 9; // 3x3 grid
 
@@ -49,8 +43,26 @@ export default function LegislationModelPage() {
   const [totalPages, setTotalPages] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortField, setSortField] = useState<string | null>(null);
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(null);
 
   const states = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'];
+  
+  // Mapping from UI friendly names to actual API parameter names
+  const sortOptions = [
+    { id: 'state', label: 'State' },
+    { id: 'bill_number', label: 'Bill Number' },
+    { id: 'last_action', label: 'Last Action' },
+    { id: 'title', label: 'Title' },
+    { id: 'sponsors', label: 'Sponsors' }
+  ];
+  
+  const handleSortChange = (option: string | null, direction: 'asc' | 'desc' | null) => {
+    console.log('Sort by:', option, 'Direction:', direction);
+    setSortField(option);
+    setSortDirection(direction);
+    setCurrentPage(1); // Reset to first page when sort changes
+  };
   
   const handleFilterChange = (selectedStates: string[]) => {
     console.log('Selected states:', selectedStates);
@@ -60,24 +72,38 @@ export default function LegislationModelPage() {
   //Fetch data for each page and set state variables correctly.
   useEffect(() => {
     const fetchLegislation = async () => {
-      let response = null;
       try {
         setLoading(true);
+        
+        // Build the query string
+        let queryParams = [];
+        
+        // Add pagination parameters
+        queryParams.push(`page=${currentPage}`);
+        queryParams.push(`per_page=${ITEMS_PER_PAGE}`);
+        
+        // Add search parameter if present
         if (searchQuery) {
-          response = await fetchApi(
-            `/legislation?search=${searchQuery}`,
-          );
-        } else {
-          response = await fetchApi(
-            `/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`,
-          )
+          queryParams.push(`search=${encodeURIComponent(searchQuery)}`);
         }
-        console.log(
-          `/legislation?page=${currentPage}&per_page=${ITEMS_PER_PAGE}`,
-        );
+        
+        // Add sort parameters if present
+        if (sortField && sortDirection) {
+          queryParams.push(`sort_by=${sortField}`);
+          queryParams.push(`sort_order=${sortDirection}`);
+        }
+        
+        // Join all parameters with &
+        const queryString = queryParams.join('&');
+        
+        const response = await fetchApi(`/legislation?${queryString}`);
+        
+        console.log(`/legislation?${queryString}`);
+        
         if (!response.ok) {
           throw new Error(`Can't fetch legislation :(`);
         }
+        
         const data = await response.json();
         console.log(data);
         setLegislationData(data.legislation || []);
@@ -106,13 +132,13 @@ export default function LegislationModelPage() {
         setLoading(false);
       }
     };
-    // fetchLegislation();
+    
     const timeoutId = setTimeout(() => {
       fetchLegislation();
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [currentPage, searchQuery]);
+  }, [currentPage, searchQuery, sortField, sortDirection]);
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -139,8 +165,8 @@ export default function LegislationModelPage() {
           provides a comprehensive database of these laws, empowering users to
           stay informed and take action in support of meaningful reform.
         </p>
-        <div className="mt-2 flex justify-between px-4 sm:px-6 lg:px-8 mt-4">
-          <p className="text-gray-600 ">
+        <div className="mt-2 flex flex-col md:flex-row justify-between items-center gap-4 px-4 sm:px-6 lg:px-8">
+          <p className="text-gray-600">
             Showing{" "}
             {legislationData.length > 0
               ? (currentPage - 1) * ITEMS_PER_PAGE + 1
@@ -148,18 +174,24 @@ export default function LegislationModelPage() {
             - {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)} of{" "}
             {totalCount} Bills
           </p>
-          <FilterButton 
-            label="State" 
-            options={states} 
-            onFilterChange={handleFilterChange} 
-          />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={handleSearch}
-            placeholder="Search Legislation"
-            className="w-1/2 max-w-md border border-gray-300 rounded-md p-2"
-          />
+          <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+            <FilterButton 
+              label="State" 
+              options={states} 
+              onFilterChange={handleFilterChange} 
+            />
+            <SortButton 
+              options={sortOptions} 
+              onSortChange={handleSortChange} 
+            />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={handleSearch}
+              placeholder="Search Legislation"
+              className="w-full sm:w-64 border border-gray-300 rounded-md p-2"
+            />
+          </div>
         </div>
         <div className="my-2">
           <br />
