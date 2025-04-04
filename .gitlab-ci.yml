@@ -46,16 +46,23 @@ test_frontend:
 test_backend_unittests:
   stage: test
   image: python:latest
+  variables:
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: example567
+    POSTGRES_DB: prod_db
+    DB_ADDRESS: justicewatch.me
+    DB_PORT: "5432"
   before_script:
     - echo "Setting up Python environment..."
     - pip install --no-cache-dir -r backend/requirements.txt
   script:
     - echo "Running API"
     - cd backend
-    - nohup python3 mainAPI.py & # Start the server in the background
-    - sleep 10 # Wait for the server to start
+    - nohup python3 mainAPI.py &  # Start the server in the background
+    - sleep 10  # Wait for the server to start
     - echo "Running Python unit tests..."
     - python3 unit-tests.py
+
 
 test_backend_postman:
   image:
