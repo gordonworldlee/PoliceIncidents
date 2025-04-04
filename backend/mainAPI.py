@@ -56,9 +56,8 @@ def paginate_request(query, page_num, per_page):
 
     Args:
         query: The SQLAlchemy query object to paginate
-        page_num: The page number to fetch (0-indexed)
+        page_num: The page number to fetch (1-indexed)
         per_page: Number of items per page
-
     Returns:
         Modified query with pagination applied
     """
