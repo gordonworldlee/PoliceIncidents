@@ -80,9 +80,12 @@ build_production:
   script:
     # Build step
     - echo "NODE_ENV=production" > .env.prod
+    # This is all required because the frontend is not set up to use env variables from the environment, it needs them in a .env file
     - echo "GITLAB_ACCESS_TOKEN=$GITLAB_ACCESS_TOKEN" >> .env.prod
     - echo "NEXT_PUBLIC_MAPS_API_KEY=$NEXT_PUBLIC_MAPS_API_KEY" >> .env.prod
     - echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> .env.prod
+    # This is required because during Docker build step (when the frontend is compiled) env_file and env from docker-compose are not available
+    - cp .env.prod frontend/.env
     - echo "Building production image..."
     - make build-production
     - echo Printing all images
