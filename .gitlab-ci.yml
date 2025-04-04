@@ -80,6 +80,9 @@ build_production:
   script:
     # Build step
     - echo "NODE_ENV=production" > .env.prod
+    - echo "GITLAB_ACCESS_TOKEN=$GITLAB_ACCESS_TOKEN" > .env.prod
+    - echo "NEXT_PUBLIC_MAPS_API_KEY=$NEXT_PUBLIC_MAPS_API_KEY" > .env.prod
+    - echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" > .env.prod
     - echo "Building production image..."
     - make build-production
     - echo Printing all images
