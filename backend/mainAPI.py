@@ -63,7 +63,7 @@ def paginate_request(query, page_num, per_page):
         Modified query with pagination applied
     """
     # Calculate the offset based on the page number and items per page
-    offset = page_num * per_page
+    offset = (page_num - 1) * per_page
 
     # Add the limit and offset to the query
     paginated_query = query.limit(per_page).offset(offset)
@@ -96,7 +96,7 @@ def serialize_all(input):
 @api.route("/legislation", methods=["GET"])
 def get_legislation():
     # Pagination query params
-    page = int(request.args.get("page", 0))
+    page = int(request.args.get("page", 1))
     per_page = int(request.args.get("per_page", 10))
     # stmt = select(Legislation).offset(page * 10).limit(per_page)
     stmt = select(Legislation)
@@ -167,7 +167,7 @@ def get_legislation_by_id(legislation_id):
 def get_incidents():
     # Pagination query params
     # Pagination query params
-    page = int(request.args.get("page", 0))
+    page = int(request.args.get("page", 1))
     per_page = int(request.args.get("per_page", 10))
     # stmt = select(Legislation).offset(page * 10).limit(per_page)
     stmt = select(Incident)
@@ -230,7 +230,7 @@ def get_incident_by_id(incident_id):
 def get_agencies():
     # Pagination query params
     # Pagination query params
-    page = int(request.args.get("page", 0))
+    page = int(request.args.get("page", 1))
     per_page = int(request.args.get("per_page", 10))
     # stmt = select(Legislation).offset(page * 10).limit(per_page)
     stmt = select(Agency)
