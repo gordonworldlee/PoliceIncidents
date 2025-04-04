@@ -5,6 +5,7 @@ import PaginationControls from "./PaginationControls";
 import ViolenceQueryCardGrid from "./ViolenceQueryCardGrid";
 import { ViolenceAPIResponse } from "@/types/important"
 import SortButton from '@/components/SortButton';
+import FilterButton from '@/components/FilterButton';
 
 const ITEMS_PER_PAGE = 9; 
 
@@ -17,7 +18,15 @@ export default function ViolenceCardGrid() {
     const [searchQuery, setSearchQuery] = useState('');
     const [sortField, setSortField] = useState<string | null>(null);
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(null);
+    const [selectedState, setSelectedState] = useState<string | null>(null);
+    const [selectedCauseOfDeath, setSelectedCauseOfDeath] = useState<string | null>(null);
     const [apiQuery, setApiQuery] = useState<string>(`page=1&per_page=${ITEMS_PER_PAGE}`);
+
+    // List of states for filtering
+    const states = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'];
+
+    // List of common causes of death for filtering
+    const causesOfDeath = ['Gunshot', 'Physical restraint', 'Taser', 'Vehicle', 'Medical emergency', 'Asphyxiation', 'Beating', 'Chemical agent', 'Unknown'];
 
     const sortOptions = [
         { id: 'city', label: 'City' },
@@ -32,6 +41,18 @@ export default function ViolenceCardGrid() {
         setSortField(option);
         setSortDirection(direction);
         setCurrentPage(1); // Reset to first page when sort changes
+    };
+
+    const handleStateFilterChange = (selectedStateOption: string | null) => {
+        console.log('Selected state:', selectedStateOption);
+        setSelectedState(selectedStateOption);
+        setCurrentPage(1); // Reset to first page when filter changes
+    };
+
+    const handleCauseOfDeathFilterChange = (selectedCauseOption: string | null) => {
+        console.log('Selected cause of death:', selectedCauseOption);
+        setSelectedCauseOfDeath(selectedCauseOption);
+        setCurrentPage(1); // Reset to first page when filter changes
     };
 
     //Fetch data for each page and set state variables correctly.
@@ -57,6 +78,16 @@ export default function ViolenceCardGrid() {
                 queryParams.push(`search=${encodeURIComponent(searchQuery)}`);
             }
             
+            // Add state filter if selected
+            if (selectedState) {
+                queryParams.push(`state=${selectedState}`);
+            }
+            
+            // Add cause of death filter if selected
+            if (selectedCauseOfDeath) {
+                queryParams.push(`cause_of_death=${encodeURIComponent(selectedCauseOfDeath)}`);
+            }
+            
             // Add sort parameters if present
             if (sortField && sortDirection) {
                 queryParams.push(`sort_by=${sortField}`);
@@ -70,7 +101,7 @@ export default function ViolenceCardGrid() {
         }, 300);
     
         return () => clearTimeout(timeoutId);
-    }, [searchQuery, currentPage, sortField, sortDirection]);
+    }, [searchQuery, currentPage, sortField, sortDirection, selectedState, selectedCauseOfDeath]);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(e.target.value);
@@ -88,9 +119,21 @@ export default function ViolenceCardGrid() {
                 {violenceData && 
                     <p className="text-gray-600">
                         Showing {violenceData.incidents.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0} - {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)} of {totalCount} incidents
+                        {selectedState && <span> in {selectedState}</span>}
+                        {selectedCauseOfDeath && <span> with cause: {selectedCauseOfDeath}</span>}
                     </p>
                 }
                 <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+                    <FilterButton 
+                        label="State" 
+                        options={states} 
+                        onFilterChange={handleStateFilterChange} 
+                    />
+                    <FilterButton 
+                        label="Cause" 
+                        options={causesOfDeath} 
+                        onFilterChange={handleCauseOfDeathFilterChange} 
+                    />
                     <SortButton 
                         options={sortOptions} 
                         onSortChange={handleSortChange} 
