@@ -7,6 +7,7 @@ import { Lato } from "next/font/google";
 import { Department } from "@/public/data/DepartmentData";
 import { fetchApi } from "@/app/utils/apifetch";
 import SortButton from '@/components/SortButton';
+import FilterButton from '@/components/FilterButton';
 
 const lato = Lato({
   subsets: ["latin"],
@@ -26,6 +27,10 @@ export default function DepartmentModelPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortField, setSortField] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(null);
+  const [selectedState, setSelectedState] = useState<string | null>(null);
+
+  // List of states for filtering
+  const states = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'];
 
   // Mapping from UI friendly names to actual API parameter names
   const sortOptions = [
@@ -41,6 +46,12 @@ export default function DepartmentModelPage() {
     setSortField(option);
     setSortDirection(direction);
     setCurrentPage(1); // Reset to first page when sort changes
+  };
+  
+  const handleFilterChange = (selectedStateOption: string | null) => {
+    console.log('Selected state:', selectedStateOption);
+    setSelectedState(selectedStateOption);
+    setCurrentPage(1); // Reset to first page when filter changes
   };
 
   useEffect(() => {
@@ -58,6 +69,11 @@ export default function DepartmentModelPage() {
         // Add search parameter if present
         if (searchQuery) {
           queryParams.push(`search=${encodeURIComponent(searchQuery)}`);
+        }
+        
+        // Add state filter if selected
+        if (selectedState) {
+          queryParams.push(`state=${selectedState}`);
         }
         
         // Add sort parameters if present
@@ -95,7 +111,7 @@ export default function DepartmentModelPage() {
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [currentPage, searchQuery, sortField, sortDirection]);
+  }, [currentPage, searchQuery, sortField, sortDirection, selectedState]); // Added selectedState as dependency
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -219,8 +235,14 @@ export default function DepartmentModelPage() {
           {departments.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}{" "}
           - {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)} of {totalCount}{" "}
           departments
+          {selectedState && <span> in {selectedState}</span>}
         </p>
         <div className="flex flex-col md:flex-row gap-2">
+          <FilterButton 
+            label="State" 
+            options={states} 
+            onFilterChange={handleFilterChange} 
+          />
           <SortButton 
             options={sortOptions} 
             onSortChange={handleSortChange} 

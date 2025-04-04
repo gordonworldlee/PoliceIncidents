@@ -45,6 +45,7 @@ export default function LegislationModelPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortField, setSortField] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(null);
+  const [selectedState, setSelectedState] = useState<string | null>(null);
 
   const states = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'];
   
@@ -64,9 +65,10 @@ export default function LegislationModelPage() {
     setCurrentPage(1); // Reset to first page when sort changes
   };
   
-  const handleFilterChange = (selectedStates: string[]) => {
-    console.log('Selected states:', selectedStates);
-    // Apply your filtering logic here
+  const handleFilterChange = (selectedStateOption: string | null) => {
+    console.log('Selected state:', selectedStateOption);
+    setSelectedState(selectedStateOption);
+    setCurrentPage(1); // Reset to first page when filter changes
   };
 
   //Fetch data for each page and set state variables correctly.
@@ -85,6 +87,11 @@ export default function LegislationModelPage() {
         // Add search parameter if present
         if (searchQuery) {
           queryParams.push(`search=${encodeURIComponent(searchQuery)}`);
+        }
+        
+        // Add state filter if selected
+        if (selectedState) {
+          queryParams.push(`state=${selectedState}`);
         }
         
         // Add sort parameters if present
@@ -138,7 +145,7 @@ export default function LegislationModelPage() {
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [currentPage, searchQuery, sortField, sortDirection]);
+  }, [currentPage, searchQuery, sortField, sortDirection, selectedState]);
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -173,6 +180,7 @@ export default function LegislationModelPage() {
               : 0}{" "}
             - {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)} of{" "}
             {totalCount} Bills
+            {selectedState && <span> in {selectedState}</span>}
           </p>
           <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
             <FilterButton 

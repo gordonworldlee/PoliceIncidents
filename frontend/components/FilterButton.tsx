@@ -1,16 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FiFilter } from 'react-icons/fi';
-import { FiCheck } from 'react-icons/fi';
+import { FiFilter, FiX } from 'react-icons/fi';
 
 interface FilterButtonProps {
   label: string;
   options: string[];
-  onFilterChange: (selectedOptions: string[]) => void;
+  onFilterChange: (selectedOption: string | null) => void;
 }
 
 const FilterButton: React.FC<FilterButtonProps> = ({ label, options, onFilterChange }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
@@ -31,32 +30,44 @@ const FilterButton: React.FC<FilterButtonProps> = ({ label, options, onFilterCha
     setIsOpen(!isOpen);
   };
 
-  const toggleOption = (option: string) => {
-    const updatedSelection = selectedOptions.includes(option)
-      ? selectedOptions.filter(item => item !== option)
-      : [...selectedOptions, option];
-    
-    setSelectedOptions(updatedSelection);
-    onFilterChange(updatedSelection);
+  const selectOption = (option: string) => {
+    // If the option is already selected, deselect it
+    const newSelection = selectedOption === option ? null : option;
+    setSelectedOption(newSelection);
+    onFilterChange(newSelection);
+  };
+
+  const clearFilter = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering the dropdown toggle
+    setSelectedOption(null);
+    onFilterChange(null);
   };
 
   return (
     <div className="relative inline-block" ref={dropdownRef}>
-      <button
+      <div 
         onClick={toggleDropdown}
-        className={`flex items-center px-4 py-2 rounded-md border ${
-          selectedOptions.length > 0 
+        className={`flex items-center px-4 py-2 rounded-md border cursor-pointer ${
+          selectedOption 
             ? 'bg-blue-50 border-blue-300 text-blue-700' 
             : 'bg-white border-gray-300 text-gray-700'
         } hover:bg-gray-50 transition-colors duration-200`}
       >
         <FiFilter className="mr-2" />
-        <span>
-          {selectedOptions.length > 0
-            ? `${label}: ${selectedOptions.length} selected`
+        <span className="mr-2">
+          {selectedOption
+            ? `${label}: ${selectedOption}`
             : `Filter by ${label}`}
         </span>
-      </button>
+        {selectedOption && (
+          <span 
+            onClick={clearFilter}
+            className="ml-1 text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 px-1 rounded cursor-pointer flex items-center justify-center"
+          >
+            <FiX size={14} />
+          </span>
+        )}
+      </div>
 
       {isOpen && (
         <div className="absolute mt-2 w-64 max-h-60 overflow-y-auto bg-white border border-gray-200 rounded-md shadow-lg z-10">
@@ -67,17 +78,23 @@ const FilterButton: React.FC<FilterButtonProps> = ({ label, options, onFilterCha
             {options.map((option) => (
               <div
                 key={option}
-                className="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                onClick={() => toggleOption(option)}
+                className="flex items-center justify-between px-4 py-3 hover:bg-gray-50 cursor-pointer"
+                onClick={() => selectOption(option)}
               >
-                <div className={`w-5 h-5 mr-3 flex items-center justify-center rounded border ${
-                  selectedOptions.includes(option)
-                    ? 'bg-blue-500 border-blue-500 text-white'
-                    : 'border-gray-300'
-                }`}>
-                  {selectedOptions.includes(option) && <FiCheck size={14} />}
+                <span className="text-gray-700">{option}</span>
+                <div className="relative">
+                  <div 
+                    className={`w-10 h-5 rounded-full transition-colors duration-200 ease-in-out ${
+                      selectedOption === option ? 'bg-blue-500' : 'bg-gray-200'
+                    }`}
+                  >
+                    <div 
+                      className={`absolute top-0.5 left-0.5 bg-white w-4 h-4 rounded-full shadow transform transition-transform duration-200 ease-in-out ${
+                        selectedOption === option ? 'translate-x-5' : 'translate-x-0'
+                      }`}
+                    />
+                  </div>
                 </div>
-                <span>{option}</span>
               </div>
             ))}
           </div>
