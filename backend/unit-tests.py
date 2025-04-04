@@ -7,57 +7,56 @@ class unitTestcases(unittest.TestCase):
         self.app = app.test_client()
         self.app.testing = True
 
-    def test_get_legislation(self):
-        response = self.app.get("/api/legislation?state=CA&bill_number=AB123&session_year=2025&subjects=Education&sponsors=John%20Doe")
+    def test_legislation_search_query(self):
+        response = self.app.get("/api/legislation?search=education")
         self.assertEqual(response.status_code, 200)
         self.assertIn("legislation", response.json)
 
-    def test_get_legislation_by_id(self):
-        response = self.app.get("/api/legislation/1")
+    def test_legislation_sort_by_title(self):
+        response = self.app.get("/api/legislation?sort_by=title&sort_order=asc")
         self.assertEqual(response.status_code, 200)
-        self.assertIn("id", response.json)
+        self.assertIn("legislation", response.json)
 
-    def test_get_legislation_by_id_not_found(self):
-        response = self.app.get("/api/legislation/999999")  # Assuming this ID doesn't exist
-        self.assertEqual(response.status_code, 404)
+    def test_legislation_invalid_sort_by(self):
+        response = self.app.get("/api/legislation?sort_by=not_a_column")
+        self.assertEqual(response.status_code, 400)
         self.assertIn("error", response.json)
 
-    def test_get_police_incidents(self):
-        response = self.app.get("/api/incidents?state=TX&city=Dallas&cause_of_death=Gunshot")
+    def test_get_incidents_with_search(self):
+        response = self.app.get("/api/incidents?search=gun")
         self.assertEqual(response.status_code, 200)
         self.assertIn("incidents", response.json)
 
-    def test_get_police_incident_by_id(self):
-        response = self.app.get("/api/incidents/1")
+    def test_incident_sort_by_city_desc(self):
+        response = self.app.get("/api/incidents?sort_by=city&sort_order=desc")
         self.assertEqual(response.status_code, 200)
-        self.assertIn("id", response.json)
+        self.assertIn("incidents", response.json)
 
-    def test_get_police_incident_by_id_not_found(self):
-        response = self.app.get("/api/incidents/999999")  # Assuming this ID doesn't exist
+    def test_incidents_invalid_sort_by(self):
+        response = self.app.get("/api/incidents?sort_by=invalid_column")
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("error", response.json)
+
+    def test_agencies_search_term(self):
+        response = self.app.get("/api/agencies?search=police")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("departments", response.json)
+
+    def test_agencies_sort_by_name(self):
+        response = self.app.get("/api/agencies?sort_by=agency_name&sort_order=asc")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("departments", response.json)
+
+    def test_agency_by_invalid_id(self):
+        response = self.app.get("/api/agencies/999999")  # Nonexistent ID
         self.assertEqual(response.status_code, 404)
         self.assertIn("error", response.json)
 
-    def test_get_departments(self):
-        response = self.app.get("/api/agencies?page=1&per_page=10&state=IL&agency_name=CHICAGO&agency_type=police-department")
+    def test_get_root_info(self):
+        response = self.app.get("/")
         self.assertEqual(response.status_code, 200)
-        self.assertIn("departments", response.json)
-
-    def test_get_departments_by_id(self):
-        response = self.app.get("/api/agencies/1")
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("id", response.json)
-
-    def test_get_legislation_pagination(self):
-        response = self.app.get("/api/legislation?page=2&per_page=5")
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("legislation", response.json)
-        self.assertEqual(response.json["current_page"], 2)
-
-    def test_get_departments_pagination(self):
-        response = self.app.get("/api/agencies?page=3&per_page=7")
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("departments", response.json)
-        self.assertEqual(response.json["current_page"], 3)
+        self.assertIn("message", response.json)
+        self.assertEqual(response.json["message"], "JusticeWatch API")
 
 if __name__ == "__main__":
     unittest.main()
