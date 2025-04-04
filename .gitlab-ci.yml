@@ -51,7 +51,7 @@ test_backend_unittests:
     - pip install --no-cache-dir -r backend/requirements.txt
   script:
     - echo "Running API"
-    - cd oldBack
+    - cd backend
     - nohup python3 mainAPI.py & # Start the server in the background
     - sleep 10 # Wait for the server to start
     - echo "Running Python unit tests..."
@@ -70,7 +70,7 @@ test_backend_postman:
   script:
     # - nohup python3 mainAPI.py & # Start the server in the background
     # - sleep 10 # Wait for the server to start
-    - cd oldBack
+    - cd backend
     - echo "Running Postman Tests"
     - ls
     - newman run Testing.postman_collection.json
