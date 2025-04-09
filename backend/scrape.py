@@ -60,23 +60,7 @@ def extractAgency():
    cols_to_check = [
        'Agency Name', 'Agency Type', 'Location Name', 'State',
        'ORI Agency Identifier (if available)', 'Latitude (if available)',
-       'Longitude (if available)', 'Total Population',
-       'Calculated Police Funding Score (if available)',
-       'Calculated Police Violence Score (if available)',
-       'Calculated Police Accountability Score (if available)',
-       'Use of Force Complaints Reported (if available)',
-       'Police Shootings in 2013 (if available)',
-       'Police Shootings in 2014 (if available)',
-       'Police Shootings in 2015 (if available)',
-       'Police Shootings in 2016 (if available)',
-       'Police Shootings in 2017 (if available)',
-       'Police Shootings in 2018 (if available)',
-       'Police Shootings in 2019 (if available)',
-       'Police Shootings in 2020 (if available)',
-       'Police Shootings in 2021 (if available)',
-       'Calculated Overall Score (if available)',
-       'Criminal Complaints Reported (if available)',
-       'Civilian Complaints Reported (if available)'
+       'Longitude (if available)', 'Total Population'
    ]
 
 
@@ -101,7 +85,7 @@ def extractAgency():
    ]
 
 
-   return filter_card_df
+   return card_df
 
 
 
@@ -109,3 +93,9 @@ def extractLegislation():
    df = pd.read_csv('legislation.csv')
 
    return df.astype(str)
+
+filtered_agency_data = extractAgency()
+
+# Print the first row using .iloc
+print("First row of the filtered DataFrame:")
+print(filtered_agency_data.iloc[0])
