@@ -163,10 +163,10 @@ export default async function ViolenceInstancePage({
                 <strong>State:</strong> {instance.state}
               </p>
               <p>
-                <strong>Address:</strong> {instance.address}
+                <strong>Address:</strong> {instance.street_address}
               </p>
               <p>
-                <strong>ID:</strong> {instance.ori}
+                <strong>ID:</strong> {instance.ori_identifier}
               </p>
               <p>
                 <strong>Encounter Type:</strong> {instance.encounter_type}
@@ -176,7 +176,7 @@ export default async function ViolenceInstancePage({
                 {instance.agency_responsible}
               </p>
               <p>
-                <strong>Cause of Death:</strong> {instance.cause}
+                <strong>Cause of Death:</strong> {instance.cause_of_death}
               </p>
               <p>
                 <strong>Date:</strong> {instance.date}

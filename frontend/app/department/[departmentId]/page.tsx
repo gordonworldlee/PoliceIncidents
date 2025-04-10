@@ -41,15 +41,13 @@ export default async function DepartmentPage({
     return data.departments;
   };
 
-  const getViolenceConnections = async (ori_identifier: string) => {
-    const response = await fetchApi(
-      `/incidents?ori_identifier=${ori_identifier}`,
-    );
+  const getViolenceConnections = async (state: string) => {
+    const response = await fetchApi(`/incidents?state=${state}`);
     if (!response.ok) {
       throw new Error("Failed to fetch departments");
     }
     const data = await response.json();
-    return data.incidents;
+    return data.incidents.slice(0, 3);
   };
 
   const getLegislationConnections = async (state: string) => {
@@ -69,7 +67,7 @@ export default async function DepartmentPage({
   );
 
   const related_violence: Violence[] = await getViolenceConnections(
-    departmentInstance.ori_identifier,
+    departmentInstance.state,
   );
 
   const departmentName = capitalize(
