@@ -177,11 +177,7 @@ export default function AboutPage() {
             </div>
           </section>
 
-          <div className="text-center mt-8">
-            <Link className="text-blue-500 hover:underline" href="/">
-              Back to Home
-            </Link>
-          </div>
+          
         </div>
       </div>
     </div>
