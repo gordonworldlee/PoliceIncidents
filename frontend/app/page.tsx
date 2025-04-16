@@ -104,16 +104,6 @@ export default function Home() {
           <div key={i} className="bg-white p-4 mb-2 rounded"></div>
         ))}
       </div> */}
-
-      {/* Footer Links */}
-      <div className="max-w-3xl mx-auto mt-16 text-left px-4 py-8">
-        <Link
-          className="block text-lg font-semibold mb-2"
-          href="/department/austin"
-        >
-          POLICE SCORECARD FOR AUSTIN, TX &gt;
-        </Link>
-      </div>
     </div>
   );
 }
