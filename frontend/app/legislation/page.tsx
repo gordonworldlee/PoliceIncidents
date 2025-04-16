@@ -166,11 +166,8 @@ export default function LegislationModelPage() {
         >
           LEGISLATION
         </h1>
-        <p className="text-lg text-green-700 font-bold mt-2 mb-4">
-          Various pieces of legislation are being introduced to improve police
-          accountability and prevent excessive use of force. Our platform
-          provides a comprehensive database of these laws, empowering users to
-          stay informed and take action in support of meaningful reform.
+        <p className="text-lg text-green-700 font-bold mt-2 mb-4 text-center">
+         Justice demands truth. Silence enables injustice.
         </p>
         <div className="mt-2 flex flex-col md:flex-row justify-between items-center gap-4 px-4 sm:px-6 lg:px-8">
           <p className="text-gray-600">

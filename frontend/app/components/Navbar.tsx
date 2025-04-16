@@ -8,11 +8,11 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div id = "navbar" className="bg-[#FFF4E1] fixed top-0 right-0 left-0 z-20 py-4 px-6">
+    <div id = "navbar" className="bg-[#FFF9E5] fixed top-0 right-0 left-0 z-20 py-4 px-6">
       <div className="flex justify-between items-center">
         <Link className="text-2xl font-bold text-[#D92552]" href="/">
           <Image
-            src="/logo-32px.png"
+            src="/image.png"
             alt="JusticeWatch"
             width={251}
             height={32}
@@ -35,20 +35,20 @@ export default function Navbar() {
 
         {/* Desktop menu - hidden on medium and smaller screens */}
         <div className="hidden md:flex space-x-6">
-          <Link className="text-black font-medium" href="/department">AGENCIES</Link>
-          <Link className="text-black font-medium" href="/violence">INCIDENTS</Link>
-          <Link className="text-black font-medium" href="/legislation">LEGISLATION</Link>
-          <Link className="text-black font-medium" href="/about">ABOUT US</Link>
+          <Link className="text-brandblue font-bold" href="/department">AGENCIES</Link>
+          <Link className="text-brandblue font-bold" href="/violence">INCIDENTS</Link>
+          <Link className="text-brandblue font-bold" href="/legislation">LEGISLATION</Link>
+          <Link className="text-brandblue font-bold" href="/about">ABOUT US</Link>
         </div>
       </div>
 
       {/* Mobile dropdown menu */}
       {isOpen && (
         <div className="md:hidden pt-4 space-y-4">
-          <Link className="block text-black font-medium" href="/department">AGENCIES</Link>
-          <Link className="block text-black font-medium" href="/violence">INCIDENTS</Link>
-          <Link className="block text-black font-medium" href="/legislation">LEGISLATION</Link>
-          <Link className="block text-black font-medium" href="/about">ABOUT US</Link>
+          <Link className="block text-brandblue font-bold" href="/department">AGENCIES</Link>
+          <Link className="block text-brandblue font-bold" href="/violence">INCIDENTS</Link>
+          <Link className="block text-brandblue font-bold" href="/legislation">LEGISLATION</Link>
+          <Link className="block text-brandblue font-bold" href="/about">ABOUT US</Link>
         </div>
       )}
     </div>

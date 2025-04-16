@@ -11,6 +11,7 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        brandblue: '#DE1B52'
       },
       keyframes: {
         typing: {
