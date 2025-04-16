@@ -223,11 +223,13 @@ export default function DepartmentModelPage() {
     <div className="min-h-screen text-black pt-20 overflow-y-auto">
       <Navbar />
       <h1
-        className={`${lato.className} text-[#D63C68] text-5xl text-center font-bold mt-8`}
+      className={`${lato.className} text-[#D63C68] text-5xl text-center font-bold mt-8`}
       >
-        DEPARTMENT MODEL
+        DEPARTMENT SCORES
       </h1>
-
+      <p className="text-lg text-[#D63C68] font-bold mt-8 mb-4 text-center">
+        Who watches the watchmen. We will.
+      </p>
       {/* display the amount of instances showing */}
       <div className="flex flex-col md:flex-row md:justify-between px-4 sm:px-6 lg:px-8 mt-4 gap-4">
         <p className="text-gray-600">

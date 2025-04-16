@@ -104,6 +104,7 @@ export default function Home() {
           <div key={i} className="bg-white p-4 mb-2 rounded"></div>
         ))}
       </div> */}
+
     </div>
   );
 }
