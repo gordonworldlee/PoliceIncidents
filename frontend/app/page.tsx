@@ -44,8 +44,7 @@ export default function Home() {
           <span> at a time.</span>
         </h1>
         <p className="mt-4 text-center mt-14">
-          Search across thousands of U.S. records, or visit your city&apos;s
-          scorecard, <span className="font-bold">here &gt;</span>
+          Search across thousands of U.S. records, or visit your city
         </p>
 
         {/* Search Bar */}
