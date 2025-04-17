@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import Link from "next/link";
 import TeamMemberCard, { TeamMember } from "@/app/components/TeamMemberCard";
 import TeamMemberCardSkeleton from "@/app/components/skeleton/TeamMemberCardSkeleton";
 import Navbar from "@/app/components/Navbar";
