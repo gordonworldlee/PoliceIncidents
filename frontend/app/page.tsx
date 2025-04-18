@@ -64,8 +64,8 @@ export default function Home() {
           </button>
         </form>
       </div>
-
-      {/* History Section */}
+      
+      {/* History Section 
       <div className="max-w-3xl mx-auto mt-12 px-4">
         <h2 className="text-lg font-semibold mb-4">History</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -95,7 +95,7 @@ export default function Home() {
           </Link>
         </div>
       </div>
-
+*/}
       {/* Make it scrollable
       <div className="max-w-3xl mx-auto mt-12 px-4 pb-32">
         <h2 className="text-lg font-semibold mb-4"></h2>
