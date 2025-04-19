@@ -8,7 +8,7 @@ import ViolenceMapWrapper from "./ViolenceMapWrapper";
 
 
 export default function ToggleView() {
-  const [view, setView] = useState<"map" | "cards">("cards");
+  const [view, setView] = useState<"map" | "cards">("map");
 
   return (
     <div className="w-full">

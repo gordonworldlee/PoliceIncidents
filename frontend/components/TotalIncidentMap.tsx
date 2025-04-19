@@ -9,6 +9,7 @@ interface TotalIncidentMapProps {
   onMarkerClick: (incident: any) => void;
 }
 
+
 const TotalIncidentMap: React.FC<TotalIncidentMapProps> = ({
   locations,
   onMarkerClick,
@@ -44,15 +45,15 @@ const TotalIncidentMap: React.FC<TotalIncidentMapProps> = ({
           setError("Map container not found.");
           return;
         }
-
+        
         // Initialize the map
-        const initialPosition =
-          locations.length > 0 ? locations[0] : { lat: 0, lng: 0 };
+        const US_CENTER = { lat: 37.0902, lng: -95.7129 };
+        const US_ZOOM = 4;
         const mapOptions: google.maps.MapOptions = {
-          center: initialPosition,
-          zoom: 10,
+          center: US_CENTER,
+          zoom: US_ZOOM,
         };
-
+        
         // Initialize map only once and store it in a ref
         mapInstanceRef.current = new Map(mapRef.current, mapOptions);
 
