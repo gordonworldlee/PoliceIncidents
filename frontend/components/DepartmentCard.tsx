@@ -87,7 +87,7 @@ export const DepartmentCard = ({ DepartmentInstance, searchQuery }: DepartmentCa
   const overallColor = getScoreColor(overallScore)
   return (
     // Card Container
-    <div className="rounded-lg transition-all shadow-lg w-full border-[1px] bg-white border-gray-300 hover:border-black hover:shadow-xl hover:-translate-y-1">
+    <div className="rounded-lg transition-all shadow-lg w-full border-[1px] bg-gradient-to-br from-white via-blue-50 to-pink-50 border-gray-300 hover:border-black hover:shadow-xl hover:-translate-y-1">
       {/* Header start */}
       <div className="pb-2 bg-[#E7F3FA] pt-4 px-4 flex gap-4">
         <span className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-200">

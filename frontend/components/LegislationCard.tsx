@@ -58,46 +58,47 @@ const stateTranslation: {[key: string]: string} = {
   VT: "vermont"
 }
 
+
 const LegislationCard = ({ bill, searchQuery }: LegislationCardProps) => {
   return (
     <Link
       key={bill.id}
       href={`/legislation/${bill.id}`}
-      className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow flex flex-col justify-center items-center text-center space-y-4 min-h-[250px] w-full"
+      className="relative bg-gradient-to-br from-white via-blue-50 to-pink-50 p-6 rounded-xl shadow-lg border-l-4 border-blue-500 transition-all duration-200 hover:scale-[1.03] hover:shadow-2xl flex flex-col w-full max-w-md mx-auto"
     >
-      <h2 className="text-xl font-bold text-blue-600">
-        <HighlightText text={bill.title} searchTerm={searchQuery || ""} />
-        {/* {bill.title} */}
-      </h2>
-      <img
-        src={`/flags/${stateTranslation[bill.state]}.png`}
-        alt={`flag of ${bill.state}`}
-        className="w-32 h-24"
-      />
-      <div className="text-gray-700 space-y-1">
+      {/* Accent bar */}
+      <span className="absolute left-0 top-0 h-full w-1 bg-blue-500 rounded-l-xl" />
+      {/* Header: Flag and Title */}
+      <div className="flex items-center gap-4 mb-4">
+        <img
+          src={`/flags/${stateTranslation[bill.state]}.png`}
+          alt={`flag of ${bill.state}`}
+          className="w-16 h-12 rounded shadow-md border border-blue-100 object-cover"
+        />
+        <h2 className="text-lg md:text-xl font-bold text-blue-700 text-left">
+          <HighlightText text={bill.title} searchTerm={searchQuery || ""} />
+        </h2>
+      </div>
+      {/* Info Section */}
+      <div className="text-gray-700 space-y-1 pl-1">
         <p className="text-sm">
-          <strong>State:</strong>
+          <span className="font-semibold text-blue-600">State:</span>{" "}
           <HighlightText text={bill.state} searchTerm={searchQuery || ""} />
-          {/* {bill.state} */}
         </p>
         <p className="text-sm">
-          <strong>Bill Number:</strong>
+          <span className="font-semibold text-blue-600">Bill Number:</span>{" "}
           <HighlightText text={bill.bill_number} searchTerm={searchQuery || ""} />
-          {/* {bill.bill_number} */}
         </p>
         <p className="text-sm">
-          <strong>Last Action:</strong>
+          <span className="font-semibold text-blue-600">Last Action:</span>{" "}
           <HighlightText text={bill.last_action || "N/A"} searchTerm={searchQuery || ""} />
-          {/* {bill.last_action || "N/A"} */}
         </p>
         <p className="text-sm">
-          <strong>Sponsors:</strong>
+          <span className="font-semibold text-blue-600">Sponsors:</span>{" "}
           <HighlightText text={bill.sponsors || "N/A"} searchTerm={searchQuery || ""} />
-          {/* {bill.sponsors || "N/A"} */}
         </p>
       </div>
     </Link>
   );
 };
-
 export default LegislationCard;

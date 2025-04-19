@@ -162,11 +162,11 @@ export default function LegislationModelPage() {
       <Navbar />
       <div className="p-4 pt-20">
         <h1
-          className={`${lato.className} text-green-700 text-5xl text-center font-bold mt-8`}
+          className={`${lato.className} text-blue-500 text-5xl text-center font-bold mt-8`}
         >
           LEGISLATION
         </h1>
-        <p className="text-lg text-green-700 font-bold mt-2 mb-4 text-center">
+        <p className="text-lg text-blue-500 font-bold mt-2 mb-4 text-center">
          Justice demands truth. Silence enables injustice.
         </p>
         <div className="mt-2 flex flex-col md:flex-row justify-between items-center gap-4 px-4 sm:px-6 lg:px-8">
