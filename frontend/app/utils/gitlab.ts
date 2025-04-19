@@ -78,7 +78,7 @@ export const fetchUserStats = async (
     // Paginate through commits
     while (hasMoreCommits) {
       const commitsResponse = await fetch(
-        `${GITLAB_API_BASE}/projects/${PROJECT_ID}/repository/commits?author=${name}&page=${currentPage}&per_page=${perPage}`,
+        `${GITLAB_API_BASE}/projects/${PROJECT_ID}/repository/commits?author=${name}&all=true&page=${currentPage}&per_page=${perPage}`,
         requestOptions,
       );
 
