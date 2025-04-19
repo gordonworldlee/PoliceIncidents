@@ -64,64 +64,6 @@ interface LegislationInstancePageProps {
   params: Promise<{ legislationId: string }>;
 }
 
-// const chamber_translation = {
-//   H: "House",
-//   S: "Senate",
-// };
-
-// const party_lookup = {
-//   D: "Democrat",
-//   R: "Republican",
-//   I: "Independent",
-//   L: "Libertarian",
-//   G: "Green",
-//   N: "Nonpartisan",
-// };
-
-// interface ViolenceInstance {
-//   id: string;
-//   city: string;
-//   state: string;
-//   encounter_type: string;
-//   cause: string;
-//   date: string;
-//   agency: string;
-//   image: string;
-// }
-
-// This is a mock data structure. In a real application, you'd fetch this data from an API or database
-// const incidents: ViolenceInstance[] = [
-//   {
-//     id: "incident1",
-//     city: "Houston",
-//     state: "TX",
-//     encounter_type: "Domestic Disturbance",
-//     cause: "Gun",
-//     date: "1/31/25",
-//     agency: "Farmington Police Department",
-//     image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png",
-//   },
-//   {
-//     id: "incident2",
-//     city: "Austin",
-//     state: "TX",
-//     encounter_type: "Mental Health/Welfare Check",
-//     cause: "Taser",
-//     date: "2/15/25",
-//     agency: "Volusia County Sheriff's Office",
-//     image: "https://dallaspolice.net/PublishingImages/badge-dpd.png",
-//   },
-//   {
-//     id: "incident3",
-//     city: "Dallas",
-//     state: "TX",
-//     encounter_type: "Violent Crime",
-//     cause: "Aphyxsiation",
-//     date: "3/1/25",
-//     agency: "Douglas County Sheriff's Office",
-//     image: "https://houstontx.gov/_siteAssets/images/citySeal125x125.png",
-//   },
-// ];
 
 export default async function LegislationInstancePage({
   params,
@@ -169,99 +111,128 @@ export default async function LegislationInstancePage({
   return (
     <div>
       <Navbar />
-      <div className="p-8 pt-20">
-        <div className="flex items-center space-x-4">
-          <img
-            src={`/flags/${stateTranslation[billData.state]}.png`}
-            alt={`flag of ${billData.state}`}
-            className="w-16 h-16"
-          />
-          <h1 className="text-3xl font-bold">{billData.title}</h1>
-        </div>
-        <br />
-        <p className="text-xl font-bold">
-          <span className="text-red-500">{billData.state}</span> |{" "}
-          <span className="text-green-500">{billData.session} </span> |{" "}
-          <span className="text-blue-500">{billData.bill_number}</span>
-        </p>
-        <br />
-
-        <div className="mb-6">
-          <h2 className="text-xl font-bold underline mb-2">Description</h2>
-          <p className="text-gray-700">{billData.description}</p>
-        </div>
-
-        <div className="mb-6">
-          <h2 className="text-xl font-bold underline mb-2">Bill Status</h2>
-          <p className="text-gray-700">
-            <span className="font-semibold">Last Action:</span>{" "}
-            {billData.last_action}
-          </p>
-        </div>
-
-        <div className="mb-6">
-          <h2 className="text-xl font-bold underline mb-2">Sponsor(s)</h2>
-          <p className="text-gray-700">{billData.sponsors}</p>
-        </div>
-
-        <div className="mb-6">
-          <h2 className="text-xl font-bold underline mb-2">Subject Areas</h2>
-          <p className="text-gray-700">{billData.subjects}</p>
-        </div>
-
-        <div className="mb-6">
-          <h2 className="text-xl font-bold underline mb-2">
-            Session Information
-          </h2>
-          <p className="text-gray-700">
-            <span className="font-semibold">Session:</span> {billData.session}
-            <br />
-            <span className="font-semibold">Session Year:</span>{" "}
-            {billData.session_year}
-          </p>
-        </div>
-
-        <div className="mb-6">
-          <h2 className="text-xl font-bold underline mb-2">Relevant Links</h2>
-          <p>
-            <a
-              href={billData.url}
-              className="text-blue-500 underline"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View on LegiScan
-            </a>
-          </p>
-        </div>
-
-        <div className="mb-6">
-          <h2 className="text-xl font-bold underline mb-2">
-            Relevant Instances of Violence
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
-            {violence_connections.map((incident: Violence, index: number) => (
-              <IncidentCard key={index} incident={incident} />
-            ))}
+      <div className="min-h-screen bg-white pt-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Header Section */}
+          <div className="bg-white rounded-lg shadow-md p-8 mb-6">
+            <div className="flex flex-col md:flex-row md:items-center gap-6">
+              <img
+                src={`/flags/${stateTranslation[billData.state]}.png`}
+                alt={`flag of ${billData.state}`}
+                className="w-20 h-20 object-cover rounded-lg shadow-sm"
+              />
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">{billData.title}</h1>
+                <div className="flex flex-wrap gap-3">
+                  <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">
+                    {billData.state}
+                  </span>
+                  <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
+                    {billData.session}
+                  </span>
+                  <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold">
+                    {billData.bill_number}
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div>
-          <h2 className="text-xl font-bold underline mb-2">
-            Relevant Departments
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {departments_connections.map(
-              (department: Department, index: number) => (
-                <Link
-                  className="w-full"
-                  key={index}
-                  href={`/department/${department.agency_name}`}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Main Content */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Description Card */}
+              <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                <h2 className="text-xl font-semibold text-blue-700 mb-4">Description</h2>
+                <p className="text-gray-700 leading-relaxed">{billData.description}</p>
+              </div>
+
+              {/* Bill Status Card */}
+              <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                <h2 className="text-xl font-semibold text-blue-700 mb-4">Bill Status</h2>
+                <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+                  <p className="text-gray-700">
+                    <span className="font-semibold">Last Action:</span>{" "}
+                    {billData.last_action}
+                  </p>
+                </div>
+              </div>
+
+              {/* Sponsors Card */}
+              <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                <h2 className="text-xl font-semibold text-blue-700 mb-4">Sponsor(s)</h2>
+                <p className="text-gray-700">{billData.sponsors}</p>
+              </div>
+            </div>
+
+            {/* Sidebar */}
+            <div className="space-y-6">
+              {/* Session Information Card */}
+              <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                <h2 className="text-xl font-semibold text-blue-700 mb-4">Session Information</h2>
+                <div className="space-y-3">
+                  <div className="flex justify-between py-2 border-b border-gray-100">
+                    <span className="text-gray-600">Session</span>
+                    <span className="font-medium text-gray-900">{billData.session}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-gray-100">
+                    <span className="text-gray-600">Year</span>
+                    <span className="font-medium text-gray-900">{billData.session_year}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Subject Areas Card */}
+              <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                <h2 className="text-xl font-semibold text-blue-700 mb-4">Subject Areas</h2>
+                <p className="text-gray-700">{billData.subjects}</p>
+              </div>
+
+              {/* Links Card */}
+              <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                <h2 className="text-xl font-semibold text-blue-700 mb-4">Relevant Links</h2>
+                <a
+                  href={billData.url}
+                  className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors w-full justify-center"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  <DepartmentCard DepartmentInstance={department} />
-                </Link>
-              ),
-            )}
+                  View on LegiScan
+                  <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Related Content Section */}
+          <div className="mt-8 space-y-8">
+            {/* Violence Instances */}
+            <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+              <h2 className="text-xl font-semibold text-blue-700 mb-6">Relevant Instances of Violence</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {violence_connections.map((incident: Violence, index: number) => (
+                  <IncidentCard key={index} incident={incident} />
+                ))}
+              </div>
+            </div>
+
+            {/* Related Departments */}
+            <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+              <h2 className="text-xl font-semibold text-blue-700 mb-6">Relevant Departments</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {departments_connections.map((department: Department, index: number) => (
+                  <Link
+                    className="block w-full transform hover:scale-102 transition-transform"
+                    key={index}
+                    href={`/department/${department.agency_name}`}
+                  >
+                    <DepartmentCard DepartmentInstance={department} />
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>

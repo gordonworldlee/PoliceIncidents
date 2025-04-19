@@ -81,141 +81,113 @@ export default async function DepartmentPage({
   return (
     <div>
       <Navbar />
-      <div className="pt-20 min-h-screen flex flex-col justify-center bg-white">
-        <h1
-          className={`${lato.className} text-[#D63C68] my-8 text-center text-3xl font-bold`}
-        >
-          {departmentName} Police Department
-        </h1>
-        <div className="rounded-lg mx-4 border p-4 my-4 shadow-lg">
-          <header className="border-b border-gray-300 font-bold text-xl">
-            Department Information
-          </header>
-          <div className="flex flex-col">
-            <div className="flex border-b pb-2 border-gray-300 justify-between pt-4">
-              <section className="font-bold text-gray-600">
-                Agency Name:{" "}
-              </section>{" "}
-              <span>
-                {capitalize(departmentInstance.agency_name.toLowerCase(), " ")}
-              </span>
+      <div className="pt-20 min-h-screen bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Department Header */}
+          <div className="bg-white rounded-lg shadow-sm p-8 mb-6 border-l-4 border-blue-600">
+            <h1 className={`${lato.className} text-3xl font-bold text-gray-900 mb-2`}>
+              {departmentName} Police Department
+            </h1>
+            <p className="text-blue-600">
+              {capitalize(departmentInstance.location_name.toLowerCase(), " ")}, {departmentInstance.state}
+            </p>
+          </div>
+
+          {/* Stats Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <div className="bg-blue-600 rounded-lg shadow-sm p-6 text-white transform hover:scale-105 transition-all">
+              <div className="text-blue-100 mb-1">Overall Score</div>
+              <div className="text-3xl font-semibold">{departmentInstance.calc_overall_score}</div>
             </div>
-            <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
-              <section className="font-bold text-gray-600">
-                Agency Type:{" "}
-              </section>{" "}
-              <span>
-                {capitalize(departmentInstance.agency_type.toLowerCase(), "-")}
-              </span>
+            <div className="bg-blue-600 rounded-lg shadow-sm p-6 text-white transform hover:scale-105 transition-all">
+              <div className="text-blue-100 mb-1">Police Funding Score</div>
+              <div className="text-3xl font-semibold">{departmentInstance.calc_police_funding_score}</div>
             </div>
-            <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
-              <section className="font-bold text-gray-600">Location: </section>{" "}
-              <span>
-                {capitalize(
-                  departmentInstance.location_name.toLowerCase(),
-                  " ",
-                )}
-              </span>
+            <div className="bg-blue-600 rounded-lg shadow-sm p-6 text-white transform hover:scale-105 transition-all">
+              <div className="text-blue-100 mb-1">Accountability Score</div>
+              <div className="text-3xl font-semibold">{departmentInstance.calc_police_accountability_score}</div>
             </div>
-            <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
-              <section className="font-bold text-gray-600">State: </section>{" "}
-              <span>
-                {capitalize(departmentInstance.state.toUpperCase(), " ")}
-              </span>
-            </div>
-            <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
-              <section className="font-bold text-gray-600">ORI: </section>{" "}
-              <span>{departmentInstance.ori_identifier}</span>
-            </div>
-            <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
-              <section className="font-bold text-gray-600">
-                Coordinates:{" "}
-              </section>{" "}
-              <span>
-                {departmentInstance.latitude}, {departmentInstance.longitude}
-              </span>
-            </div>
-            <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
-              <section className="font-bold text-gray-600">
-                Total Population:{" "}
-              </section>{" "}
-              <span>{departmentInstance.total_population}</span>
+            <div className="bg-blue-600 rounded-lg shadow-sm p-6 text-white transform hover:scale-105 transition-all">
+              <div className="text-blue-100 mb-1">Total Population</div>
+              <div className="text-3xl font-semibold">{departmentInstance.total_population.toLocaleString()}</div>
             </div>
           </div>
-        </div>
 
-        <div className="rounded-lg mx-4 border p-4 my-4 shadow-lg">
-          <header className="border-b border-gray-300 font-bold text-xl">
-            Performance Metric
-          </header>
-          <div className="flex flex-col">
-            <div className="flex border-b pb-2 border-gray-300 justify-between pt-4">
-              <section className="font-bold text-gray-600">
-                Overall Score:{" "}
-              </section>{" "}
-              <span>{departmentInstance.calc_overall_score}</span>
+          {/* Department Info and Performance Metrics */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            {/* Department Information */}
+            <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 hover:border-blue-400 transition-all hover:shadow-lg">
+              <h2 className="text-xl font-semibold mb-4 text-blue-700">Department Information</h2>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                  <span className="text-gray-600">Agency Type</span>
+                  <span className="font-medium text-blue-900">{capitalize(departmentInstance.agency_type.toLowerCase(), "-")}</span>
+                </div>
+                <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                  <span className="text-gray-600">ORI Identifier</span>
+                  <span className="font-medium text-blue-900">{departmentInstance.ori_identifier}</span>
+                </div>
+                <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                  <span className="text-gray-600">Location</span>
+                  <span className="font-medium text-blue-900">{departmentInstance.latitude}, {departmentInstance.longitude}</span>
+                </div>
+              </div>
             </div>
-            <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
-              <section className="font-bold text-gray-600">
-                Police Funding Score:{" "}
-              </section>{" "}
-              <span>{departmentInstance.calc_police_funding_score}</span>
-            </div>
-            <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
-              <section className="font-bold text-gray-600">
-                Police Accountability Score:{" "}
-              </section>{" "}
-              <span>{departmentInstance.calc_police_accountability_score}</span>
-            </div>
-            <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
-              <section className="font-bold text-gray-600">
-                Police Shooting Average:{" "}
-              </section>{" "}
-              <span>{departmentInstance.police_shootings_2021}</span>
-            </div>
-            <div className="flex border-b pb-2 border-gray-300 justify-between pt-2">
-              <section className="font-bold text-gray-600">
-                Use of Force Reported:{" "}
-              </section>{" "}
-              <span>{departmentInstance.use_of_force_complaints_reported}</span>
+
+            {/* Performance Metrics */}
+            <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 hover:border-blue-400 transition-all hover:shadow-lg">
+              <h2 className="text-xl font-semibold mb-4 text-blue-700">Performance Metrics</h2>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                  <span className="text-gray-600">Police Shootings (2021)</span>
+                  <span className="font-medium text-blue-900">{departmentInstance.police_shootings_2021}</span>
+                </div>
+                <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                  <span className="text-gray-600">Use of Force Reports</span>
+                  <span className="font-medium text-blue-900">{departmentInstance.use_of_force_complaints_reported}</span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="rounded-lg mx-4 border p-4 my-4 shadow-lg">
-          <header className="border-b mb-4 border-gray-300 font-bold text-xl">
-            Department Location:
-          </header>
-          <Map
-            latitude={parseFloat(departmentInstance.latitude)}
-            longitude={parseFloat(departmentInstance.longitude)}
-          />
-        </div>
-
-        <div className="text-left border-b-2 border-gray-300 rounded-lg shadow-md p-4 bg-white">
-          <p className="mt-4 text-xl font-bold underline">
-            View Incidents in {stateTranslation[departmentInstance.state]}
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {related_violence.map((incident, index) => (
-              <IncidentCard key={index} incident={incident} />
-            ))}
+          {/* Map Section */}
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-6 hover:shadow-lg transition-all">
+            <h2 className="text-xl font-semibold mb-4 text-blue-700">Department Location</h2>
+            <Map
+              latitude={parseFloat(departmentInstance.latitude)}
+              longitude={parseFloat(departmentInstance.longitude)}
+            />
           </div>
-          <p className="mt-4 text-xl font-bold underline">
-            View Legislation from {stateTranslation[departmentInstance.state]}
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {related_legislation.map(
-              (legislation: Legislation, index: number) => (
+
+          {/* Related Information */}
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-6 hover:shadow-lg transition-all">
+            <h2 className="text-xl font-semibold mb-6 text-blue-700">Related Information</h2>
+            
+            <h3 className="text-lg font-medium mb-4 text-blue-900">Recent Incidents in {stateTranslation[departmentInstance.state]}</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+              {related_violence.map((incident, index) => (
+                <IncidentCard key={index} incident={incident} />
+              ))}
+            </div>
+
+            <h3 className="text-lg font-medium mb-4 text-blue-900">Related Legislation in {stateTranslation[departmentInstance.state]}</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {related_legislation.map((legislation: Legislation, index: number) => (
                 <LegislationCard key={index} bill={legislation} />
-              ),
-            )}
+              ))}
+            </div>
           </div>
-        </div>
-        <div className="mt-6 text-center">
-          <Link className="text-blue-500 underline" href="/department">
-            Back to Department List
-          </Link>
+
+          {/* Back Link */}
+          <div className="text-center pb-8">
+            <Link 
+              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all hover:shadow-md" 
+              href="/department"
+            >
+              <span className="mr-2">←</span>
+              Back to Department List
+            </Link>
+          </div>
         </div>
       </div>
     </div>

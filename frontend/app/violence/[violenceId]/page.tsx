@@ -131,110 +131,136 @@ export default async function ViolenceInstancePage({
     return <div>Instance not found</div>;
   }
 
-  // Fetch related data
-  console.log(instance);
-  let related_departments = await getDepartmentConnections(
-    instance.ori_identifier,
-  );
+  let related_departments = await getDepartmentConnections(instance.ori_identifier);
   if (related_departments.length === 0) {
     related_departments = DepartmentInstances;
   }
   const related_legislation = await getLegislationConnections(instance.state);
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100 m-0 overflow-x-hidden">
+    <div>
       <Navbar />
-      <div className="flex-grow w-full max-w-full p-6 bg-white shadow-md rounded-lg min-h-full pt-20">
-        <h1 className="text-3xl font-bold text-center mb-4">
-          Violence Instance Details
-        </h1>
-        <img
-          src={instance.image_url}
-          alt={`${instance.agency_responsible} logo`}
-          className="w-32 h-32 mb-6 mx-auto"
-        />
-        <div className="mt-4 text-left space-y-2">
-          <div className="flex flex-row">
-            <div className="w-1/2">
-              <p>
-                <strong>City:</strong> {instance.city}
-              </p>
-              <p>
-                <strong>State:</strong> {instance.state}
-              </p>
-              <p>
-                <strong>Address:</strong> {instance.street_address}
-              </p>
-              <p>
-                <strong>ID:</strong> {instance.ori_identifier}
-              </p>
-              <p>
-                <strong>Encounter Type:</strong> {instance.encounter_type}
-              </p>
-              <p>
-                <strong>Agency Responsible:</strong>{" "}
-                {instance.agency_responsible}
-              </p>
-              <p>
-                <strong>Cause of Death:</strong> {instance.cause_of_death}
-              </p>
-              <p>
-                <strong>Date:</strong> {instance.date}
-              </p>
-            </div>
-            <div className="w-1/2">
-              <Map latitude={30.26993} longitude={-97.74315} />
+      <div className="min-h-screen bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          {/* Header Section */}
+          <div className="bg-white rounded-xl shadow-md p-8 mb-8">
+            <div className="flex flex-col md:flex-row items-center gap-8">
+              <img
+                src={instance.image_url}
+                alt={`${instance.agency_responsible} logo`}
+                className="w-32 h-32 object-cover rounded-lg shadow-md"
+              />
+              <div className="flex-1 text-center md:text-left">
+                <h1 className="text-3xl font-bold text-gray-900 mb-4">Incident Report</h1>
+                <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+                  <span className="px-4 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">
+                    {instance.city}, {instance.state}
+                  </span>
+                  <span className="px-4 py-1.5 bg-red-100 text-red-700 rounded-full text-sm font-semibold">
+                    {instance.encounter_type}
+                  </span>
+                  <span className="px-4 py-1.5 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold">
+                    {instance.date.split(' ')[0]}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
-          <p>
-            <strong>Description:</strong> {instance.description}
-          </p>
-          <NewsLink url={instance.news_link} />
-          {/* <div className="mt-6">
-            <ScorecardLink
-              agency_name={departmentInfo.agency_name}
-              department_image={departmentInfo.department_image}
-              location_name={departmentInfo.location_name}
-              state={departmentInfo.state}
-              latitude={departmentInfo.latitude}
-              longitude={departmentInfo.longitude}
-              calc_police_violence_score={departmentInfo.calc_police_violence_score}
-              police_shooting_avg={departmentInfo.police_shooting_avg}
-              calc_overall_score={departmentInfo.calc_overall_score}
-            />
-          </div> */}
-        </div>
 
-        {/* Add connections sections */}
-        <div className="mt-8">
-          <h2 className="text-xl font-bold underline mb-4">
-            Related Departments
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {related_departments.map(
-              (department: Department, index: number) => (
-                <Link
-                  className="w-full"
-                  key={index}
-                  href={`/department/${department.agency_name}`}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Main Information */}
+            <div className="space-y-6">
+              {/* Description Card */}
+              <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+                <h2 className="text-xl font-semibold text-blue-700 mb-4">Description</h2>
+                <p className="text-gray-700 leading-relaxed">{instance.description}</p>
+              </div>
+
+              {/* Details Card */}
+              <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+                <h2 className="text-xl font-semibold text-blue-700 mb-4">Incident Details</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-3">
+                    <div className="flex flex-col">
+                      <span className="text-sm text-gray-500">Agency Responsible</span>
+                      <span className="font-medium text-gray-900">{instance.agency_responsible}</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm text-gray-500">Cause of Death</span>
+                      <span className="font-medium text-gray-900">{instance.cause_of_death}</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm text-gray-500">ID</span>
+                      <span className="font-medium text-gray-900">{instance.ori_identifier}</span>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex flex-col">
+                      <span className="text-sm text-gray-500">Location</span>
+                      <span className="font-medium text-gray-900">{instance.street_address}</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm text-gray-500">Date</span>
+                      <span className="font-medium text-gray-900">{instance.date}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* News Link Card */}
+              <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+                <h2 className="text-xl font-semibold text-blue-700 mb-4">Additional Information</h2>
+                <Link 
+                  href={instance.news_link} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors group"
                 >
-                  <DepartmentCard DepartmentInstance={department} />
+                  <FaNewspaper className="mr-2" />
+                  <span>Read Full News Article</span>
+                  <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
                 </Link>
-              ),
-            )}
-          </div>
-        </div>
+              </div>
+            </div>
 
-        <div className="mt-8">
-          <h2 className="text-xl font-bold underline mb-4">
-            Related Legislation
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {related_legislation.map(
-              (legislation: Legislation, index: number) => (
-                <LegislationCard key={index} bill={legislation} />
-              ),
-            )}
+            {/* Map Section */}
+            <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+              <h2 className="text-xl font-semibold text-blue-700 mb-4">Location</h2>
+              <div className="h-[400px] rounded-lg overflow-hidden">
+                <Map latitude={30.26993} longitude={-97.74315} />
+              </div>
+            </div>
+          </div>
+
+          {/* Related Content */}
+          <div className="mt-12 space-y-8">
+            {/* Related Departments */}
+            <div className="bg-white rounded-xl shadow-md p-8 hover:shadow-lg transition-shadow">
+              <h2 className="text-2xl font-semibold text-blue-700 mb-6">Related Departments</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {related_departments.map((department: Department, index: number) => (
+                  <Link
+                    className="transform hover:scale-102 transition-transform"
+                    key={index}
+                    href={`/department/${department.agency_name}`}
+                  >
+                    <DepartmentCard DepartmentInstance={department} />
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Related Legislation */}
+            <div className="bg-white rounded-xl shadow-md p-8 hover:shadow-lg transition-shadow">
+              <h2 className="text-2xl font-semibold text-blue-700 mb-6">Related Legislation</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {related_legislation.map((legislation: Legislation, index: number) => (
+                  <LegislationCard key={index} bill={legislation} />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
