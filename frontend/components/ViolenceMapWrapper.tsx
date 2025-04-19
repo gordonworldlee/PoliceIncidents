@@ -7,7 +7,7 @@ import IncidentCard from "./ViolenceCard";
 import { Violence } from "@/types/important";
 import { fetchApi } from "@/app/utils/apifetch";
 
-const ITEMS_TO_LOAD = 500;
+const ITEMS_TO_LOAD = 1000;
 
 const ViolenceMapWrapper = () => {
   const [violenceData, setViolenceData] = useState<Violence[]>([]);
