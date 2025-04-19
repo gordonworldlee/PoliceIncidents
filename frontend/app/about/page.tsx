@@ -10,7 +10,7 @@ const teamMembers: Omit<TeamMember, "stats">[] = [
     gitLabName: "Gordon",
     username: "gordonworldlee",
     role: "Backend Systems Architecture",
-    bio: "I am a sophmore learning Computer Science. Gordon Lee's favorite movies are Black Swan, Virgin Suicides, and Pride and Prejudice",
+    bio: "I am a sophmore learning Computer Science. My favorite movies are Black Swan, Virgin Suicides, and Pride and Prejudice. This summer I will be interning at SpaceX for the Starsihp team.",
     photoUrl: "/headshots/gordon.jpeg",
     gitlabUrl: "https://gitlab.com/gordonworldlee",
   },
