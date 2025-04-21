@@ -34,7 +34,7 @@ export default function Home() {
             <span className="absolute left-1/2 bottom-0 h-[2px] w-0 bg-[#D92552] transition-all duration-300 ease-out group-hover:w-full transform -translate-x-1/2"></span>
           </Link>
           <span>, and </span>
-          <Link href="/incident" className="relative inline-block group">
+          <Link href="/violence" className="relative inline-block group">
             <span className="relative z-10 text-[#D92552] transition-transform duration-300 ease-out group-hover:-translate-y-1.5">
               {" "}
               incident{" "}
