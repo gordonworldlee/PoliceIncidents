@@ -104,6 +104,14 @@ export default function AboutPage() {
                 API Documentation (Postman)
               </a>
             </p>
+            <p className="text-gray-700 mt-2">
+              <a
+                href="/visualizations"
+                className="text-blue-500 hover:underline"
+              >
+                Explore Our Visualizations
+              </a>
+            </p>
           </section>
 
           <section className="mb-12">
@@ -175,8 +183,6 @@ export default function AboutPage() {
               ))}
             </div>
           </section>
-
-          
         </div>
       </div>
     </div>
