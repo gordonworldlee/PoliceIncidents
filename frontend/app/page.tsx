@@ -1,12 +1,58 @@
 "use client";
 import Link from "next/link";
 import Navbar from "./components/Navbar";
-import { useState } from "react";
+import { useState} from "react";
 import { useRouter } from "next/navigation";
+import HistoryCard from "@/components/HistoryCard";
+import { useHistory } from "@/hooks/useHistory";
+import ExampleCard from "@/components/ExampleCard";
+import { History, TrendingUp } from "lucide-react";
+
+interface exampleQueryInterface {
+  type: 'department' | 'legislation' | 'violence', 
+  title: string, 
+  path: string, 
+  imageUrl: string
+}
+
+const exampleQueries : exampleQueryInterface[] = [
+  {
+    type: "legislation",
+    title: "Law Enforcement Officers; civil and criminal immunity expanded",
+    path: "/legislation/11",
+    imageUrl: "/flags/alabama.png", 
+  },
+  {
+    type: "legislation",
+    title: "Relating to a progressive disciplinary matrix for police officer misconduct in certain municipalities.",
+    path: "http://localhost:3000/legislation/1926",
+    imageUrl: "/flags/texas.png",
+  },
+  {
+    type: "violence",
+    title: "Death by Gunshot in San Antonio, TX",
+    path: "/violence/9",
+    imageUrl: "https://s.hdnux.com/photos/01/46/25/36/26826627/5/960x0.webp",
+  },
+  {
+    type: "violence",
+    title: "Death by Gunshot in Fairhaven, MA",
+    path: "/violence/125",
+    imageUrl: "https://fallriverreporter.com/wp-content/uploads/2023/12/Paul-N.-Coderre-Jr.jpg",
+  },
+  {
+    type: "department",
+    title: "Austin Police Department",
+    path: "/department/AUSTIN",
+    imageUrl: "/police_pic.jpg",
+  },
+];
+
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
+  const { history, historyLoaded, clearHistory } = useHistory();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,45 +111,48 @@ export default function Home() {
         </form>
       </div>
       
-      {/* History Section 
-      <div className="max-w-3xl mx-auto mt-12 px-4">
-        <h2 className="text-lg font-semibold mb-4">History</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Link href="/department/austin">
-            <div className="bg-gray-200 p-4 rounded-lg cursor-pointer hover:bg-gray-300 flex flex-col justify-between h-full">
-              Austin Police Department <br />
-              <span className="text-sm text-gray-600">AGENCY</span>
-            </div>
-          </Link>
-          <Link href="/violence/incident3">
-            <div className="bg-gray-200 p-4 rounded-lg cursor-pointer hover:bg-gray-300 flex flex-col justify-between h-full">
-              Violent Crime in Dallas, TX <br />
-              <span className="text-sm text-gray-600">INCIDENT</span>
-            </div>
-          </Link>
-          <Link href="/violence/incident1">
-            <div className="bg-gray-200 p-4 rounded-lg cursor-pointer hover:bg-gray-300 flex flex-col justify-between h-full">
-              Domestic Disturbance in Houston, TX <br />
-              <span className="text-sm text-gray-600">INCIDENT</span>
-            </div>
-          </Link>
-          <Link href="/department/houston">
-            <div className="bg-gray-200 p-4 rounded-lg cursor-pointer hover:bg-gray-300 flex flex-col justify-between h-full">
-              Houston Police Department <br />
-              <span className="text-sm text-gray-600">AGENCY</span>
-            </div>
-          </Link>
+      {historyLoaded && (
+  <>
+    {history.length > 0 && (
+      <div className="max-w-3xl mx-auto mt-16 px-4">
+        {/* Recently Viewed Section */}
+        <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-semibold flex items-center gap-2">
+          <History className="w-5 h-5 text-[#D92552]" />
+          Recently Viewed
+        </h2>
+          <button 
+            onClick={clearHistory}
+            className="text-sm text-[#D92552] hover:underline"
+          >
+            Clear History
+          </button>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+          {history.map((item) => (
+            <HistoryCard key={item.path} item={item} />
+          ))}
         </div>
       </div>
-*/}
-      {/* Make it scrollable
-      <div className="max-w-3xl mx-auto mt-12 px-4 pb-32">
-        <h2 className="text-lg font-semibold mb-4"></h2>
-        {[...Array(20)].map((_, i) => (
-          <div key={i} className="bg-white p-4 mb-2 rounded"></div>
-        ))}
-      </div> */}
+    )}
 
+    {/* Example Queries (always show) */}
+    <div className="max-w-3xl mx-auto mt-16 px-4">
+    <h2 className="text-xl font-semibold flex items-center gap-2 mb-6">
+      <TrendingUp className="w-5 h-5 text-[#D92552]" />
+      Trending
+    </h2>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+        {exampleQueries.map((item) => (
+          <ExampleCard key={item.path} item={item} />
+        ))}
+      </div>
+    </div>
+  </>
+)}
+
+      {/* Footer spacing */}
+      <div className="h-24"></div>
     </div>
   );
 }

@@ -1,4 +1,6 @@
-// import { obtainSingleBill } from "@/lib/fetch_legislative_data";
+"use client";
+
+import { useEffect, useState, use} from "react";
 import Link from "next/link";
 import Navbar from "../../components/Navbar";
 import { Department, DepartmentInstances } from "@/public/data/DepartmentData";
@@ -6,7 +8,9 @@ import { DepartmentCard } from "@/components/DepartmentCard";
 import { fetchApi } from "@/app/utils/apifetch";
 import IncidentCard from "@/components/ViolenceCard";
 import { Violence } from "@/types/important";
+import { historyService } from "@/services/historyService";
 
+// State translation object
 const stateTranslation: { [key: string]: string } = {
   AL: "alabama",
   AK: "alaska",
@@ -60,16 +64,41 @@ const stateTranslation: { [key: string]: string } = {
   VT: "vermont",
 };
 
+// Define TypeScript interfaces
 interface LegislationInstancePageProps {
-  params: Promise<{ legislationId: string }>;
+  params: { legislationId: string };
 }
 
+interface BillData {
+  id: string;
+  title: string;
+  state: string;
+  session: string;
+  session_year: string;
+  bill_number: string;
+  description: string;
+  last_action: string;
+  sponsors: string;
+  subjects: string;
+  url: string;
+  [key: string]: any; // For any other properties
+}
 
-export default async function LegislationInstancePage({
+export default function LegislationInstancePage({
   params,
 }: LegislationInstancePageProps) {
-  const { legislationId } = await params;
-  const fetchBillData = async () => {
+  const resolvedParams: any = use(params as any);
+  const legislationId = resolvedParams.legislationId;
+
+  // State variables with proper TypeScript types
+  const [billData, setBillData] = useState<BillData | null>(null);
+  const [departmentsConnections, setDepartmentsConnections] = useState<Department[]>([]);
+  const [violenceConnections, setViolenceConnections] = useState<Violence[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch data functions
+  const fetchBillData = async (): Promise<any[]> => {
     const getBill = await fetchApi(`/legislation?id=${legislationId}`);
     if (!getBill.ok) {
       throw new Error("Can't fetch bill :(");
@@ -79,7 +108,7 @@ export default async function LegislationInstancePage({
     return billData.legislation;
   };
 
-  const fetchDepartmentConnections = async (state: string) => {
+  const fetchDepartmentConnections = async (state: string): Promise<Department[]> => {
     const response = await fetchApi(`/agencies?state=${state}`);
     if (!response.ok) {
       throw new Error("Can't fetch departments :(");
@@ -89,25 +118,79 @@ export default async function LegislationInstancePage({
     return departments.departments.slice(0, 3);
   };
 
-  const getViolenceConnections = async (state: string) => {
+  const getViolenceConnections = async (state: string): Promise<Violence[]> => {
     const response = await fetchApi(`/incidents?state=${state}`);
     if (!response.ok) {
-      throw new Error("Failed to fetch departments");
+      throw new Error("Failed to fetch incidents");
     }
     const data = await response.json();
     return data.incidents.slice(0, 3);
   };
-  // const billData = await obtainSingleBill(parseInt(legislationId));
-  const getBill = await fetchBillData();
-  const billData = getBill[0];
-  let departments_connections: Department[] = await fetchDepartmentConnections(
-    billData.state,
+
+  // Load data and add to history when component mounts
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const bills = await fetchBillData();
+        const billItem = bills[0];
+        setBillData(billItem);
+        
+        // Fetch related data once we have the bill
+        if (billItem) {
+          try {
+            const departments = await fetchDepartmentConnections(billItem.state);
+            setDepartmentsConnections(departments.length > 0 ? departments : DepartmentInstances);
+          } catch (err) {
+            console.error("Error fetching departments:", err);
+            setDepartmentsConnections(DepartmentInstances);
+          }
+          
+          try {
+            const violence = await getViolenceConnections(billItem.state);
+            setViolenceConnections(violence);
+          } catch (err) {
+            console.error("Error fetching violence incidents:", err);
+            setViolenceConnections([]);
+          }
+          
+          // Add to history
+          historyService.addToHistory(
+            'legislation', 
+            billItem.title, 
+            `/legislation/${legislationId}`,
+             `/flags/${stateTranslation[billItem.state]}.png`
+          );
+        }
+      } catch (err: any) {
+        console.error("Error loading legislation data:", err);
+        setError(err.message || "Error loading data");
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadData();
+  }, [legislationId]);
+
+  if (loading) return (
+    <div>
+      <Navbar />
+      <div className="min-h-screen bg-white pt-20 flex justify-center items-center">
+        <div className="text-xl">Loading...</div>
+      </div>
+    </div>
   );
-  if (departments_connections.length === 0) {
-    console.log(DepartmentInstances);
-    departments_connections = DepartmentInstances;
-  }
-  const violence_connections = await getViolenceConnections(billData.state);
+
+  if (error || !billData) return (
+    <div>
+      <Navbar />
+      <div className="min-h-screen bg-white pt-20 flex justify-center items-center">
+        <div className="text-xl text-red-600">Error loading legislation data</div>
+      </div>
+    </div>
+  );
+
   return (
     <div>
       <Navbar />
@@ -209,30 +292,34 @@ export default async function LegislationInstancePage({
           {/* Related Content Section */}
           <div className="mt-8 space-y-8">
             {/* Violence Instances */}
-            <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-              <h2 className="text-xl font-semibold text-blue-700 mb-6">Relevant Instances of Violence</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {violence_connections.map((incident: Violence, index: number) => (
-                  <IncidentCard key={index} incident={incident} />
-                ))}
+            {violenceConnections.length > 0 && (
+              <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                <h2 className="text-xl font-semibold text-blue-700 mb-6">Relevant Instances of Violence</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {violenceConnections.map((incident, index) => (
+                    <IncidentCard key={index} incident={incident} />
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Related Departments */}
-            <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-              <h2 className="text-xl font-semibold text-blue-700 mb-6">Relevant Departments</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {departments_connections.map((department: Department, index: number) => (
-                  <Link
-                    className="block w-full transform hover:scale-102 transition-transform"
-                    key={index}
-                    href={`/department/${department.agency_name}`}
-                  >
-                    <DepartmentCard DepartmentInstance={department} />
-                  </Link>
-                ))}
+            {departmentsConnections.length > 0 && (
+              <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                <h2 className="text-xl font-semibold text-blue-700 mb-6">Relevant Departments</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {departmentsConnections.map((department, index) => (
+                    <Link
+                      className="block w-full transform hover:scale-102 transition-transform"
+                      key={index}
+                      href={`/department/${department.agency_name}`}
+                    >
+                      <DepartmentCard DepartmentInstance={department} />
+                    </Link>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
