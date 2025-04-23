@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, use} from "react";
+import { useEffect, useState} from "react";
 import Link from "next/link";
 import Navbar from "../../components/Navbar";
 import { Department, DepartmentInstances } from "@/public/data/DepartmentData";
@@ -87,8 +87,7 @@ interface BillData {
 export default function LegislationInstancePage({
   params,
 }: LegislationInstancePageProps) {
-  const resolvedParams: any = use(params as any);
-  const legislationId = resolvedParams.legislationId;
+  const legislationId = params.legislationId;
 
   // State variables with proper TypeScript types
   const [billData, setBillData] = useState<BillData | null>(null);
