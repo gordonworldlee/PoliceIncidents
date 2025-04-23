@@ -25,7 +25,7 @@ const exampleQueries : exampleQueryInterface[] = [
   {
     type: "legislation",
     title: "Relating to a progressive disciplinary matrix for police officer misconduct in certain municipalities.",
-    path: "http://localhost:3000/legislation/1926",
+    path: "/legislation/1926",
     imageUrl: "/flags/texas.png",
   },
   {
