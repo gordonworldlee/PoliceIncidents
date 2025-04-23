@@ -9,6 +9,7 @@ import { fetchApi } from "@/app/utils/apifetch";
 import IncidentCard from "@/components/ViolenceCard";
 import { Violence } from "@/types/important";
 import { historyService } from "@/services/historyService";
+import { useParams } from "next/navigation";
 
 // State translation object
 const stateTranslation: { [key: string]: string } = {
@@ -64,11 +65,6 @@ const stateTranslation: { [key: string]: string } = {
   VT: "vermont",
 };
 
-// Define TypeScript interfaces
-interface LegislationInstancePageProps {
-  params: { legislationId: string };
-}
-
 interface BillData {
   id: string;
   title: string;
@@ -84,10 +80,8 @@ interface BillData {
   [key: string]: any; // For any other properties
 }
 
-export default function LegislationInstancePage({
-  params,
-}: LegislationInstancePageProps) {
-  const legislationId = params.legislationId;
+export default function LegislationInstancePage() {
+  const { legislationId } = useParams() as { legislationId: string };
 
   // State variables with proper TypeScript types
   const [billData, setBillData] = useState<BillData | null>(null);
