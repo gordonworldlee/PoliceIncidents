@@ -74,7 +74,7 @@ export default function Home() {
               <span className="inline-block text-[#D92552]">agency</span>
               <span className="absolute left-1/2 bottom-0 h-[2px] w-0 bg-[#D92552] transition-all duration-300 ease-out group-hover:w-full transform -translate-x-1/2"></span>
             </Link>
-            <span>, piece of</span>
+            <span>, piece of </span>
             <Link className="relative inline-block group" href="/legislation">
               <span className="inline-block text-[#D92552]">legislation</span>
               <span className="absolute left-1/2 bottom-0 h-[2px] w-0 bg-[#D92552] transition-all duration-300 ease-out group-hover:w-full transform -translate-x-1/2"></span>
