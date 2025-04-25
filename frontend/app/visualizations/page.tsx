@@ -28,7 +28,7 @@ export default function VisualizationsPage() {
                     : "bg-white text-gray-700 hover:bg-gray-50"
                 }`}
               >
-                Developer Statistics
+                Project Statistics
               </button>
               <button
                 type="button"
@@ -39,7 +39,7 @@ export default function VisualizationsPage() {
                     : "bg-white text-gray-700 hover:bg-gray-50"
                 }`}
               >
-                Project Statistics
+                Developer Statistics
               </button>
             </div>
           </div>
