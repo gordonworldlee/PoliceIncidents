@@ -1,144 +1,165 @@
-// src/Visualizations.tsx
-
 import React, { useEffect, useState } from "react";
 import {
-  ScatterChart,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
-  Scatter,
   ResponsiveContainer,
-  BarChart,
-  Bar,
-  LabelList
+  Legend,
+  LabelList,
+  PieChart,
+  Pie,
+  Cell,
+  ScatterChart,
+  Scatter
 } from "recharts";
 
-const Visualizations: React.FC = () => {
-  const [agencies, setAgencies] = useState<any[]>([]);
+// Types
+type CountItem = { name: string; count: number };
+type SeverityItem = { name: string; value: number };
+type TimelinePoint = { x: number; y: number; name: string };
+
+// Constants
+const COLORS: Record<string, string> = {
+  mild: "#90ee90",
+  moderate: "#f4c542",
+  severe: "#f87171",
+};
+
+const App: React.FC = () => {
+  const [specialtiesRaw, setSpecialtiesRaw] = useState<CountItem[]>([]);
+  const [severityData, setSeverityData] = useState<SeverityItem[]>([]);
+  const [timelineData, setTimelineData] = useState<TimelinePoint[]>([]);
 
   useEffect(() => {
-    const fetchPages = async () => {
-      let allDepartments: any[] = [];
-      for (let page = 1; page <= 5; page++) {
-        try {
-          const res = await fetch(`https://justicewatch.me/api/agencies?page=${page}`);
-          const json = await res.json();
-          allDepartments = [...allDepartments, ...(json.departments || [])];
-        } catch (err) {
-          console.error("API fetch error on page", page, err);
-        }
-      }
-      setAgencies(allDepartments);
-    };
-
-    fetchPages();
+    fetch("https://texasmindbridgeapi.me/providers", {
+      headers: { "x-api-key": "your-api-key-here" }
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        setSpecialtiesRaw(processSpecialties(json.results));
+      });
   }, []);
 
-  const populationData = agencies
-    .filter((dept: any) => dept.state && dept.total_population)
-    .reduce((acc: any, dept: any) => {
-      acc[dept.state] = (acc[dept.state] || 0) + parseInt(dept.total_population || "0");
-      return acc;
-    }, {});
+  useEffect(() => {
+    fetch("https://texasmindbridgeapi.me/symptoms", {
+      headers: { "x-api-key": "your-api-key-here" }
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        const tally: Record<string, number> = {};
+        (json.results || []).forEach((s: any) => {
+          if (s.severity) tally[s.severity] = (tally[s.severity] || 0) + 1;
+        });
+        const formatted = Object.entries(tally).map(
+          ([name, value]) => ({ name, value })
+        );
+        setSeverityData(formatted);
+      });
+  }, []);
 
-  const barData = Object.entries(populationData)
-    .map(([state, value]) => ({ state, population: value }))
-    .sort((a, b) => Number(b.population) - Number(a.population))
-    .slice(0, 10);
-
-  const scoreScatterData = agencies
-    .filter((d: any) => d.calc_police_violence_score && d.calc_overall_score)
-    .map((d: any) => ({
-      x: parseInt(d.calc_police_violence_score.replace("%", "")),
-      y: parseInt(d.calc_overall_score.replace("%", "")),
-      name: d.location_name,
-    }));
-
-  const histogramBuckets = {
-    '0–500k': { total: 0, count: 0 },
-    '500k–1M': { total: 0, count: 0 },
-    '1M–2M': { total: 0, count: 0 },
-    '2M–5M': { total: 0, count: 0 },
-    '>5M': { total: 0, count: 0 },
-  };
-
-  agencies.forEach((d: any) => {
-    const pop = parseInt(d.total_population?.replace(/,/g, "") || "0");
-    const vscore = parseInt(d.calc_police_violence_score?.replace("%", "") || "0");
-    if (!pop || !vscore) return;
-
-    if (pop < 500000) {
-      histogramBuckets['0–500k'].total += vscore;
-      histogramBuckets['0–500k'].count++;
-    } else if (pop < 1000000) {
-      histogramBuckets['500k–1M'].total += vscore;
-      histogramBuckets['500k–1M'].count++;
-    } else if (pop < 2000000) {
-      histogramBuckets['1M–2M'].total += vscore;
-      histogramBuckets['1M–2M'].count++;
-    } else if (pop < 5000000) {
-      histogramBuckets['2M–5M'].total += vscore;
-      histogramBuckets['2M–5M'].count++;
-    } else {
-      histogramBuckets['>5M'].total += vscore;
-      histogramBuckets['>5M'].count++;
-    }
+  useEffect(() => {
+    fetch("https://texasmindbridgeapi.me/SupportGroups", {
+      headers: { "x-api-key": "your-api-key-here" }
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        const allGroups = json.results.slice(0, 25);
+        const timeline = allGroups
+  .filter((g: any) => g.meeting_date && g.meeting_time && g.meeting_time.includes(":"))
+  .map((g: any, i: number) => {
+    const [h, m] = g.meeting_time.split(":").map(Number);
+    return {
+      x: new Date(g.meeting_date).getTime() + i * 1000000,
+      y: h + m / 60,
+      name: g.group_name,
+    };
   });
 
-  const histogramData = Object.entries(histogramBuckets)
-    .filter(([, { count }]) => count > 0)
-    .map(([range, { total, count }]) => ({
-      range,
-      avgViolence: count > 0 ? Math.round(total / count) : 0
-    }));
+        setTimelineData(timeline);
+      });
+  }, []);
+
+  const processSpecialties = (providers: any[]): CountItem[] => {
+    const counts: Record<string, number> = {};
+    providers.forEach((p: any) => {
+      const list = p.specialization?.split(",").map((s: string) => s.trim()) || [];
+      list.forEach((s: string) => (counts[s] = (counts[s] || 0) + 1));
+    });
+    return Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([name, count]) => ({ name, count }));
+  };
 
   return (
-    <div style={{ padding: "1rem" }}>
-      <h2>Top 10 States by Population Covered</h2>
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={barData} layout="vertical" margin={{ top: 20, right: 30, bottom: 20, left: 80 }}>
+    <div style={{ fontFamily: "sans-serif", padding: 20 }}>
+      <h2>Top 10 Specialties</h2>
+      <ResponsiveContainer width="100%" height={400}>
+        <BarChart data={specialtiesRaw} layout="vertical" margin={{ top: 20, right: 30, left: 100, bottom: 30 }}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis type="number" />
-          <YAxis type="category" dataKey="state" />
+          <XAxis type="number" allowDecimals={false} />
+          <YAxis type="category" dataKey="name" width={200} />
           <Tooltip />
           <Legend />
-          <Bar dataKey="population" fill="#82ca9d">
-            <LabelList dataKey="population" position="right" />
+          <Bar dataKey="count" fill="#8884d8">
+            <LabelList dataKey="count" position="right" />
           </Bar>
         </BarChart>
       </ResponsiveContainer>
 
-      <h2>Violence Score vs Overall Score</h2>
+      <h2>Severity Distribution</h2>
+      <ResponsiveContainer width="100%" height={400}>
+        <PieChart>
+          <Pie
+            data={severityData}
+            dataKey="value"
+            nameKey="name"
+            outerRadius={120}
+            label={({ name }) => name}
+          >
+            {severityData.map((entry) => (
+              <Cell key={entry.name} fill={COLORS[entry.name] || "#ccc"} />
+            ))}
+          </Pie>
+          <Tooltip />
+          <Legend />
+        </PieChart>
+      </ResponsiveContainer>
+
+      <h2>Support Groups Timeline (Date vs Time)</h2>
       <ResponsiveContainer width="100%" height={400}>
         <ScatterChart margin={{ top: 20, right: 30, bottom: 20, left: 50 }}>
           <CartesianGrid />
-          <XAxis dataKey="x" name="Violence Score (%)" type="number" domain={[0, 100]} />
-          <YAxis dataKey="y" name="Overall Score (%)" type="number" domain={[0, 100]} />
-          <Tooltip formatter={(val: number) => `${val}%`} labelFormatter={(_, payload) => payload?.[0]?.payload?.name} />
+          <XAxis
+            dataKey="x"
+            name="Date"
+            domain={['auto', 'auto']}
+            type="number"
+            tickFormatter={(unixTime) => new Date(unixTime).toLocaleDateString()}
+          />
+          <YAxis
+            dataKey="y"
+            name="Time"
+            domain={[0, 24]}
+            tickFormatter={(time) => `${Math.floor(time)}:00`}
+            label={{ value: "Hour of Day", angle: -90, position: "insideLeft" }}
+          />
+          <Tooltip
+            cursor={{ strokeDasharray: "3 3" }}
+            formatter={(value: number, name: string) =>
+              name === "y" ? `${Math.floor(value)}:00` : value
+            }
+            labelFormatter={(value) => new Date(value).toLocaleString()}
+          />
           <Legend />
-          <Scatter name="Departments" data={scoreScatterData} fill="#8884d8" />
+          <Scatter name="Support Group" data={timelineData} fill="#82ca9d" />
         </ScatterChart>
-      </ResponsiveContainer>
-
-      <h2>Average Violence Score by Population Range</h2>
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={histogramData} margin={{ top: 20, right: 30, bottom: 20, left: 50 }}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="range" />
-          <YAxis domain={[0, 100]} />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="avgViolence" fill="#8884d8">
-            <LabelList dataKey="avgViolence" position="top" />
-          </Bar>
-        </BarChart>
       </ResponsiveContainer>
     </div>
   );
 };
 
- export default Visualizations;
-
-
+export default App;

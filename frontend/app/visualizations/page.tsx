@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import Navbar from "@/app/components/Navbar";
-import DeveloperVisualizations from "./developerVisualizations";
-import OurVisualizations from "./ourVisualizations";
+import DeveloperVisualizations from "./ourVisualizations";
+import OurVisualizations from "./developerVisualizations";
 
 export default function VisualizationsPage() {
   const [activeTab, setActiveTab] = useState<"developer" | "project">("developer");
